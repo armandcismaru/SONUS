@@ -57,7 +57,8 @@ Thumbs.db
 Thumbs.db.meta
 
 # MacOS
-*.DS_Store
+.DS_Store
 
 # VS Code
 *.vscode
+.vsconfig
