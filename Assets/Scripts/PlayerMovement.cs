@@ -6,34 +6,59 @@ public class PlayerMovement : MonoBehaviour
 {
     private Camera cam;
 
-    CharacterController characterController;
-
-    public float movementSpeed = 1;
-    public float gravity = 10f;
-    //private float velocity = 0;
+    private Rigidbody rb;
+    private float movementSpeed = 10f;
+    private bool _jump;
+    private bool onGround;
+    private float horizontal;
+    private float vertical;
 
     void Start()
     {
         cam = Camera.main;
-        characterController = GetComponent<CharacterController>();
-    }
+        rb = GetComponent<Rigidbody>();
+        _jump = false;
+        onGround = false;
+        horizontal = 0;
+        vertical = 0;
+}
 
     void Update()
     {
-        // player movement - forward, backward, left, right
-        float horizontal = Input.GetAxis("Horizontal") * movementSpeed;
-        float vertical = Input.GetAxis("Vertical") * movementSpeed;
-        characterController.Move((cam.transform.right * horizontal + cam.transform.forward * vertical) * Time.deltaTime);
-        /*
-        // Gravity
-        if (characterController.isGrounded)
+        Debug.Log(onGround);
+        if (onGround)
         {
-            velocity = 0;
+
+            horizontal = Input.GetAxis("Horizontal") * movementSpeed;
+            vertical = Input.GetAxis("Vertical") * movementSpeed;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                _jump = true;
+                onGround = false;
+            }
+
         }
-        else
+    }
+    private void FixedUpdate()
+    {
+
+        if (_jump)
         {
-            velocity -= gravity * Time.deltaTime;
-            characterController.Move(new Vector3(0, velocity, 0));
-        }*/
+            rb.AddForce(Vector3.up * 5, ForceMode.VelocityChange);
+            _jump = false;
+        }
+
+        Vector3 cameraOrientation = cam.transform.right * horizontal + cam.transform.forward * vertical;
+        rb.velocity = new Vector3(cameraOrientation.x, rb.velocity.y, cameraOrientation.z);
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            onGround = true;
+        }
+
     }
 }
