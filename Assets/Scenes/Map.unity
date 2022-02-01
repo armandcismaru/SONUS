@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -469,6 +469,16 @@ MonoBehaviour:
   sounds:
   - name: ConcreteFootsteps
     clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
+    volume: 0.563
+    pitch: 1
+    source: {fileID: 0}
+  - name: ConcreteFootsteps
+    clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
+    volume: 0.563
+    pitch: 1
+    source: {fileID: 0}
+  - name: Gunshot
+    clip: {fileID: 8300000, guid: 7710184bb1543428fa5c1a5c26f95814, type: 3}
     volume: 0.563
     pitch: 1
     source: {fileID: 0}
