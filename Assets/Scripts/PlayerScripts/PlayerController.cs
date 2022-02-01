@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject cameraHolder;
     private float verticalLookRotation;
     private bool grounded;
+    private bool isMoving;
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
 
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
             Destroy(rb);
         }
         Cursor.lockState = CursorLockMode.Locked;
+        isMoving = false;
     }
 
     // Update is called once per frame
@@ -90,6 +92,19 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
 
+        if (moveDir.x != 0f || moveDir.z != 0f)
+            isMoving = true;
+        else
+            isMoving = false;
+
+        if (isMoving)
+        {
+            if (!FindObjectOfType<AudioManager>().isPlaying("ConcreteFootsteps"))
+                FindObjectOfType<AudioManager>().Play("ConcreteFootsteps");
+        }
+        else
+            FindObjectOfType<AudioManager>().Stop("ConcreteFootsteps");
+
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
     }
 
@@ -100,6 +115,7 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(transform.up * jumpForce);
         }
     }
+
     public void SetGroundedState(bool _grounded)
     {
         grounded = _grounded;
