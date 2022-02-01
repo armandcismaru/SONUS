@@ -9,3 +9,7 @@ If you have set up the build settings once, you can just use **ctrl+b** to build
 The game should start on the first scene (Loading Scene) and automatically transition to a lobby scene. To create a game input a keyword into the text field and press create, this should lead to the basic map with a controllable player. To join a game that is already created you need a second instance of the game, in the lobby scene input the word used to create the game and press join.
 
 Note that you cannot open two instances of the game from the "play button" from unity, so you have to build the project and open it outside of unity if you want to test the multiplayer part.
+
+# Commands
+
+Use WASD or arrow keys to move around, SPACE to jump, Left-Click to shoot.
