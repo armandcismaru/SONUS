@@ -116,12 +116,13 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(transform.up * jumpForce);
         }
     }
-
+    
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             FindObjectOfType<AudioManager>().Play("Gunshot");
+        
         }
     }
 
