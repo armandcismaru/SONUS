@@ -47,7 +47,8 @@ public class PlayerController : MonoBehaviour
             {
                 Look();
             }
-            
+
+            Shoot();
             Move();
             Jump();
         }
@@ -110,9 +111,17 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        if (Input.GetKey(KeyCode.Space) && grounded)
         {
             rb.AddForce(transform.up * jumpForce);
+        }
+    }
+
+    void Shoot()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            FindObjectOfType<AudioManager>().Play("Gunshot");
         }
     }
 
