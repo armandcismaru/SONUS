@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 {
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject cameraHolder;
@@ -12,11 +13,16 @@ public class PlayerController : MonoBehaviour
     private bool isMoving;
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
-
+    private int health;
+    private int bullets;
     private PhotonView view;
-
+    SpawnPlayers spawnPlayers;
+    [SerializeField] Gun gun;
+    [SerializeField] Knife knife;
     private Rigidbody rb;
-
+    [SerializeField] GameObject gunView;
+    public Text healthView;
+    public Text bulletsView;
 
     // Start is called before the first frame update
     void Awake()
@@ -27,13 +33,17 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        //spawnPlayers = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<SpawnPlayers>();
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
+            //gunView.SetActive(true);
             Destroy(rb);
         }
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
+        health = 100;
+        bullets = 5;
     }
 
     // Update is called once per frame
@@ -49,6 +59,7 @@ public class PlayerController : MonoBehaviour
             }
 
             Shoot();
+            UseKnife();
             Move();
             Jump();
         }
@@ -119,10 +130,32 @@ public class PlayerController : MonoBehaviour
     
     void Shoot()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && bullets > 0)
         {
             FindObjectOfType<AudioManager>().Play("Gunshot");
-        
+            Debug.Log("da");
+            bullets -= 1;
+            bulletsView.text = bullets.ToString();
+            gun.Shoot();
+            Debug.Log("nu");
+
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0) &&  bullets <= 0)
+        {
+            Debug.Log("DASDA");
+            FindObjectOfType<AudioManager>().Play("DryFire");
+        }
+    }
+
+    void UseKnife()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FindObjectOfType<AudioManager>().Play("stab");
+            //Debug.Log("da");
+            knife.UseKnife();
+            //Debug.Log("nu");
+
         }
     }
 
@@ -131,4 +164,43 @@ public class PlayerController : MonoBehaviour
         grounded = _grounded;
     }
 
+    //private void Die()
+    //{
+    //    Destroy(gameObject);
+    //}
+
+    public void TakeDamage(int damage)
+    {
+        view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+    }
+
+    [PunRPC]
+    void RPC_TakeDamage(int damage)
+    {
+        //if (!view.IsMine)
+        //    return;
+        health -= damage;
+        healthView.text = health.ToString();
+        Debug.Log(health);
+        //healthbarImage.fillAmount = currentHealth / maxHealth;
+
+        if (health <= 0)
+        {
+            Debug.Log("AM MURIT");
+            Die();
+            
+        }
+    }
+
+    //void Die()
+    //{
+    //    spawnPlayers.Die();
+    //}
+
+    public void Die()
+    {
+        Debug.Log("5");
+        PhotonNetwork.Destroy(gameObject);
+        //CreateController();
+    }
 }
