@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject cameraHolder;
+    [SerializeField] Material redMat;
+    [SerializeField] Material blueMat;
+    [HideInInspector] public int team;
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
@@ -27,6 +30,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        GetComponent<Renderer>().material = (team == 0 ? blueMat : redMat);
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);

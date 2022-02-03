@@ -1,0 +1,22 @@
+using Photon.Realtime;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+
+public class RoomItem : MonoBehaviour
+{
+    [SerializeField] private TMP_Text text;
+
+    RoomInfo info;
+    public void SetUp(RoomInfo inf)
+    {
+        info = inf;
+        text.text = inf.Name;
+    }
+
+    public void OnPressed()
+    {
+        CreateAndJoinRooms.Instance.JoinRoom(info);
+    }
+}
