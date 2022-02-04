@@ -1,29 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
 public class SpawnPlayers : MonoBehaviour
 {
     public GameObject playerPrefab;
-    //private PhotonView view;
 
     public float minX;
     public float maxX;
     public float minZ;
     public float maxZ;
 
-    //void Awake()
-    //{
-    //    view = GetComponent<PhotonView>();
-    //}
-
     void Start()
     {
-            CreateController();
+        CreateController();
     }
-
-        
 
     private void CreateController()
     {
