@@ -19,6 +19,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        PhotonNetwork.LoadLevel("Map");
+        PhotonNetwork.LoadLevel("Map 2.0");
     }
 }
