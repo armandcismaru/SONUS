@@ -7,8 +7,7 @@ using UnityEngine.SceneManagement;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
-    private int players;
-
+    public int currentTeam = 0;
     private void Awake()
     {
         if (Instance)
@@ -28,16 +27,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnDisable()
     {
         base.OnDisable();
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         if(scene.buildIndex == 1)
         {
-            players++;
             GameObject obj = PhotonNetwork.Instantiate("PlayerManager", Vector3.zero, Quaternion.identity);
-            obj.GetComponent<PlayerManager>().team = players % 2;
         }
+    }
+
+    public void UpdateTeam()
+    {
+        currentTeam++;
     }
 }

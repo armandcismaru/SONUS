@@ -36,7 +36,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        if(PhotonNetwork.CountOfPlayersInRooms > 2)
+        if(PhotonNetwork.CountOfPlayersInRooms > 5)
         {
             leaveRoom();
             return;

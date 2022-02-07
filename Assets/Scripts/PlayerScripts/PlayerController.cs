@@ -7,9 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject cameraHolder;
-    [SerializeField] Material redMat;
-    [SerializeField] Material blueMat;
-    [HideInInspector] public int team;
+    [SerializeField] private Material RedMat;
+    [SerializeField] private Material BlueMat;
+
+    public int team;
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
@@ -30,7 +31,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        GetComponent<Renderer>().material = (team == 0 ? blueMat : redMat);
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -132,6 +132,30 @@ public class PlayerController : MonoBehaviour
     public void SetGroundedState(bool _grounded)
     {
         grounded = _grounded;
+    }
+
+    public void SetTeamAndUpdateMaterials(int tm)
+    {
+        team = tm;
+        view.RPC("RPC_ChangeTexture", RpcTarget.All, tm);
+    }
+
+    [PunRPC]
+    void RPC_ChangeTexture(int tm)
+    {
+       // if (view.IsMine)
+       // {
+        team = tm;
+        if (team == 0)
+        {
+            GetComponent<Renderer>().material = BlueMat;
+        }
+        else
+        {
+            GetComponent<Renderer>().material = RedMat;
+        }
+
+        //}
     }
 
 }
