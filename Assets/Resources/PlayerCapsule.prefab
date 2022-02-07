@@ -136,6 +136,7 @@ MonoBehaviour:
   jumpForce: 300
   smoothTime: 0.15
   cameraHolder: {fileID: 4510523601521975064}
+  gun: {fileID: 0}
 --- !u!114 &5477576895150788752
 MonoBehaviour:
   m_ObjectHideFlags: 0
