@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
-    public int currentTeam = 0;
+    [HideInInspector] public int currentTeam = 0;
     private void Awake()
     {
         if (Instance)

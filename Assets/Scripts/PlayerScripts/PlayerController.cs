@@ -143,8 +143,6 @@ public class PlayerController : MonoBehaviour
     [PunRPC]
     void RPC_ChangeTexture(int tm)
     {
-       // if (view.IsMine)
-       // {
         team = tm;
         if (team == 0)
         {
@@ -154,8 +152,6 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<Renderer>().material = RedMat;
         }
-
-        //}
     }
 
 }

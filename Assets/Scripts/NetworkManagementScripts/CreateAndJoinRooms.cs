@@ -25,7 +25,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         if (!string.IsNullOrEmpty(inputWord.text))
         {
-            PhotonNetwork.CreateRoom(inputWord.text);
+            PhotonNetwork.CreateRoom(inputWord.text, new RoomOptions { MaxPlayers = 6 });
             MenuManager.Instance.OpenMenu("loading");
         }
     }
@@ -36,15 +36,10 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        if(PhotonNetwork.CountOfPlayersInRooms > 5)
-        {
-            leaveRoom();
-            return;
-        }
         MenuManager.Instance.OpenMenu("lobby");
         displayRoomName.text = PhotonNetwork.CurrentRoom.Name;
         startButton.SetActive(PhotonNetwork.IsMasterClient);
-        playerCount.text = (1 + PhotonNetwork.CountOfPlayersInRooms).ToString() + "/6 players";
+        playerCount.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString() + "/6 players";
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -71,19 +66,19 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         }
         for (int i = 0; i < roomList.Count; i++)
         {
-            if(!roomList[i].RemovedFromList)
+            if(!roomList[i].RemovedFromList && roomList[i].PlayerCount < roomList[i].MaxPlayers)
                 Instantiate(roomListButtonPrefab, roomListContent).GetComponent<RoomItem>().SetUp(roomList[i]);
         }
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        playerCount.text = PhotonNetwork.CountOfPlayersInRooms.ToString() + "/6 players";
+        playerCount.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString() + "/6 players";
     }
 
     public override void OnPlayerLeftRoom(Player newPlayer)
     {
-        playerCount.text = PhotonNetwork.CountOfPlayersInRooms.ToString() + "/6 players";
+        playerCount.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString() + "/6 players";
     }
 
     public void StartGame()

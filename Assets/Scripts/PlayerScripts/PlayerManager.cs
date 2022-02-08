@@ -5,13 +5,9 @@ using Photon.Pun;
 
 public class PlayerManager : MonoBehaviour
 {
-    [SerializeField] private GameObject RedPlayerPrefab;
-    [SerializeField] private GameObject BluePlayerPrefab;
-
-
-
+    [SerializeField] private GameObject PlayerPrefab;
     private GameObject myAvatar = null;
-    PhotonView view;
+    private PhotonView view;
 
     public float minX;
     public float maxX;
@@ -29,9 +25,6 @@ public class PlayerManager : MonoBehaviour
         if (view.IsMine)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
-            /*Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
-            GameObject obj = PhotonNetwork.Instantiate(playerPrefab.name, randomPosition, Quaternion.identity);
-            obj.GetComponent<PlayerController>().team = team;*/
         }
     }
 
@@ -44,12 +37,12 @@ public class PlayerManager : MonoBehaviour
                 Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
                 if (team == 0)
                 {
-                    myAvatar = PhotonNetwork.Instantiate(BluePlayerPrefab.name, randomPosition, Quaternion.identity);
+                    myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity);
                     myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
                 }
                 else
                 {
-                    myAvatar = PhotonNetwork.Instantiate(RedPlayerPrefab.name, randomPosition, Quaternion.identity);
+                    myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity);
                     myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
                 }
             }

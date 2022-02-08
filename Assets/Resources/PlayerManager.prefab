@@ -66,8 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f7b530261cd5142b99cc91c4337091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RedPlayerPrefab: {fileID: 3441432402261338044, guid: 4b7b4165f19443c40a0707cd77192ccc, type: 3}
-  BluePlayerPrefab: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+  PlayerPrefab: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
   minX: -8
   maxX: 8
   minZ: -8
