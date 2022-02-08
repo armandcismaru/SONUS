@@ -83,7 +83,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel("map");
+        PhotonNetwork.LoadLevel("Map 2.0");
     }
 
     public override void OnConnectedToMaster()
