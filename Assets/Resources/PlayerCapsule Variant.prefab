@@ -192,8 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa790a0ed2e5488ba4d4148ed00b1b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 50
-  range: 100
   fpsCam: {fileID: 6521057915234584602}
 --- !u!114 &2216203663358200940
 MonoBehaviour:
@@ -207,8 +205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 509972f6231df45079c37c91d9e8d3d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 100
-  range: 1.5
   fpsCam: {fileID: 6521057915234584602}
 --- !u!1 &4174058814588709296
 GameObject:
@@ -767,8 +763,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa790a0ed2e5488ba4d4148ed00b1b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  range: 100
   fpsCam: {fileID: 6521057915234584602}
 --- !u!1001 &1732983493988335764
 PrefabInstance:

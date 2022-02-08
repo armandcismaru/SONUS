@@ -39,6 +39,9 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - RPC_GetTeam
+  - RPC_SentTeam
+  - RPC_ChangeTexture
   - RPC_TakeDamage
   - RPC_Shoot
   DisableAutoOpenWizard: 1

@@ -6,6 +6,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 {
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject cameraHolder;
+    [SerializeField] private Material RedMat;
+    [SerializeField] private Material BlueMat;
+
+    [HideInInspector] public int team;
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
@@ -153,6 +157,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     public void SetGroundedState(bool _grounded)
     {
         grounded = _grounded;
+    }
+
+    public void SetTeamAndUpdateMaterials(int tm)
+    {
+        team = tm;
+        view.RPC("RPC_ChangeTexture", RpcTarget.All, tm);
+    }
+
+    [PunRPC]
+    void RPC_ChangeTexture(int tm)
+    {
+        team = tm;
+        if (team == 0)
+        {
+            GetComponent<Renderer>().material = BlueMat;
+        }
+        else
+        {
+            GetComponent<Renderer>().material = RedMat;
+        }
     }
 
     public void TakeDamage(int damage)
