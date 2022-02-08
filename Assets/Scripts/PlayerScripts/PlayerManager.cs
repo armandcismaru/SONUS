@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
     public float minZ;
     public float maxZ;
 
-    [HideInInspector] public int team = -1;
+    public int team = -1;
 
     private void Awake()
     {
