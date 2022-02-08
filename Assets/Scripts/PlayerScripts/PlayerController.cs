@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
 
-    public int team;
+    [HideInInspector] public int team;
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
