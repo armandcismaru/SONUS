@@ -110,16 +110,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8955ad2b929c2564dab20b5568de5093, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   mouseSensitivity: 3
   sprintSpeed: 6
   walkSpeed: 3
-  jumpForce: 300
+  jumpForce: 100
   smoothTime: 0.15
   cameraHolder: {fileID: 4510523601521975064}
 --- !u!54 &7678388244334074468
 Rigidbody:
+  RedMat: {fileID: 2100000, guid: 923df859c811aa54eac309430b953a97, type: 2}
+  BlueMat: {fileID: 2100000, guid: dd7c9e202c2579f4b97d33013007fc21, type: 2}
+  team: 0
+  gun: {fileID: 0}
+--- !u!114 &5477576895150788752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3441432402261338044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 4726079576783015097}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &4726079576783015097
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -220,8 +249,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf13b03b386f9be40802f123c85b812f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1 &7340208567751387185
 GameObject:
   m_ObjectHideFlags: 0
