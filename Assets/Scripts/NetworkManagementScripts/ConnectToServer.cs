@@ -18,7 +18,7 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        MenuManager.Instance.OpenMenu("main");
+        SceneManager.LoadScene("Lobby");
     }
 }
 

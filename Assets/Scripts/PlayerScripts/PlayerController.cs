@@ -1,29 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
-using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject cameraHolder;
-    [SerializeField] private Material RedMat;
-    [SerializeField] private Material BlueMat;
-
-    [HideInInspector] public int team;
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
-    private int health;
-    private int bullets;
+
     private PhotonView view;
-    [SerializeField] Gun gun;
-    [SerializeField] Knife knife;
+
     private Rigidbody rb;
-    [SerializeField] GameObject gunView;
-    public Text healthView;
-    public Text bulletsView;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -41,10 +34,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        health = 100;
-        bullets = 5;
     }
 
+    // Update is called once per frame
     void Update()
     {
         if (view.IsMine)
@@ -57,7 +49,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             }
 
             Shoot();
-            UseKnife();
             Move();
             Jump();
         }
@@ -125,32 +116,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             rb.AddForce(transform.up * jumpForce);
         }
     }
-    
+
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if (bullets > 0)
-            {
-                FindObjectOfType<AudioManager>().Play("Gunshot");
-                bullets -= 1;
-                bulletsView.text = bullets.ToString();
-                gun.Shoot();
-            }
-            else
-            {
-                FindObjectOfType<AudioManager>().Play("DryFire");
-            }
-        }
-    }
-
-    void UseKnife()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            FindObjectOfType<AudioManager>().Play("stab");
-            knife.UseKnife();
-
+            FindObjectOfType<AudioManager>().Play("Gunshot");
         }
     }
 
@@ -159,50 +130,4 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         grounded = _grounded;
     }
 
-    public void SetTeamAndUpdateMaterials(int tm)
-    {
-        team = tm;
-        view.RPC("RPC_ChangeTexture", RpcTarget.All, tm);
-    }
-
-    [PunRPC]
-    void RPC_ChangeTexture(int tm)
-    {
-        team = tm;
-        if (team == 0)
-        {
-            GetComponent<Renderer>().material = BlueMat;
-        }
-        else
-        {
-            GetComponent<Renderer>().material = RedMat;
-        }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
-    }
-
-    [PunRPC]
-    void RPC_TakeDamage(int damage)
-    {
-        if (!view.IsMine)
-            return;
-
-        health -= damage;
-        healthView.text = health.ToString();
-
-        if (health <= 0)
-        {
-            Die();
-            
-        }
-    }
-
-
-    public void Die()
-    {
-        PhotonNetwork.Destroy(gameObject);
-    }
 }

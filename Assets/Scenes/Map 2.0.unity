@@ -5580,8 +5580,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ab03ec2e40f54e1fbfff8ce25b710df, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   sounds:
   - name: ConcreteFootsteps
     clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
@@ -26163,8 +26163,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 904a52aeda9b64a409d55ab9e1f37672, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   _rotation: {x: 0, y: 0, z: 0}
   _speed: 0
   _pickupType: 0
@@ -26645,8 +26645,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
@@ -26673,8 +26673,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
@@ -32339,8 +32339,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 904a52aeda9b64a409d55ab9e1f37672, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   _rotation: {x: 0, y: 0, z: 0}
   _speed: 0
   _pickupType: 2
@@ -32666,8 +32666,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79490ea4189c3de458ff9aaff78c3bbe, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   TheDistance: 0
   TheDoor: {fileID: 206657827}
   CreakSound: {fileID: 439488631}
@@ -39916,8 +39916,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d6962a0b2ceb7b340aa7bafe376ab90c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   FireState: 0
   FireLight: {fileID: 307960513}
 --- !u!1 &997116040
@@ -40872,8 +40872,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 904a52aeda9b64a409d55ab9e1f37672, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   _rotation: {x: 0, y: 0, z: 0}
   _speed: 0
   _pickupType: 0
@@ -41753,8 +41753,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ba86cea2c817b841953f84c9fcdd37f, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   UIElements:
   - {fileID: 805976451979740137, guid: 4f5ad17c01e2137449804cda9557441e, type: 3}
   - {fileID: 8442246945765584066, guid: 5b8cc0788112a9d49aa9d3fd1772e903, type: 3}
@@ -41768,8 +41768,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_PositionModel:
     SynchronizeEnabled: 0
     TeleportEnabled: 1
@@ -41801,8 +41801,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
@@ -41824,8 +41824,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a3eea39bd4884b42a5025c13e45331b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   prefabPlayerCanvas: {fileID: 3586580352017611715, guid: 4034723a2be356540be1d15bf20dd5b0, type: 3}
 --- !u!114 &1249843683
 MonoBehaviour:
@@ -41837,8 +41837,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bda53161db3f824c9d03dbefc7db6ca, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   ToTarget: 0
 --- !u!114 &1249843684
 MonoBehaviour:
@@ -41850,8 +41850,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e897ff1a30f513a4c9bb5d067f529d91, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   UIElements:
   - {fileID: 4771206061125140707, guid: 233e9e65477d0e147bb4d66ca429d32a, type: 3}
   max_health: 10
@@ -41879,8 +41879,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c589e2984eb2f9a4a8deac45fd601ec6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   instancePickupComponents:
   - {fileID: 1249843684}
   - {fileID: 1249843675}
@@ -43050,8 +43050,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9f7b530261cd5142b99cc91c4337091, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   playerPrefab: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
   minX: 27
   maxX: 28
@@ -49760,7 +49760,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3799501528888600622, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_Mesh
-      value:
+      value: 
       objectReference: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 3835646438195333435, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_RootOrder
@@ -49808,7 +49808,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: cameraHolder
-      value:
+      value: 
       objectReference: {fileID: 559457443}
     - target: {fileID: 7678388244334074468, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_Interpolate
@@ -49844,8 +49844,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   volumeTrigger: {fileID: 1874908639}
   volumeLayer:
     serializedVersion: 2
@@ -49904,8 +49904,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   sharedProfile: {fileID: 11400000, guid: 44ff1565856b8ef4594e23b8e132b715, type: 2}
   isGlobal: 1
   blendDistance: 0
