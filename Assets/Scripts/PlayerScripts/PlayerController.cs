@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 {
@@ -8,8 +9,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
+    [SerializeField] private TMP_Text blueScore;
+    [SerializeField] private TMP_Text redScore;
+    [SerializeField] private TMP_Text timer;
 
     [HideInInspector] public int team;
+    private PlayerManager playerManager;
+
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
@@ -30,6 +36,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
+
+        playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
     }
 
     void Start()
@@ -60,6 +68,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             UseKnife();
             Move();
             Jump();
+            float mins = Timer.Instance.GetTimerMinutes();
+            float secs = Timer.Instance.GetTimerSeconds();
+            if(secs < 10)
+            {
+                timer.text = mins.ToString() + ":0" + secs.ToString();
+            } else
+            {
+                timer.text = mins.ToString() + ":" + secs.ToString();
+            }
+            redScore.text = RoomManager.Instance.scoreRed.ToString();
+            blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }
     }
 
@@ -162,7 +181,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     public void SetTeamAndUpdateMaterials(int tm)
     {
         team = tm;
-        view.RPC("RPC_ChangeTexture", RpcTarget.All, tm);
+        view.RPC("RPC_ChangeTexture", RpcTarget.AllBuffered, tm);
     }
 
     [PunRPC]
@@ -201,8 +220,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     }
 
 
-    public void Die()
+    private void Die()
     {
-        PhotonNetwork.Destroy(gameObject);
+        playerManager.Die();
     }
 }

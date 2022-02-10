@@ -15,6 +15,8 @@ public class PlayerManager : MonoBehaviour
     public float maxZ;
 
     [HideInInspector] public int team = -1;
+    [HideInInspector] public bool isReady = false;
+    [HideInInspector] public bool isAlive = false;
 
     private void Awake()
     {
@@ -28,26 +30,64 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void SpawnPlayer()
+    {
+        Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
+        if (team == 0)
+        {
+            myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, new object[] { view.ViewID });
+            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+        }
+        else
+        {
+            myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, new object[] { view.ViewID });
+            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+        }
+    }
     void FixedUpdate()
     {
         if (view.IsMine)
         {
-            if (myAvatar == null && team != -1)
+            if (!RoomManager.Instance.roundRunning && myAvatar == null && team != -1)
             {
-                Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
-                if (team == 0)
-                {
-                    myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity);
-                    myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-                }
-                else
-                {
-                    myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity);
-                    myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-                }
+                SpawnPlayer();
             }
         }
     }
+
+    public void StartRound()
+    {
+        if (view.IsMine)
+        {
+            SpawnPlayer();
+        }
+    }
+
+    public void Die()
+    {
+        if (view.IsMine)
+        {
+            DestroyController();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                RoomManager.Instance.PlayerDied(team);
+            }
+            else
+            {
+                view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
+            }
+        }
+    }
+
+    public void DestroyController()
+    {
+        if (view.IsMine && myAvatar != null)
+        {
+            PhotonNetwork.Destroy(myAvatar);
+        }
+    }
+
+
     [PunRPC]
     void RPC_GetTeam()
     {
@@ -55,9 +95,10 @@ public class PlayerManager : MonoBehaviour
         if (myAvatar != null)
         {
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+            isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.Others, team);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
     }
 
     [PunRPC]
@@ -67,6 +108,13 @@ public class PlayerManager : MonoBehaviour
         if (myAvatar != null)
         {
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+            isReady = true;
         }
+    }
+
+    [PunRPC]
+    void RPC_PlayerDied(int tm)
+    {
+        RoomManager.Instance.PlayerDied(tm);
     }
 }

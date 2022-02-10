@@ -44,6 +44,13 @@ MonoBehaviour:
   - RPC_ChangeTexture
   - RPC_TakeDamage
   - RPC_Shoot
+  - RPC_StartRound
+  - RPC_PlayerDied
+  - RPC_StartTimer
+  - RPC_StopTimer
+  - RPC_TimerFinished
+  - RPC_UpdateTime
+  - RPC_EndRoundAndUpdateScores
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
