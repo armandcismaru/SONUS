@@ -140,6 +140,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             if (bullets > 0)
             {
                 FindObjectOfType<AudioManager>().Play("Gunshot");
+                Debug.Log("fmm");
                 PlayStopSound("Gunshot", "play");
 
                 bullets -= 1;
