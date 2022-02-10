@@ -508,6 +508,21 @@ BoxCollider:
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2933213943549292242
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8955ad2b929c2564dab20b5568de5093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 3
+  sprintSpeed: 6
+  walkSpeed: 3
+  jumpForce: 100
+  smoothTime: 0.15
+  cameraHolder: {fileID: 4510523601521975064}
+  RedMat: {fileID: 2100000, guid: 923df859c811aa54eac309430b953a97, type: 2}
+  BlueMat: {fileID: 2100000, guid: dd7c9e202c2579f4b97d33013007fc21, type: 2}
+  team: 0
+  gun: {fileID: 0}
+--- !u!114 &5477576895150788752
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
