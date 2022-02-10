@@ -17,8 +17,13 @@ public class DoorOpener : MonoBehaviour
     void OnMouseOver()
     {
         if (Input.GetButtonDown("Action") && (TheDistance <= 2))
-        {
-            this.GetComponent<BoxCollider>().enabled = false;
+        {  
+            var colliders = this.gameObject.transform.parent.GetComponentsInChildren<BoxCollider>();
+            var length = colliders.Length;
+            foreach (BoxCollider collider in colliders)
+            { 
+                collider.enabled = false;
+            }
             TheDoor.GetComponent<Animation>().Play("DoorAnimation1");
             CreakSound.Play();
         }

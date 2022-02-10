@@ -15,6 +15,6 @@ public class SpawnPlayers : MonoBehaviour
     void Start()
     {
         Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
-        PhotonNetwork.Instantiate(playerPrefab.name, randomPosition, Quaternion.identity);
+        //PhotonNetwork.Instantiate(playerPrefab.name, randomPosition, Quaternion.identity);
     }
 }
