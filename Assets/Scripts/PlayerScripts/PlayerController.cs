@@ -113,13 +113,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             {
                 FindObjectOfType<AudioManager>().Play("ConcreteFootsteps");
                 PlayStopSound("ConcreteFootsteps", "play");
+
             }
         }
-        else
+        /*else
         {
             FindObjectOfType<AudioManager>().Stop("ConcreteFootsteps");
-            PlayStopSound("ConcreteFootsteps", "stop");
-        }
+            //PlayStopSound("ConcreteFootsteps", "stop");
+        }*/
             
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
