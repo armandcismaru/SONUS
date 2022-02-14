@@ -46,6 +46,8 @@ MonoBehaviour:
   - RPC_Shoot
   - RPC_OpenDoor
   - RPC_DestroyObject
+  - destroyPickUpActor
+  - rpcDestroyObject
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

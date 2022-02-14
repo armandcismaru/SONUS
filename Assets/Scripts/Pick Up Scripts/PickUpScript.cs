@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,24 @@ public class PickUpScript : MonoBehaviour {
     [SerializeField] private PickUpType _pickupType;
 
     public PickUpType pickupType { get => _pickupType;}
+
+    public void destroyThisObject()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+        else
+        {
+            GetComponent<PhotonView>().RPC("rpcDestroyObject", RpcTarget.MasterClient);
+        }
+    }
+
+    [PunRPC]
+    void rpcDestroyObject()
+    {
+        PhotonNetwork.Destroy(gameObject);
+    }
 
     void Update()
     {

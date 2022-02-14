@@ -6,20 +6,20 @@ using Photon.Pun;
 
 public class HealthPickupComponent : PickUpComponent
 {
-    private float  current_health;
+    private float current_health;
     [SerializeField] private float max_health;
     [SerializeField] private float min_health;
 
     private void Update()
     {
-        
+
     }
 
-    public override List<GameObject>  GetUIElements()
+    public override List<GameObject> GetUIElements()
     {
         var elements = base.GetUIElements();
         base.setSlider(5, "Health", current_health / max_health);
-        
+
         return elements;
     }
 
@@ -32,8 +32,8 @@ public class HealthPickupComponent : PickUpComponent
 
     public override void pickupTrigger(PickUpScript pickup)
     {
-         if (pickup != null)
-         {
+        if (pickup != null)
+        {
             // Check if it s a health component 
             if (pickup.pickupType == PickUpScript.PickUpType.Health)
             {
@@ -42,6 +42,6 @@ public class HealthPickupComponent : PickUpComponent
                 incrementHealth(5f);
                 Destroy(pickup.gameObject);
             }
-         } 
+        }
     }
 }

@@ -7,11 +7,11 @@ using UnityEngine.UI;
 public class PickUpComponent : MonoBehaviour
 {
     [SerializeField] private List<GameObject> UIElements; //references to the UI componenets that can be attached.
-    internal List<GameObject> instancesUIElements; 
+    internal List<GameObject> instancesUIElements;
     //Called in PickUpManager
-    public  virtual List<GameObject> GetUIElements()
+    public virtual List<GameObject> GetUIElements()
     {
-        if(instancesUIElements == null)
+        if (instancesUIElements == null)
         {
             instancesUIElements = new List<GameObject>();
             //Initialize the UI components
@@ -22,7 +22,7 @@ public class PickUpComponent : MonoBehaviour
             }
         }
         return instancesUIElements;
-    } 
+    }
 
     internal void setSlider(int filterLayer, string filterTag, float value)
     {
