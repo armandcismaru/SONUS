@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     private GameObject myAvatar = null;
     private PhotonView view;
+    private object[] id;
 
     public float minX;
     public float maxX;
@@ -28,6 +29,8 @@ public class PlayerManager : MonoBehaviour
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }
+        id = new object[] { view.ViewID };
+
     }
 
     private void SpawnPlayer()
@@ -35,12 +38,12 @@ public class PlayerManager : MonoBehaviour
         Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
         if (team == 0)
         {
-            myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, new object[] { view.ViewID });
+            myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, id);
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
         else
         {
-            myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, new object[] { view.ViewID });
+            myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, id);
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
     }
@@ -83,7 +86,8 @@ public class PlayerManager : MonoBehaviour
     {
         if (view.IsMine && myAvatar != null)
         {
-            PhotonNetwork.Destroy(myAvatar);
+            PhotonNetwork.Destroy(myAvatar.gameObject);
+            myAvatar = null;
         }
     }
 

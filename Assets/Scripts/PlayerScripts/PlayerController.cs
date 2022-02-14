@@ -37,7 +37,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
 
-        playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+        if (view.IsMine)
+        {
+            playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+        }
     }
 
     void Start()

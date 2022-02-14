@@ -116,6 +116,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         else
         {
             warmupEnded = true;
+            view.RPC("RPC_SetWarmupEnded", RpcTarget.OthersBuffered, true);
         }
 
     }
@@ -163,6 +164,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             scoreRed++;
         }
+    }
+
+    [PunRPC]
+    void RPC_SetWarmupEnded(bool value)
+    {
+        warmupEnded = value;
     }
 
 }

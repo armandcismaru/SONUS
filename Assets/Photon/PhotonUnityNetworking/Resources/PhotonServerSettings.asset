@@ -51,6 +51,7 @@ MonoBehaviour:
   - RPC_TimerFinished
   - RPC_UpdateTime
   - RPC_EndRoundAndUpdateScores
+  - RPC_SetWarmupEnded
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
