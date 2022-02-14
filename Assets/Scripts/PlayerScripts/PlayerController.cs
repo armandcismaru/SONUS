@@ -132,7 +132,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             if (bullets > 0)
             {
-                FindObjectOfType<AudioManager>().Play("Gunshot");
+                //FindObjectOfType<AudioManager>().Play("Gunshot");
+                PlaySound("Gunshot");
+
                 bullets -= 1;
                 bulletsView.text = bullets.ToString();
                 gun.Shoot();
@@ -200,6 +202,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
+    public void PlaySound(string sound)
+    {
+        view.RPC("RPC_PlaySound", RpcTarget.All, sound);
+    }
+
+    [PunRPC]
+    void RPC_PlaySound(string sound)
+    {
+        FindObjectOfType<AudioManager>().Play(sound);
+    }
 
     public void Die()
     {
