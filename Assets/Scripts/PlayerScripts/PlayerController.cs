@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         if (isMoving)
         {
-            if (!FindObjectOfType<AudioManager>().isPlaying("ConcreteFootsteps"))
+            if (!FindObjectOfType<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
                 FindObjectOfType<AudioManager>().Play("ConcreteFootsteps");
                 PlayStopSound("ConcreteFootsteps", "play");
@@ -140,7 +140,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             if (bullets > 0)
             {
                 FindObjectOfType<AudioManager>().Play("Gunshot");
-                Debug.Log("fmm");
                 PlayStopSound("Gunshot", "play");
 
                 bullets -= 1;
