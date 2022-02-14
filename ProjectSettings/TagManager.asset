@@ -5,11 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - PickUp
+  - Health
+  - Food
+  - Fuel
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Layer 3
   - Water
   - UI
   - Weapon
