@@ -48,7 +48,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (view.IsMine)
         {
-            if (!RoomManager.Instance.roundRunning && myAvatar == null && team != -1)
+            if (!RoomManager.Instance.warmupEnded && myAvatar == null && team != -1)
             {
                 SpawnPlayer();
             }

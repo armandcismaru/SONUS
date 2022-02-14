@@ -11,7 +11,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private PhotonView view;
 
     public GameObject playerManager;
-    private bool warmupEnded = false;
+    public bool warmupEnded = false;
     public int bluePlayers = 0;
     public int redPlayers = 0;
 
