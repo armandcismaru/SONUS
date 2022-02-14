@@ -48,6 +48,8 @@ MonoBehaviour:
   - RPC_DestroyObject
   - destroyPickUpActor
   - rpcDestroyObject
+  - RPC_PlaySound
+  - RPC_StopSound
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

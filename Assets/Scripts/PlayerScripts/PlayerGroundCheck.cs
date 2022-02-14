@@ -17,6 +17,7 @@ public class PlayerGroundCheck : MonoBehaviour
             playerController.SetGroundedState(true);
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject != playerController.gameObject)
@@ -33,25 +34,32 @@ public class PlayerGroundCheck : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    // TO FIX: GUN TOO LONG IF YOU POINT IT INTO GROUND YOU LIFT ABOVE GROUND
+    private void OnCollisionEnter(Collision other)
     {
-        if (collision.gameObject != playerController.gameObject)
+        if (other.gameObject != playerController.gameObject)
         {
             playerController.SetGroundedState(true);
+            if (other.gameObject.CompareTag("Ground") &&
+                other.GetContact(0).thisCollider.transform.gameObject.name != "Gun")
+            {
+                FindObjectOfType<AudioManager>().Play("Jump");
+                playerController.PlayStopSound("Jump", "play");
+            }
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnCollisionExit(Collision other)
     {
-        if (collision.gameObject != playerController.gameObject)
+        if (other.gameObject != playerController.gameObject)
         {
             playerController.SetGroundedState(false);
         }
     }
 
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionStay(Collision other)
     {
-        if (collision.gameObject != playerController.gameObject)
+        if (other.gameObject != playerController.gameObject)
         {
             playerController.SetGroundedState(true);
         }
