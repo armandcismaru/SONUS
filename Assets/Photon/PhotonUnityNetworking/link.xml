@@ -11,4 +11,10 @@
   <assembly fullname="Photon3Unity3d">
     <namespace fullname="ExitGames.Client.Photon" preserve="all"/>
   </assembly>
+  <assembly fullname="PhotonWebSocket">
+	<type fullname="ExitGames.Client.Photon.SocketWebTcp" preserve="all"/>
+  </assembly>
+	<assembly fullname="PhotonWebSocket">
+	<type fullname="ExitGames.Client.Photon.SocketWebSecure" preserve="all"/>
+  </assembly>
 </linker>

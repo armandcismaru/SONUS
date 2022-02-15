@@ -52,6 +52,12 @@ MonoBehaviour:
   - RPC_UpdateTime
   - RPC_EndRoundAndUpdateScores
   - RPC_SetWarmupEnded
+  - RPC_OpenDoor
+  - RPC_DestroyObject
+  - destroyPickUpActor
+  - rpcDestroyObject
+  - RPC_PlaySound
+  - RPC_StopSound
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
