@@ -13,3 +13,4 @@ Note that you cannot open two instances of the game from the "play button" from 
 # Commands
 
 Use WASD or arrow keys to move around, SPACE to jump, Left-Click to shoot.
+ddd
