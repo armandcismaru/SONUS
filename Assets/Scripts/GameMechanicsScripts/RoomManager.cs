@@ -51,7 +51,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Timer.Instance.StartTimer(20f);
         }
-        if (scene.buildIndex == 2)
+        if (scene.buildIndex == 1)
         {
             playerManager = PhotonNetwork.Instantiate("PlayerManager", Vector3.zero, Quaternion.identity);
         }

@@ -83,7 +83,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
-        PhotonNetwork.LoadLevel(2);
+        PhotonNetwork.LoadLevel(1);
     }
 
     public override void OnConnectedToMaster()
