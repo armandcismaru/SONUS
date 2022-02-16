@@ -205,4 +205,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         PhotonNetwork.Destroy(gameObject);
     }
+
+    public void Reload()
+    {
+        if (bullets < 5)
+        {
+            bullets = 5;
+            bulletsView.text = bullets.ToString();
+            FindObjectOfType<AudioManager>().Play("Reload");
+        }
+    }
 }
