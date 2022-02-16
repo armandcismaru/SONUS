@@ -263,4 +263,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         playerManager.Die();
     }
+
+    public void Reload()
+    {
+        if (bullets < 5)
+        {
+            bullets = 5;
+            bulletsView.text = bullets.ToString();
+            FindObjectOfType<AudioManager>().Play("Reload");
+        }
+    }
 }
