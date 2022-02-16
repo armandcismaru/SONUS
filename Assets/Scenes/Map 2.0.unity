@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08781818, g: 0.08882197, b: 0.095451586, a: 1}
+  m_IndirectSpecularColor: {r: 0.08703973, g: 0.08881097, b: 0.094668366, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5641,6 +5641,11 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Jump
     clip: {fileID: 8300000, guid: c4cd7b41e0acd44e1ba6fdfd8b8cd9ab, type: 3}
+    volume: 0.563
+    pitch: 1
+    source: {fileID: 0}
+  - name: Reload
+    clip: {fileID: 8300000, guid: 186e64d1594bd45e5a490f00dc27ffda, type: 3}
     volume: 0.563
     pitch: 1
     source: {fileID: 0}
