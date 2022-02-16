@@ -72,3 +72,5 @@ MonoBehaviour:
   minZ: -60
   maxZ: -54
   team: 0
+  isReady: 0
+  isAlive: 0

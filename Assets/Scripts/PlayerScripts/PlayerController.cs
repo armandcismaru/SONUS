@@ -1,6 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 {
@@ -8,8 +9,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
+    [SerializeField] private TMP_Text blueScore;
+    [SerializeField] private TMP_Text redScore;
+    [SerializeField] private TMP_Text timer;
 
     [HideInInspector] public int team;
+    private PlayerManager playerManager;
+
     private float verticalLookRotation;
     private bool grounded;
     private bool isMoving;
@@ -30,6 +36,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
+
+        if (view.IsMine)
+        {
+            playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+        }
     }
 
     void Start()
@@ -60,6 +71,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             UseKnife();
             Move();
             Jump();
+            float mins = Timer.Instance.GetTimerMinutes();
+            float secs = Timer.Instance.GetTimerSeconds();
+            if(secs < 10)
+            {
+                timer.text = mins.ToString() + ":0" + secs.ToString();
+            } else
+            {
+                timer.text = mins.ToString() + ":" + secs.ToString();
+            }
+            redScore.text = RoomManager.Instance.scoreRed.ToString();
+            blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }
     }
 
@@ -109,11 +131,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         if (isMoving)
         {
-            if (!FindObjectOfType<AudioManager>().isPlaying("ConcreteFootsteps"))
+            if (!FindObjectOfType<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
+            {
                 FindObjectOfType<AudioManager>().Play("ConcreteFootsteps");
+                PlayStopSound("ConcreteFootsteps", "play");
+
+            }
         }
-        else
+        /*else
+        {
             FindObjectOfType<AudioManager>().Stop("ConcreteFootsteps");
+            //PlayStopSound("ConcreteFootsteps", "stop");
+        }*/
+            
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
     }
@@ -133,6 +163,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             if (bullets > 0)
             {
                 FindObjectOfType<AudioManager>().Play("Gunshot");
+                PlayStopSound("Gunshot", "play");
+
                 bullets -= 1;
                 bulletsView.text = bullets.ToString();
                 gun.Shoot();
@@ -140,6 +172,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             else
             {
                 FindObjectOfType<AudioManager>().Play("DryFire");
+                PlayStopSound("DryFire", "play");     
             }
         }
     }
@@ -149,6 +182,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (Input.GetKeyDown(KeyCode.F))
         {
             FindObjectOfType<AudioManager>().Play("stab");
+            PlayStopSound("stab", "play");
             knife.UseKnife();
 
         }
@@ -162,7 +196,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     public void SetTeamAndUpdateMaterials(int tm)
     {
         team = tm;
-        view.RPC("RPC_ChangeTexture", RpcTarget.All, tm);
+        view.RPC("RPC_ChangeTexture", RpcTarget.AllBuffered, tm);
     }
 
     [PunRPC]
@@ -200,10 +234,34 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
-
-    public void Die()
+    public void PlayStopSound(string sound, string action)
     {
-        PhotonNetwork.Destroy(gameObject);
+        if (action == "stop")
+        {
+            view.RPC("RPC_StopSound", RpcTarget.Others, sound);
+        }    
+        else
+        if (action == "play")
+        {
+            view.RPC("RPC_PlaySound", RpcTarget.Others, sound);
+        }    
+    }
+
+    [PunRPC]
+    void RPC_PlaySound(string sound)
+    {
+        FindObjectOfType<AudioManager>().Play(sound);
+    }
+
+    [PunRPC]
+    void RPC_StopSound(string sound)
+    {
+        FindObjectOfType<AudioManager>().Stop(sound);
+    }
+
+    private void Die()
+    {
+        playerManager.Die();
     }
 
     public void Reload()

@@ -44,10 +44,20 @@ MonoBehaviour:
   - RPC_ChangeTexture
   - RPC_TakeDamage
   - RPC_Shoot
+  - RPC_StartRound
+  - RPC_PlayerDied
+  - RPC_StartTimer
+  - RPC_StopTimer
+  - RPC_TimerFinished
+  - RPC_UpdateTime
+  - RPC_EndRoundAndUpdateScores
+  - RPC_SetWarmupEnded
   - RPC_OpenDoor
   - RPC_DestroyObject
   - destroyPickUpActor
   - rpcDestroyObject
+  - RPC_PlaySound
+  - RPC_StopSound
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
