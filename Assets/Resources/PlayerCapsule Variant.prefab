@@ -1512,6 +1512,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
   m_PrefabInstance: {fileID: 1732983493988335764}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &326672027331638908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4021335990823298856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46f180a2b316740358b341c2a8a5ef8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4022902855537707778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1587,15 +1599,13 @@ MonoBehaviour:
     spread: 173
     minDistance: 1
     maxDistance: 50
---- !u!114 &326672027331638908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4021335990823298856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46f180a2b316740358b341c2a8a5ef8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  - name: Reload
+    clip: {fileID: 8300000, guid: 186e64d1594bd45e5a490f00dc27ffda, type: 3}
+    volume: 0.516
+    pitch: 1
+    source: {fileID: 0}
+    spatialBlend: 0.027
+    dopplerLevel: 0.27
+    spread: 63
+    minDistance: 1
+    maxDistance: 25
