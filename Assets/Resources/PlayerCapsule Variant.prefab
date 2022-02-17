@@ -1544,7 +1544,7 @@ MonoBehaviour:
     source: {fileID: 0}
     spatialBlend: 1
     dopplerLevel: 3.79
-    spread: 142
+    spread: 173
     minDistance: 1
     maxDistance: 50
   - name: Gunshot
@@ -1556,34 +1556,34 @@ MonoBehaviour:
     dopplerLevel: 3.31
     spread: 179
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 100
   - name: stab
     clip: {fileID: 8300000, guid: 91bc00afb5f014d1c93e0bdf865d8ebb, type: 3}
     volume: 0.346
     pitch: 1.59
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 0.57
-    spread: 108
+    dopplerLevel: 0.87
+    spread: 26
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 25
   - name: DryFire
     clip: {fileID: 8300000, guid: 239f351f7fa3f4514bb468f7f0b34a02, type: 3}
     volume: 0.413
     pitch: 1
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 1.24
-    spread: 81
+    dopplerLevel: 1.41
+    spread: 37
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 40
   - name: Jump
     clip: {fileID: 8300000, guid: c4cd7b41e0acd44e1ba6fdfd8b8cd9ab, type: 3}
     volume: 0.241
     pitch: 1.13
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 1.39
-    spread: 100
+    dopplerLevel: 2.08
+    spread: 173
     minDistance: 1
     maxDistance: 50
