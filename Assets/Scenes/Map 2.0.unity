@@ -5767,6 +5767,11 @@ MonoBehaviour:
     spread: 0
     minDistance: 1
     maxDistance: 50
+  - name: Reload
+    clip: {fileID: 8300000, guid: 186e64d1594bd45e5a490f00dc27ffda, type: 3}
+    volume: 0.563
+    pitch: 1
+    source: {fileID: 0}
 --- !u!4 &90479577
 Transform:
   m_ObjectHideFlags: 0
