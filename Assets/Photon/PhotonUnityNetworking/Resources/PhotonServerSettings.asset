@@ -58,6 +58,7 @@ MonoBehaviour:
   - rpcDestroyObject
   - RPC_PlaySound
   - RPC_StopSound
+  - RPC_SwapTeams
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

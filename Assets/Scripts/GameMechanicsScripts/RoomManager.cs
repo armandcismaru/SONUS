@@ -22,6 +22,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public int scoreRed = 0;
     public bool roundRunning = false;
 
+    public float suppliesX;
+    public float suppliesZ;
+
+    private GameObject supplies;
+
     private void Awake()
     {
         if (Instance)
@@ -103,6 +108,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void StartRound()
     {
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (supplies != null)
+            {
+                PhotonNetwork.Destroy(supplies);
+            }
+            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 1, suppliesZ), Quaternion.identity);
+
+        }
         Timer.Instance.StartTimer(90f);
         view.RPC("RPC_StartRound", RpcTarget.All);
     }
@@ -124,30 +139,25 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void DefendersWon()
     {
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Timer.Instance.StopTimer();
-            StartRound();
-        }
     }
 
     public void AttackersWon()
     {
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
-        if (PhotonNetwork.IsMasterClient)
-        {
-            Timer.Instance.StopTimer();
-            StartRound();
-        }
     }
 
 
     [PunRPC]
     void RPC_StartRound()
     {
+
         aliveBlue = bluePlayers;
         aliveRed = redPlayers;
         roundRunning = true;
+        playerManager.GetComponent<PlayerManager>().SwapTeams();
+        var aux = scoreBlue;
+        scoreBlue = scoreRed;
+        scoreRed = aux;
         playerManager.GetComponent<PlayerManager>().DestroyController();
         playerManager.GetComponent<PlayerManager>().StartRound();
     }
@@ -163,6 +173,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         else
         {
             scoreRed++;
+        }
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Timer.Instance.StopTimer();
+            StartRound();
         }
     }
 
