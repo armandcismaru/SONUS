@@ -17,4 +17,17 @@ public class Sound
 
     [HideInInspector]
     public AudioSource source;
+
+    [Range(0f, 1f)]
+    public float spatialBlend;
+
+    [Range(0f, 5f)]
+    public float dopplerLevel;
+
+    [Range(0, 360)]
+    public int spread;
+
+    public float minDistance;
+    public float maxDistance;
+
 }
