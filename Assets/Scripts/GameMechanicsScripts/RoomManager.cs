@@ -115,7 +115,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 PhotonNetwork.Destroy(supplies);
             }
-            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 1, suppliesZ), Quaternion.identity);
+            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 0, suppliesZ), Quaternion.identity);
 
         }
         Timer.Instance.StartTimer(90f);
