@@ -14,7 +14,7 @@ public class OpenDoorPopUp : MonoBehaviour
         canvasGroup.alpha = 0;
         AlreadyDisplayed = false;
     }
-
+    /*
     void DetectNearToDoor()
     {
         GameObject Door = GameObject.Find("Door");
@@ -40,5 +40,5 @@ public class OpenDoorPopUp : MonoBehaviour
     void Update()
     {
         DetectNearToDoor();
-    }
+    }*/
 }
