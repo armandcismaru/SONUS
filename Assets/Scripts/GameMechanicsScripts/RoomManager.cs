@@ -144,7 +144,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void AttackersWon()
     {
-        view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
+        if (Timer.Instance.GetTimeRemaining() < 85)
+        {
+            view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
+        }
     }
 
 
@@ -198,7 +201,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_suppliesPicked()
     {
-        supplies = null;
         AttackersWon();
     }
 }

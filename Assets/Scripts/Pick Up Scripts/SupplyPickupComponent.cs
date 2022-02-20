@@ -57,7 +57,7 @@ public class SupplyPickupComponent : PickUpComponent
                     if (!picked)
                     {
                         //Check
-                        pickup.destroyThisObject();
+                        //pickup.destroyThisObject();
                         picked = true;
                         RoomManager.Instance.suppliesPicked();
                     }
