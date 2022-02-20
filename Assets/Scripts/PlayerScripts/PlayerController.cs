@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(rb);
         }
+
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         health = 100;
@@ -71,8 +72,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             UseKnife();
             Move();
             Jump();
+
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
+
             if(secs < 10)
             {
                 timer.text = mins.ToString() + ":0" + secs.ToString();
@@ -131,20 +134,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         if (isMoving)
         {
-            if (!FindObjectOfType<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
+            if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
-                FindObjectOfType<AudioManager>().Play("ConcreteFootsteps");
-                PlayStopSound("ConcreteFootsteps", "play");
+                GetComponent<AudioManager>().Play("ConcreteFootsteps");
+                //PlayStopSound("ConcreteFootsteps", "play");
+                BroadcastSound("ConcreteFootsteps");
 
             }
         }
-        /*else
+        else
         {
-            FindObjectOfType<AudioManager>().Stop("ConcreteFootsteps");
+            GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             //PlayStopSound("ConcreteFootsteps", "stop");
-        }*/
+            BroadcastSoundS("ConcreteFootsteps");
+        }
             
-
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
     }
 
@@ -162,8 +166,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         {
             if (bullets > 0)
             {
-                FindObjectOfType<AudioManager>().Play("Gunshot");
-                PlayStopSound("Gunshot", "play");
+                GetComponent<AudioManager>().Play("Gunshot");
+                //PlayStopSound("Gunshot", "play");
+                BroadcastSound("Gunshot");
 
                 bullets -= 1;
                 bulletsView.text = bullets.ToString();
@@ -171,8 +176,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             }
             else
             {
-                FindObjectOfType<AudioManager>().Play("DryFire");
-                PlayStopSound("DryFire", "play");     
+                GetComponent<AudioManager>().Play("DryFire");
+                //PlayStopSound("DryFire", "play");
+                BroadcastSound("DryFire");
             }
         }
     }
@@ -181,8 +187,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            FindObjectOfType<AudioManager>().Play("stab");
-            PlayStopSound("stab", "play");
+            GetComponent<AudioManager>().Play("stab");
+            //PlayStopSound("stab", "play");
+            BroadcastSound("stab");
             knife.UseKnife();
 
         }
@@ -247,20 +254,64 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }    
     }
 
+    public void BroadcastSound(string sound)
+    {
+        view.RPC("RPC_BroadcastSound", RpcTarget.Others, sound);
+    }
+
+    public void BroadcastSoundS(string sound)
+    {
+        view.RPC("RPC_BroadcastSoundS", RpcTarget.Others, sound);
+    }
+
+    public void PlayRemote(string sound)
+    {
+        GetComponent<AudioManager>().Play(sound);
+    }
+
+    public void StopRemote(string sound)
+    {
+        GetComponent<AudioManager>().Stop(sound);
+    }
+
+    [PunRPC]
+    void RPC_BroadcastSound(string sound)
+    {
+        PlayRemote(sound);
+    }
+
+    [PunRPC]
+    void RPC_BroadcastSoundS(string sound)
+    {
+        StopRemote(sound);
+    }
+
+
+
     [PunRPC]
     void RPC_PlaySound(string sound)
     {
-        FindObjectOfType<AudioManager>().Play(sound);
+        GetComponent<AudioManager>().Play(sound);
     }
 
     [PunRPC]
     void RPC_StopSound(string sound)
     {
-        FindObjectOfType<AudioManager>().Stop(sound);
+        GetComponent<AudioManager>().Stop(sound);
     }
 
     private void Die()
     {
         playerManager.Die();
+    }
+
+    public void Reload()
+    {
+        if (bullets < 5)
+        {
+            bullets = 5;
+            bulletsView.text = bullets.ToString();
+            FindObjectOfType<AudioManager>().Play("Reload");
+        }
     }
 }
