@@ -56,11 +56,10 @@ public class SupplyPickupComponent : PickUpComponent
                 {
                     if (!picked)
                     {
-                        RoomManager.Instance.AttackersWon();
                         //Check
-
                         pickup.destroyThisObject();
                         picked = true;
+                        RoomManager.Instance.suppliesPicked();
                     }
                     // PhotonNetwork.Destroy(pickup.gameObject);
                 }

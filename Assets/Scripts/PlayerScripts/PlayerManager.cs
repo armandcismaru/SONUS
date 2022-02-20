@@ -105,9 +105,10 @@ public class PlayerManager : MonoBehaviour
 
     public void SwapTeams()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (view.IsMine)
         {
-            view.RPC("RPC_SwapTeams", RpcTarget.All);
+            team = 1 - team;
+            myAvatar.GetComponent<PlayerController>().team = team;
         }
     }
 

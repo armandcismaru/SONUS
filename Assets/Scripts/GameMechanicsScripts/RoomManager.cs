@@ -114,12 +114,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
             if (supplies != null)
             {
                 PhotonNetwork.Destroy(supplies);
+                supplies = null;
             }
             supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 0, suppliesZ), Quaternion.identity);
 
+            Timer.Instance.StartTimer(90f);
+            view.RPC("RPC_StartRound", RpcTarget.All);
         }
-        Timer.Instance.StartTimer(90f);
-        view.RPC("RPC_StartRound", RpcTarget.All);
     }
 
     public void TimerFinished()
@@ -150,14 +151,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_StartRound()
     {
-
+        int aux = bluePlayers;
+        bluePlayers = redPlayers;
+        redPlayers = bluePlayers;
         aliveBlue = bluePlayers;
         aliveRed = redPlayers;
         roundRunning = true;
-        playerManager.GetComponent<PlayerManager>().SwapTeams();
-        var aux = scoreBlue;
+        aux = scoreBlue;
         scoreBlue = scoreRed;
         scoreRed = aux;
+        playerManager.GetComponent<PlayerManager>().SwapTeams();
         playerManager.GetComponent<PlayerManager>().DestroyController();
         playerManager.GetComponent<PlayerManager>().StartRound();
     }
@@ -187,4 +190,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         warmupEnded = value;
     }
 
+    public void suppliesPicked()
+    {
+        view.RPC("RPC_suppliesPicked", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    public void RPC_suppliesPicked()
+    {
+        supplies = null;
+        AttackersWon();
+    }
 }

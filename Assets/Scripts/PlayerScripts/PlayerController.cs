@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+            team = playerManager.team;
         }
     }
 
@@ -117,11 +118,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         var x = Input.GetAxis("Mouse X") * Time.deltaTime;
         var y = Input.GetAxis("Mouse Y") * Time.deltaTime;
-        if (Application.platform == RuntimePlatform.WebGLPlayer)
+/*        if (Application.platform == RuntimePlatform.WebGLPlayer)
         {
             x = DampenedMovement(x);
             y = DampenedMovement(y);
-        }
+        }*/
         x *= mouseSensitivity;
         y *= mouseSensitivity;
         transform.Rotate(Vector3.up * x * mouseSensitivity);
