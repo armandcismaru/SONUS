@@ -10,6 +10,8 @@ public class SupplyPickupComponent : PickUpComponent
     [SerializeField] private float max_food;
     [SerializeField] private float min_food;
 
+    private bool picked;
+
     public override List<GameObject> GetUIElements()
     {
         var elements = base.GetUIElements();
@@ -45,16 +47,22 @@ public class SupplyPickupComponent : PickUpComponent
 
     public override void pickupTrigger(PickUpScript pickup)
     {
-        if (pickup != null)
+        if (gameObject.GetComponent<PlayerController>().team == 1)
         {
-            // Check if it s a food component 
-            if (pickup.pickupType == PickUpScript.PickUpType.Food)
+            if (pickup != null)
             {
-                incrementFood(5f);
-                //Check
-                
-                pickup.destroyThisObject();
-                // PhotonNetwork.Destroy(pickup.gameObject);
+                // Check if it s a food component 
+                if (pickup.pickupType == PickUpScript.PickUpType.Food)
+                {
+                    if (!picked)
+                    {
+                        //Check
+                        //pickup.destroyThisObject();
+                        picked = true;
+                        RoomManager.Instance.suppliesPicked();
+                    }
+                    // PhotonNetwork.Destroy(pickup.gameObject);
+                }
             }
         }
     }

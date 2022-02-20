@@ -5,7 +5,8 @@ using TMPro;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 {
-    [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
+    [SerializeField] private float mouseSensitivity, walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private CharacterController controller;
     [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
@@ -17,10 +18,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     private PlayerManager playerManager;
 
     private float verticalLookRotation;
-    private bool grounded;
+    public bool grounded;
     private bool isMoving;
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
+    private Vector3 velocity;
     private int health;
     private int bullets;
     private PhotonView view;
@@ -40,6 +42,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+            team = playerManager.team;
         }
     }
 
@@ -92,15 +95,39 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (view.IsMine)
         {
-            rb.MovePosition(rb.position + transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
+            if (grounded && velocity.y < 0)
+            {
+                velocity.y = -1f;
+            }
+            velocity.y += gravity * Time.fixedDeltaTime;
+            controller.Move(transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
+            controller.Move(velocity * Time.fixedDeltaTime);
         }
     }
 
+    private float DampenedMovement(float value)
+    {
+
+        if (Mathf.Abs(value) > 1f)
+        {
+            return Mathf.Lerp(value, Mathf.Sign(value), 0.25f);
+        }
+        return value;
+    }
     void Look()
     {
-        transform.Rotate(Vector3.up * Input.GetAxisRaw("Mouse X") * mouseSensitivity);
+        var x = Input.GetAxis("Mouse X") * Time.deltaTime;
+        var y = Input.GetAxis("Mouse Y") * Time.deltaTime;
+/*        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            x = DampenedMovement(x);
+            y = DampenedMovement(y);
+        }*/
+        x *= mouseSensitivity;
+        y *= mouseSensitivity;
+        transform.Rotate(Vector3.up * x * mouseSensitivity);
 
-        verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
+        verticalLookRotation += y * mouseSensitivity;
         verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
 
         cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
@@ -149,14 +176,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             BroadcastSoundS("ConcreteFootsteps");
         }
             
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref smoothMoveVelocity, smoothTime);
+
+        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
     }
 
     void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && grounded)
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
-            rb.AddForce(transform.up * jumpForce);
+            velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
     
