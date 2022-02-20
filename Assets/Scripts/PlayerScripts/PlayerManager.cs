@@ -108,7 +108,6 @@ public class PlayerManager : MonoBehaviour
         if (view.IsMine)
         {
             team = 1 - team;
-            myAvatar.GetComponent<PlayerController>().team = team;
         }
     }
 
