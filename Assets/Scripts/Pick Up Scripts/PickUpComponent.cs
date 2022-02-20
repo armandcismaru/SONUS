@@ -26,13 +26,14 @@ public class PickUpComponent : MonoBehaviour
 
     internal void setSlider(int filterLayer, string filterTag, float value)
     {
-        foreach (GameObject uiElement in instancesUIElements)
-        {
-            if (uiElement.layer == filterLayer && uiElement.tag == filterTag)
+            foreach (GameObject uiElement in instancesUIElements)
             {
-                uiElement.GetComponent<Slider>().value = value;
+                if (uiElement.layer == filterLayer && uiElement.tag == filterTag)
+                {
+                    Slider slider = uiElement.GetComponent<Slider>();
+                    slider.value = value;
+                }
             }
-        }
     }
 
     public virtual void pickupTrigger(PickUpScript pickup)

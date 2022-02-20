@@ -2,8 +2,10 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
+using System;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpForce, smoothTime;
     [SerializeField] GameObject cameraHolder;
@@ -30,6 +32,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject gunView;
     public Text healthView;
     public Text bulletsView;
+
+    private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
+
 
     // Start is called before the first frame update
     void Awake()
@@ -83,6 +88,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }
+         
     }
 
     private void FixedUpdate()
@@ -215,24 +221,45 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     public void TakeDamage(int damage)
     {
-        view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
+        if (!view.IsMine)
+            return;
+
+        view.RPC("RPC_TakeDamage", RpcTarget.MasterClient, damage);
     }
 
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        if (!view.IsMine)
-            return;
+        /*if (!view.IsMine)
+            return;*/
 
-        health -= damage;
-        healthView.text = health.ToString();
+        /*health -= damage;
+        healthView.text = health.ToString();*/
 
-        if (health <= 0)
+
+        /*if (health <= 0)
         {
             Die();
-            
+
+        }*/
+
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (subscriberType.Equals("IDamageObserver"))
+            {
+                foreach (IObserver subscriber in observers[subscriberType])
+                {
+                    (subscriber as IDamageObserver).Notify(damage);
+                }
+            }
         }
     }
+    
+
+    /*public void increaseHealth()
+    {
+        healthPickUp.pickupTrigger(pickup);
+    }*/
 
     public void PlayStopSound(string sound, string action)
     {
@@ -271,6 +298,55 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             bullets = 5;
             bulletsView.text = bullets.ToString();
             FindObjectOfType<AudioManager>().Play("Reload");
+        }
+    }
+
+    public void addObserver<T>(IObserver observer)
+    {
+        //string check = typeof(T).Name;
+        //observers.Add(typeof(T).Name, new List<IObserver>());
+        //observers[typeof(T).Name].Add(observer);
+        /*foreach (string subscriberType in observers.Keys)
+        {
+            
+            *//*if (subscriberType == T as string)
+            {
+
+            }*//*
+            if (typeof(T).Equals(subscriberType))
+            {
+                observers[subscriberType].Add(observer);
+            }
+        }*/
+
+        
+
+        //if the key element exists in observers.keys
+        foreach (string observerType in observers.Keys)
+        {
+            if (typeof(T).Name == observerType)
+            {
+                observers[typeof(T).Name].Add(observer);
+                return;
+            }
+        }
+
+        observers.Add(typeof(T).Name, new List<IObserver>());
+        observers[typeof(T).Name].Add(observer);
+    }
+
+    public void unsubscribeObserver<T>(IObserver observer)
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            /*if (subscriberType == T as string)
+            {
+
+            }*/
+            if (typeof(T).Equals(subscriberType))
+            {
+                observers[subscriberType].Remove(observer);
+            }
         }
     }
 }

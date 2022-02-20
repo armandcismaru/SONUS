@@ -20,10 +20,33 @@ public class SupplyPickupComponent : PickUpComponent
 
     private void incrementFood(float value)
     {
-        current_food = Mathf.Clamp(current_food + value, min_food, max_food);
-        base.setSlider(5, "Food", current_food / max_food);
+        if (!GetComponent<PhotonView>().IsMine)
+            return;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            rpcIncrementFood(value);
+        }
+        else
+        {
+            GetComponent<PhotonView>().RPC("rpcIncrementFood", RpcTarget.MasterClient, value);
+        }
     }
 
+    [PunRPC]
+    private void rpcIncrementFood(float value)
+    {
+        GetComponent<PhotonView>().RPC("replicateIncrementFood", RpcTarget.AllViaServer, value);
+
+    }
+
+    [PunRPC]
+    private void replicateIncrementFood(float value)
+    {
+        current_food = Mathf.Clamp(current_food + value, min_food, max_food);
+        if (GetComponent<PhotonView>().IsMine)
+            base.setSlider(5, "Food", current_food / max_food); 
+    }
     /*public override void pickupTrigger(PickUpScript pickup)
     {
             if (pickup != null)
