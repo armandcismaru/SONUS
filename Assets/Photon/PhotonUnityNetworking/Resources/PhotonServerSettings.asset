@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: ru
     Server: 
     Port: 0
     ProxyServer: 
@@ -63,5 +63,5 @@ MonoBehaviour:
   - RPC_BroadcastSoundS
   - RPC_suppliesPicked
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1
