@@ -164,7 +164,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
                 GetComponent<AudioManager>().Play("ConcreteFootsteps");
-                //PlayStopSound("ConcreteFootsteps", "play");
                 BroadcastSound("ConcreteFootsteps");
 
             }
@@ -172,7 +171,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         else
         {
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
-            //PlayStopSound("ConcreteFootsteps", "stop");
             BroadcastSoundS("ConcreteFootsteps");
         }
             
@@ -195,7 +193,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             if (bullets > 0)
             {
                 GetComponent<AudioManager>().Play("Gunshot");
-                //PlayStopSound("Gunshot", "play");
                 BroadcastSound("Gunshot");
 
                 bullets -= 1;
@@ -205,7 +202,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             else
             {
                 GetComponent<AudioManager>().Play("DryFire");
-                //PlayStopSound("DryFire", "play");
                 BroadcastSound("DryFire");
             }
         }
@@ -216,10 +212,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         if (Input.GetKeyDown(KeyCode.F))
         {
             GetComponent<AudioManager>().Play("stab");
-            //PlayStopSound("stab", "play");
             BroadcastSound("stab");
             knife.UseKnife();
-
         }
     }
 
@@ -269,19 +263,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
-    public void PlayStopSound(string sound, string action)
-    {
-        if (action == "stop")
-        {
-            view.RPC("RPC_StopSound", RpcTarget.Others, sound);
-        }    
-        else
-        if (action == "play")
-        {
-            view.RPC("RPC_PlaySound", RpcTarget.Others, sound);
-        }    
-    }
-
     public void BroadcastSound(string sound)
     {
         view.RPC("RPC_BroadcastSound", RpcTarget.Others, sound);
@@ -312,20 +293,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     void RPC_BroadcastSoundS(string sound)
     {
         StopRemote(sound);
-    }
-
-
-
-    [PunRPC]
-    void RPC_PlaySound(string sound)
-    {
-        GetComponent<AudioManager>().Play(sound);
-    }
-
-    [PunRPC]
-    void RPC_StopSound(string sound)
-    {
-        GetComponent<AudioManager>().Stop(sound);
     }
 
     private void Die()
