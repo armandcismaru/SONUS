@@ -42,7 +42,7 @@ public class PlayerGroundCheck : MonoBehaviour
             if (other.collider.gameObject.name == "Ground" &&
                 other.GetContact(0).thisCollider.transform.gameObject.name != "Gun")
             {
-                FindObjectOfType<AudioManager>().Play("Jump");
+                playerController.GetComponent<AudioManager>().Play("Jump");
                 playerController.BroadcastSound("Jump");
             }
         }
