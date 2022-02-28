@@ -10,6 +10,7 @@ TagManager:
   - Food
   - Fuel
   - Weapon
+  - TestCamDirection
   layers:
   - Default
   - TransparentFX

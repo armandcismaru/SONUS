@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         view = GetComponent<PhotonView>();
 
         if (view.IsMine)
-        {
+        { 
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
         }
     }
@@ -221,15 +221,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void TakeDamage(int damage)
     {
-        if (!view.IsMine)
-            return;
+        /*if (!view.IsMine)
+            return;*/
 
+        Debug.Log("Take Damage RPC called");
         view.RPC("RPC_TakeDamage", RpcTarget.MasterClient, damage);
     }
 
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
+        //Debug.Log("Take Damage RPC called");
         /*if (!view.IsMine)
             return;*/
 
@@ -237,7 +239,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         healthView.text = health.ToString();*/
 
 
-        /*if (health <= 0)
+       /* if (health <= 0)
         {
             Die();
 
@@ -286,7 +288,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         FindObjectOfType<AudioManager>().Stop(sound);
     }
 
-    private void Die()
+    public void Die()
     {
         playerManager.Die();
     }

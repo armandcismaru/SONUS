@@ -11,6 +11,9 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
     [SerializeField] private float min_health;
     [SerializeField] private float start_health;
 
+    private PlayerController playerController;
+    private PlayerManager playerManager;
+
     public GameObject HealthUI;
 
     private void Start()
@@ -20,7 +23,8 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
     private void Awake()
     {
-        GetComponent<PlayerController>().addObserver<IDamageObserver>(this);
+       var playerController = GetComponent<PlayerController>();
+        playerController.addObserver<IDamageObserver>(this);
     }
 
     /*void Start()
@@ -54,11 +58,15 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
         if (PhotonNetwork.IsMasterClient)
         {
+            //Debug.Log("Before increment health from Master Client.");
             rpcIncrementHealth(value);
+            //Debug.Log("After increment health from Master.");
         }
         else
         {
+            //Debug.Log("Before incremente health from Client.");
             GetComponent<PhotonView>().RPC("rpcIncrementHealth", RpcTarget.MasterClient, value);
+            //Debug.Log("After increment health from Client.");
         }
     }
 
@@ -110,37 +118,59 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
     }
 
     public void Notify(int damage)
-    {
-        if (!GetComponent<PhotonView>().IsMine)
-            return;
-        
+    { 
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("Before Get Damage, Master");
-            rpcGetDamage(damage);
+            //Debug.Log("Before Get Damage, Master");
+            rpcGetDamage(5);
         } else
         {
-            Debug.Log("Before Get Damage, Client");
-            GetComponent<PhotonView>().RPC("rpcGetDamage", RpcTarget.MasterClient, damage);
+           // Debug.Log("Before Get Damage, Client");
+            GetComponent<PhotonView>().RPC("rpcGetDamage", RpcTarget.MasterClient, 5);
         }
-
-
     }
 
 
     [PunRPC]
     void rpcGetDamage(int damage)
     {
-        Debug.Log("Before Decrement Health, Master");
-        decrementHealth((float)damage);
-         GetComponent<PhotonView>().RPC("rpcGetDamageAll", RpcTarget.Others, damage);
+        //Debug.Log("Before Decrement Health, Master");
+        decrementHealth((float)5);
+        GetComponent<PhotonView>().RPC("rpcGetDamageAll", RpcTarget.Others, 5);
+        //Debug.Log("Current health value: ");
+        //Debug.Log(current_health);
+        if (current_health <= 0 && PhotonNetwork.IsMasterClient)
+        {
+            //Debug.Log("Before Player Dies, Master");
+           // playerController.Die();
+            playerManager.Die();
+            //Debug.Log("After Player Dies, Master");
+        } else
+        {
+            GetComponent<PhotonView>().RPC("RPCCallDie", RpcTarget.MasterClient);
+        }
+    }
+
+    [PunRPC]
+    void RPCCallDie()
+    {
+        playerManager.Die();
     }
 
     [PunRPC]
     void rpcGetDamageAll(int damage)
     {
-        Debug.Log("Before Decrement Health, Client");
-        decrementHealth((float)damage);
+        //Debug.Log("Before Decrement Health, Client");
+        decrementHealth((float)5);
+        //Debug.Log("Current health value: ");
+        //Debug.Log(current_health);
+        /*if (current_health <= 0 && GetComponent<PhotonView>().IsMine)
+        {
+            //Debug.Log("Before Player Dies, Client");
+           // playerController.Die();
+            playerManager.Die();
+           // Debug.Log("After Player Dies, Client");
+        }*/
     }
 
     public override void pickupTrigger(PickUpScript pickup)

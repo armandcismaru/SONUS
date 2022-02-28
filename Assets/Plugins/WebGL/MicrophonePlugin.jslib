@@ -114,7 +114,7 @@ var MicrophonePlugin = {
   },
   
   GetNumberOfMicrophones: function() {
-    console.log("GetNumberOfMicrophones");
+    //console.log("GetNumberOfMicrophones");
 	var microphones = document.mMicrophones;
     if (microphones == undefined) {
 	  //console.log("GetNumberOfMicrophones", 0);
