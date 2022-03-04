@@ -23,7 +23,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private bool isMoving;
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
-    private int health;
     private int bullets;
     private PhotonView view;
     [SerializeField] Gun gun;
@@ -42,14 +41,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
 
-        if (view.IsMine)
-        { 
-            playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
-        }
     }
 
     void Start()
     {
+        if (view.IsMine)
+        {
+            playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+        }
+
+
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -57,7 +58,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        health = 100;
+        //health = 100;
         bullets = 5;
     }
 
@@ -225,7 +226,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             return;*/
 
         Debug.Log("Take Damage RPC called");
-        view.RPC("RPC_TakeDamage", RpcTarget.MasterClient, damage);
+        //view.RPC("RPC_TakeDamage", RpcTarget.MasterClient, damage);
+        view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
     [PunRPC]
