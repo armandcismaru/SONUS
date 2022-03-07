@@ -67,10 +67,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 4021335990823298856, guid: f58e991ccb685440eb21a2370ecfdd35, type: 3}
-  minX: 0
-  maxX: 4
-  minZ: -60
-  maxZ: -54
+  minBlueX: -3.5
+  maxBlueX: 9
+  minBlueZ: -2.8
+  maxBlueZ: 10
+  minRedX: -45
+  maxRedX: -40
+  minRedZ: -64
+  maxRedZ: -50
   team: 0
   isReady: 0
   isAlive: 0

@@ -1213,49 +1213,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 3, y: 0}
   m_UseGraphicAlpha: 1
---- !u!1 &9149603068187126071
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8709185238851566487}
-  - component: {fileID: 5319253542130956050}
-  m_Layer: 0
-  m_Name: CastSpell
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8709185238851566487
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9149603068187126071}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 3257861007513110959}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5319253542130956050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9149603068187126071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46f180a2b316740358b341c2a8a5ef8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1732983492859530218
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1366,6 +1323,10 @@ PrefabInstance:
       propertyPath: max_food
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2788821815844845590, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_Name
       value: PlayerCapsule Variant
@@ -1400,7 +1361,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3835646438195333435, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.67
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3835646438195333435, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1408,7 +1369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3835646438195333435, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.77
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3835646438195333435, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1534,6 +1495,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5706581174178216913, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 7340208567751387185, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_TagString
       value: Untagged
@@ -1584,3 +1549,76 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf13b03b386f9be40802f123c85b812f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4818349871344008530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4021335990823298856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ab03ec2e40f54e1fbfff8ce25b710df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: ConcreteFootsteps
+    clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
+    volume: 0.432
+    pitch: 1.01
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 3.79
+    spread: 173
+    minDistance: 1
+    maxDistance: 50
+  - name: Gunshot
+    clip: {fileID: 8300000, guid: 7710184bb1543428fa5c1a5c26f95814, type: 3}
+    volume: 0.301
+    pitch: 0.96
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 3.31
+    spread: 179
+    minDistance: 1
+    maxDistance: 100
+  - name: stab
+    clip: {fileID: 8300000, guid: 91bc00afb5f014d1c93e0bdf865d8ebb, type: 3}
+    volume: 0.346
+    pitch: 1.59
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 0.87
+    spread: 26
+    minDistance: 1
+    maxDistance: 25
+  - name: DryFire
+    clip: {fileID: 8300000, guid: 239f351f7fa3f4514bb468f7f0b34a02, type: 3}
+    volume: 0.413
+    pitch: 1
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 1.41
+    spread: 37
+    minDistance: 1
+    maxDistance: 40
+  - name: Jump
+    clip: {fileID: 8300000, guid: c4cd7b41e0acd44e1ba6fdfd8b8cd9ab, type: 3}
+    volume: 0.241
+    pitch: 1.13
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 2.08
+    spread: 173
+    minDistance: 1
+    maxDistance: 50
+  - name: Reload
+    clip: {fileID: 8300000, guid: 186e64d1594bd45e5a490f00dc27ffda, type: 3}
+    volume: 0.516
+    pitch: 1
+    source: {fileID: 0}
+    spatialBlend: 0.027
+    dopplerLevel: 0.27
+    spread: 63
+    minDistance: 1
+    maxDistance: 25

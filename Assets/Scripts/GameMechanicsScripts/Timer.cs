@@ -43,6 +43,10 @@ public class Timer : MonoBehaviour
             }
         }
     }
+    public float GetTimeRemaining()
+    {
+        return timeRemaining;
+    }
 
     public void StartTimer(float time)
     {

@@ -10,6 +10,8 @@ public class SupplyPickupComponent : PickUpComponent
     [SerializeField] private float max_food;
     [SerializeField] private float min_food;
 
+    private bool picked;
+
     public override List<GameObject> GetUIElements()
     {
         var elements = base.GetUIElements();
@@ -50,7 +52,7 @@ public class SupplyPickupComponent : PickUpComponent
     
     public override void pickupTrigger(PickUpScript pickup)
     {
-        if (pickup != null)
+        if (gameObject.GetComponent<PlayerController>().team == 1)
         {
             if (pickup.pickupType == PickUpScript.PickUpType.Food)
             {
