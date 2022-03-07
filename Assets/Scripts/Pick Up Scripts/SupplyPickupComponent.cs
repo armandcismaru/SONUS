@@ -47,68 +47,17 @@ public class SupplyPickupComponent : PickUpComponent
         if (GetComponent<PhotonView>().IsMine)
             base.setSlider(5, "Food", current_food / max_food); 
     }
-    /*public override void pickupTrigger(PickUpScript pickup)
-    {
-            if (pickup != null)
-            {
-                // Check if it s a food component 
-                if (pickup.pickupType == PickUpScript.PickUpType.Food)
-                {
-                    incrementFood(5f);
-                    //Check
-                    if (GetComponent<PhotonView>().IsMine)
-                    {
-                        GetComponent<PhotonView>().RPC("destroyPickUpActor", RpcTarget.AllBuffered, pickup);
-                    }
-                    // PhotonNetwork.Destroy(pickup.gameObject);
-                }
-            }
-    }*/
-
-
+    
     public override void pickupTrigger(PickUpScript pickup)
     {
         if (pickup != null)
         {
-            // Check if it s a food component 
             if (pickup.pickupType == PickUpScript.PickUpType.Food)
             {
-                incrementFood(5f);
-                //Check
-                
+                incrementFood(5f);                
                 pickup.destroyThisObject();
-                // PhotonNetwork.Destroy(pickup.gameObject);
             }
         }
-    }
-
-
-    /*[PunRPC]
-    private void destroyPickUpActor(PickUpScript pickUp)
-    {
-        PhotonNetwork.Destroy(pickUp.gameObject);
-    }*/
-
-
-
-
-
-    /*if(pickup.pickupType == PickUpScript.PickUpType.Supply)
-    {
-        var supplyPickup = cast.... < SupplyPickup >;
-        switch supplyPickup.SupplyType{
-            case food: food++; break;
-            case fuel: fuel++; break;
-            default: break;
-        }
-        foreach (GameObject uiElement in instancesUIElements)
-        {
-            if (uiElement.layer == 5 && uiElement.tag == "Health")
-            {
-                uiElement.GetComponent<Slider>().value += 0.5f;
-                Destroy(pickup.gameObject);
-            }
-        }
-    }*/
+    } 
 }
 

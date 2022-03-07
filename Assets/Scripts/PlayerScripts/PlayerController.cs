@@ -28,14 +28,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
     private Rigidbody rb;
-    [SerializeField] GameObject gunView;
     public Text healthView;
     public Text bulletsView;
 
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
-
-    // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -43,6 +40,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     }
 
+    // Start is called before the first frame update
     void Start()
     {
         if (view.IsMine)
@@ -58,7 +56,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        //health = 100;
         bullets = 5;
     }
 
@@ -222,31 +219,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void TakeDamage(int damage)
     {
-        /*if (!view.IsMine)
-            return;*/
-
-        Debug.Log("Take Damage RPC called");
-        //view.RPC("RPC_TakeDamage", RpcTarget.MasterClient, damage);
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        //Debug.Log("Take Damage RPC called");
-        /*if (!view.IsMine)
-            return;*/
-
-        /*health -= damage;
-        healthView.text = health.ToString();*/
-
-
-       /* if (health <= 0)
-        {
-            Die();
-
-        }*/
-
         foreach (string subscriberType in observers.Keys)
         {
             if (subscriberType.Equals("IDamageObserver"))
@@ -258,12 +236,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             }
         }
     }
-    
-
-    /*public void increaseHealth()
-    {
-        healthPickUp.pickupTrigger(pickup);
-    }*/
 
     public void PlayStopSound(string sound, string action)
     {
@@ -290,11 +262,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         FindObjectOfType<AudioManager>().Stop(sound);
     }
 
-    public void Die()
-    {
-        playerManager.Die();
-    }
-
     public void Reload()
     {
         if (bullets < 5)
@@ -307,24 +274,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void addObserver<T>(IObserver observer)
     {
-        //string check = typeof(T).Name;
-        //observers.Add(typeof(T).Name, new List<IObserver>());
-        //observers[typeof(T).Name].Add(observer);
-        /*foreach (string subscriberType in observers.Keys)
-        {
-            
-            *//*if (subscriberType == T as string)
-            {
-
-            }*//*
-            if (typeof(T).Equals(subscriberType))
-            {
-                observers[subscriberType].Add(observer);
-            }
-        }*/
-
-        
-
         //if the key element exists in observers.keys
         foreach (string observerType in observers.Keys)
         {
@@ -343,10 +292,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         foreach (string subscriberType in observers.Keys)
         {
-            /*if (subscriberType == T as string)
-            {
-
-            }*/
             if (typeof(T).Equals(subscriberType))
             {
                 observers[subscriberType].Remove(observer);

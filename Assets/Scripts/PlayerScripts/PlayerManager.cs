@@ -69,18 +69,13 @@ public class PlayerManager : MonoBehaviour
     public void Die()
     {       
         DestroyController();
-        Debug.Log(team);
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("DIE CALLED BEFORE MASTER DIES!");
             RoomManager.Instance.PlayerDied(team);
-            Debug.Log("DIE CALLED AFTER MASTER DIES!");
         }
         else
         {
-            Debug.Log("DIE CALLED BEFORE CLIENT DIES!");
             view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
-            Debug.Log("DIE CALLED AFTER CLIENT DIES!");
         }
     }
 
