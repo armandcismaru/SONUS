@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8955ad2b929c2564dab20b5568de5093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 2
+  mouseSensitivity: 8
   walkSpeed: 8
   jumpHeight: 2
   smoothTime: 0.15
@@ -168,7 +168,6 @@ MonoBehaviour:
   grounded: 0
   gun: {fileID: 0}
   knife: {fileID: 0}
-  gunView: {fileID: 0}
   healthView: {fileID: 0}
   bulletsView: {fileID: 0}
 --- !u!114 &5477576895150788752
@@ -256,6 +255,8 @@ MonoBehaviour:
   - {fileID: 4771206061125140707, guid: 233e9e65477d0e147bb4d66ca429d32a, type: 3}
   max_health: 10
   min_health: 0
+  start_health: 0
+  HealthUI: {fileID: 0}
 --- !u!114 &2706524280334559286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3eea39bd4884b42a5025c13e45331b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPlayerCanvas: {fileID: 3586580352017611715, guid: 4034723a2be356540be1d15bf20dd5b0, type: 3}
 --- !u!114 &8010404179485702097
 MonoBehaviour:
   m_ObjectHideFlags: 0
