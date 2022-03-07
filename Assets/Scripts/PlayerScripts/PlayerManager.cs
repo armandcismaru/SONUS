@@ -21,15 +21,35 @@ public class PlayerManager : MonoBehaviour
     public float maxRedZ;
 
     [HideInInspector] public int team = -1;
+    [HideInInspector] public int index = -1;
     [HideInInspector] public bool isReady = false;
     [HideInInspector] public bool isAlive = false;
+
+    const int maxNumOfPlayers = 6;
+    private string[] offerString = new string[6];
+ 
 
     private void Awake()
     {
         view = GetComponent<PhotonView>();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            index = 0;
+        }
+#if UNITY_WEBGL && !UNITY_EDITOR
+            WebRTC.initWebRTC();
+#endif
+        for (int i = 0; i < maxNumOfPlayers; i++)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            offerString[i] = WebRTC.create();
+#endif
+        }
+
     }
     void Start()
     {
+        
         if (view.IsMine)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
@@ -122,18 +142,21 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
+        view.RPC("RPC_SentTeamAndIndex", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
     }
 
     [PunRPC]
-    void RPC_SentTeam(int tm)
+    void RPC_SentTeamAndIndex(int tm)
     {
-        team = tm;
+        team = tm % 2;
+        index = tm;
         if (myAvatar != null)
         {
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
             isReady = true;
         }
+
+
     }
 
     [PunRPC]

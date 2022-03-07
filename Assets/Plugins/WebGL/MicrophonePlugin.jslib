@@ -4,7 +4,7 @@ var MicrophonePlugin = {
 
   Init: function() {
 
-    console.log("Init:");
+    ////console.log("Init:");
   
 	// START - used to read the volume
 	document.volume = 0;
@@ -26,7 +26,7 @@ var MicrophonePlugin = {
 		  }
 		};
 		navigator.getUserMedia(constraints, function(stream) {
-		  console.log('navigator.getUserMedia successCallback: ', stream);
+		  //console.log('navigator.getUserMedia successCallback: ', stream);
 	  
 		  document.position = 0;
 
@@ -45,7 +45,7 @@ var MicrophonePlugin = {
 		  document.source.connect(document.analyser);
 
 		  document.mediaRecorder.start();
-		  console.log(document.mediaRecorder.state);
+		  //console.log(document.mediaRecorder.state);
 
 		  document.readDataOnInterval = function() {
 
@@ -90,18 +90,18 @@ var MicrophonePlugin = {
   
   QueryAudioInput: function() {
 
-    console.log("QueryAudioInput");
+    //console.log("QueryAudioInput");
 
     document.mMicrophones = [];
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      console.log("enumerateDevices() not supported.");
+      //console.log("enumerateDevices() not supported.");
     } else {
       // List microphones
       navigator.mediaDevices.enumerateDevices()
       .then(function(devices) {
         devices.forEach(function(device) {
-          console.log("QueryAudioInput: kind="+device.kind + " device=", device, " label=" + device.label);
+          //console.log("QueryAudioInput: kind="+device.kind + " device=", device, " label=" + device.label);
           if (device.kind === 'audioinput') {
             document.mMicrophones.push(device.label);
           }
@@ -114,18 +114,18 @@ var MicrophonePlugin = {
   },
   
   GetNumberOfMicrophones: function() {
-    console.log("GetNumberOfMicrophones");
+    //console.log("GetNumberOfMicrophones");
 	var microphones = document.mMicrophones;
     if (microphones == undefined) {
-	  console.log("GetNumberOfMicrophones", 0);
+	  //console.log("GetNumberOfMicrophones", 0);
       return 0;
     }  
-    console.log("GetNumberOfMicrophones length="+microphones.length);
+    //console.log("GetNumberOfMicrophones length="+microphones.length);
     return microphones.length;
   },
   
   GetMicrophoneDeviceName: function(index) {
-	//console.log("GetMicrophoneDeviceName");
+	////console.log("GetMicrophoneDeviceName");
 	var returnStr = "Not Set";
 	var microphones = document.mMicrophones;
     if (microphones != undefined) {
@@ -135,19 +135,20 @@ var MicrophonePlugin = {
 		}
       }
     }  
-	console.log("GetMicrophoneDeviceName", returnStr);
+	//console.log("GetMicrophoneDeviceName", returnStr);
     var buffer = _malloc(lengthBytesUTF8(returnStr) + 1);
     writeStringToMemory(returnStr, buffer);
     return buffer;
   },
 
   GetMicrophoneVolume: function(index) {
-	console.log("GetMicrophoneVolume");
+	//console.log("GetMicrophoneVolume");
     if (document.volume == undefined) {
 	   return 0;
 	}
-	console.log("GetMicrophoneVolume", document.volume);
+	//console.log("GetMicrophoneVolume", document.volume);
     return document.volume;
   }
 };
+
 mergeInto(LibraryManager.library, MicrophonePlugin);

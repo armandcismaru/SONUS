@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}}></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">{{{ PRODUCT_NAME }}}</div>
+      </div>
+    </div>
+    <script>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
+
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      var config = {
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "{{{ COMPANY_NAME }}}",
+        productName: "{{{ PRODUCT_NAME }}}",
+        productVersion: "{{{ PRODUCT_VERSION }}}",
+        showBanner: unityShowBanner,
+      };
+
+      // By default Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        // Avoid draining fillrate performance on mobile devices,
+        // and default/override low DPI mode on mobile browsers.
+        config.devicePixelRatio = 1;
+        unityShowBanner('WebGL builds are not supported on mobile devices.');
+      } else {
+        canvas.style.width = "{{{ WIDTH }}}px";
+        canvas.style.height = "{{{ HEIGHT }}}px";
+      }
+#if BACKGROUND_FILENAME
+      canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
+#endif
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script>
+
+
+
+    <h2>1. Start your Webcam</h2>
+    <div class="videos">
+      <span>
+        <h3>Local Stream</h3>
+        <video id="webcamVideo" autoplay playsinline></video>
+      </span>
+      <span>
+        <h3>Remote Stream</h3>
+        <video id="remoteVideo" autoplay playsinline></video>
+      </span>
+      <span>
+        <h3>Remote Stream2</h3>
+        <video id="remoteVideo2" autoplay playsinline></video>
+      </span>
+
+
+    </div>
+
+    <button id="webcamButton">Start webcam</button>
+    <h2>2. Create a new Call</h2>
+    <button id="callButton" disabled>Create Call (offer)</button>
+
+    <h2>3. Join a Call</h2>
+    <p>Answer the call from a different browser window or device</p>
+    
+    <input id="callInput" />
+    <button id="answerButton" disabled>Answer</button>
+
+    <h2>4. Hangup</h2>
+
+    <button id="hangupButton" disabled>Hangup</button>
+
+    <h2>4. ????</h2>
+    <button id="incrementButton">increment</button>
+
+    
+    <h2>4. ????</h2>
+    <button id="incrementButton2">increment</button>
+
+
+    <!-- <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> -->
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script type="module">
+      const firebaseConfig = {
+        apiKey: "AIzaSyDeZYyTRl_WtlFUo5kPBsRxxApC23ViZ4U",
+        authDomain: "testwebrtc-9b260.firebaseapp.com",
+        projectId: "testwebrtc-9b260",
+        storageBucket: "testwebrtc-9b260.appspot.com",
+        messagingSenderId: "928306188442",
+        appId: "1:928306188442:web:81d540191fe44d3a4c4f23",
+        measurementId: "G-8WSTX959QN"
+      };
+    
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const firestore = firebase.firestore();
+
+      const servers = {
+        iceServers: [
+          {
+            urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
+          },
+        ],
+        iceCandidatePoolSize: 10,
+      };
+
+      // Global State
+      let pc = [new RTCPeerConnection(servers),
+        new RTCPeerConnection(servers), 
+        new RTCPeerConnection(servers), 
+        new RTCPeerConnection(servers),
+        new RTCPeerConnection(servers), 
+        new RTCPeerConnection(servers)];
+      let index = 0;
+      let answerIndex = 0;
+      let localStream = null;
+      let remoteStream = [new MediaStream(),
+        new MediaStream(),
+        new MediaStream(),
+        new MediaStream(),
+        new MediaStream(),
+        new MediaStream()];
+
+      // HTML elements
+      const webcamButton = document.getElementById('webcamButton');
+      const webcamVideo = document.getElementById('webcamVideo');
+      const callButton = document.getElementById('callButton');
+      const callInput = document.getElementById('callInput');
+      const answerButton = document.getElementById('answerButton');
+      const remoteVideo = document.getElementById('remoteVideo');
+      const remoteVideo2 = document.getElementById('remoteVideo2');
+      const remoteVideos = [remoteVideo, remoteVideo2];
+      const hangupButton = document.getElementById('hangupButton');
+      const incrementButton = document.getElementById('incrementButton');
+      const incrementButton2 = document.getElementById('incrementButton2');
+
+      pc[0].ontrack = (event) => {
+          event.streams[0].getTracks().forEach((track) => {
+          remoteStream[0].addTrack(track);
+        }); 
+      };
+      pc[1].ontrack = (event) => {
+          event.streams[0].getTracks().forEach((track) => {
+          remoteStream[1].addTrack(track);
+        }); 
+      };
+      pc[2].ontrack = (event) => {
+        event.streams[0].getTracks().forEach((track) => {
+        remoteStream[2].addTrack(track);
+        }); 
+      };
+      pc[3].ontrack = (event) => {
+        event.streams[0].getTracks().forEach((track) => {
+        remoteStream[3].addTrack(track);
+        }); 
+      };
+      pc[4].ontrack = (event) => {
+        event.streams[0].getTracks().forEach((track) => {
+        remoteStream[4].addTrack(track);
+        }); 
+      };
+      pc[5].ontrack = (event) => {
+        event.streams[0].getTracks().forEach((track) => {
+        remoteStream[5].addTrack(track);
+        }); 
+      };
+
+      // 1. Setup media sources
+      window.initializeWebRTC = async function () { 
+        console.log("web?");
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        for(let i = 0; i < pc.length; i++){
+          localStream.getTracks().forEach((track) => {
+              pc[i].addTrack(track, localStream);
+          });
+        }
+        webcamVideo.srcObject = localStream;
+        remoteVideos[0].srcObject = remoteStream[0];
+        remoteVideos[1].srcObject = remoteStream[1];
+        console.log("index is %d", index);
+        callButton.disabled = false;
+        answerButton.disabled = false;
+        webcamButton.disabled = true;
+        console.log("web!");
+      };
+
+      webcamButton.onclick = async () => {
+        console.log("web?");
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+        // Push tracks from local stream to peer connection
+        for(let i = 0; i < pc.length; i++){
+          localStream.getTracks().forEach((track) => {
+              pc[i].addTrack(track, localStream);
+          });
+        } 
+
+        // Pull tracks from remote stream, add to video stream
+        
+
+        webcamVideo.srcObject = localStream;
+        remoteVideos[0].srcObject = remoteStream[0];
+        remoteVideos[1].srcObject = remoteStream[1];
+        console.log("index is %d", index);
+        callButton.disabled = false;
+        answerButton.disabled = false;
+        webcamButton.disabled = true;
+        console.log("web!");
+      };
+
+
+      window.createOffer = async function () { 
+          // Reference Firestore collections for signaling
+          const callDoc = firestore.collection('calls').doc();
+          const offerCandidates = callDoc.collection('offerCandidates');
+          const answerCandidates = callDoc.collection('answerCandidates');
+
+          // Get candidates for caller, save to db
+          pc[index].onicecandidate = (event) => {
+            event.candidate && offerCandidates.add(event.candidate.toJSON());
+          };
+  
+          const offerDescription = await pc[index].createOffer();
+          await pc[index].setLocalDescription(offerDescription);
+  
+          const offer = {
+            sdp: offerDescription.sdp,
+            type: offerDescription.type,
+            index: index
+          };
+  
+          await callDoc.set({ offer });
+  
+          let ind = index
+          // Listen for remote answer
+          callDoc.onSnapshot((snapshot) => {
+            const data = snapshot.data();
+            ind = parseInt(data['offer']['index'])
+            console.log(ind);
+            if (!pc[ind].currentRemoteDescription && data?.answer) {
+              const answerDescription = new RTCSessionDescription(data.answer);
+              
+              pc[ind].setRemoteDescription(answerDescription);
+            }
+          });
+  
+          // When answered, add candidate to peer connection
+          answerCandidates.onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === 'added') {
+                const candidate = new RTCIceCandidate(change.doc.data());
+                console.log(ind);
+                pc[ind].addIceCandidate(candidate);
+              }
+            });
+          });
+          hangupButton.disabled = false;
+
+
+          index += 1;
+          return callDoc.id;
+      };
+
+      // 2. Create an offer
+      callButton.onclick = async () => {
+        // Reference Firestore collections for signaling
+        const callDoc = firestore.collection('calls').doc();
+        const offerCandidates = callDoc.collection('offerCandidates');
+        const answerCandidates = callDoc.collection('answerCandidates');
+
+        callInput.value = callDoc.id;
+
+        // Get candidates for caller, save to db
+        pc[index].onicecandidate = (event) => {
+          event.candidate && offerCandidates.add(event.candidate.toJSON());
+        };
+
+        // Create offer
+        const offerDescription = await pc[index].createOffer();
+        await pc[index].setLocalDescription(offerDescription);
+
+        const offer = {
+          sdp: offerDescription.sdp,
+          type: offerDescription.type,
+          index: index
+        };
+
+        await callDoc.set({ offer });
+
+        let ind = index
+        // Listen for remote answer
+        callDoc.onSnapshot((snapshot) => {
+          const data = snapshot.data();
+          ind = parseInt(data['offer']['index'])
+          console.log(ind);
+          if (!pc[ind].currentRemoteDescription && data?.answer) {
+            const answerDescription = new RTCSessionDescription(data.answer);
+            
+            pc[ind].setRemoteDescription(answerDescription);
+          }
+        });
+
+        // When answered, add candidate to peer connection
+        answerCandidates.onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === 'added') {
+              const candidate = new RTCIceCandidate(change.doc.data());
+              console.log(ind);
+              pc[ind].addIceCandidate(candidate);
+            }
+          });
+        });
+        hangupButton.disabled = false;
+      };
+
+      window.answerOffer = async function (name) {
+        const callId = name;
+        const callDoc = firestore.collection('calls').doc(callId);
+        const answerCandidates = callDoc.collection('answerCandidates');
+        const offerCandidates = callDoc.collection('offerCandidates');
+
+        pc[answerIndex].onicecandidate = (event) => {
+          event.candidate && answerCandidates.add(event.candidate.toJSON());
+        };
+
+        const callData = (await callDoc.get()).data();
+
+        const offerDescription = callData.offer;
+        await pc[answerIndex].setRemoteDescription(new RTCSessionDescription(offerDescription));
+
+        const answerDescription = await pc[answerIndex].createAnswer();
+        await pc[answerIndex].setLocalDescription(answerDescription);
+
+        const answer = {
+          type: answerDescription.type,
+          sdp: answerDescription.sdp,
+        };
+
+        await callDoc.update({ answer });
+        offerCandidates.onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            console.log(change.doc.data());
+            if (change.type === 'added') {
+              let data = change.doc.data();
+              pc[answerIndex].addIceCandidate(new RTCIceCandidate(data));
+            }
+          });
+        });
+      };
+
+      // 3. Answer the call with the unique ID
+      answerButton.onclick = async () => {
+        const callId = callInput.value;
+        const callDoc = firestore.collection('calls').doc(callId);
+        const answerCandidates = callDoc.collection('answerCandidates');
+        const offerCandidates = callDoc.collection('offerCandidates');
+
+        pc[answerIndex].onicecandidate = (event) => {
+          event.candidate && answerCandidates.add(event.candidate.toJSON());
+        };
+
+        const callData = (await callDoc.get()).data();
+
+        const offerDescription = callData.offer;
+        await pc[answerIndex].setRemoteDescription(new RTCSessionDescription(offerDescription));
+
+        const answerDescription = await pc[answerIndex].createAnswer();
+        await pc[answerIndex].setLocalDescription(answerDescription);
+
+        const answer = {
+          type: answerDescription.type,
+          sdp: answerDescription.sdp,
+        };
+
+        await callDoc.update({ answer });
+        offerCandidates.onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            console.log(change.doc.data());
+            if (change.type === 'added') {
+              let data = change.doc.data();
+              pc[answerIndex].addIceCandidate(new RTCIceCandidate(data));
+            }
+          });
+        });
+
+      };
+
+      incrementButton.onclick = async() =>{
+        index += 1;
+        console.log("incremented index: %d", index);
+        callButton.click()
+      };
+
+      window.answeredCall = function(){
+        answerIndex += 1;
+        console.log("incremented answerIndex: %d", index);
+      };
+
+      incrementButton2.onclick = async() =>{
+        answerIndex += 1;
+        console.log("incremented answerIndex: %d", index);
+      }
+
+    </script>
+  </body>
+</html>
