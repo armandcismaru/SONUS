@@ -2,8 +2,10 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
+using System;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
     [SerializeField] private float mouseSensitivity, walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
@@ -23,31 +25,33 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
-    private int health;
     private int bullets;
     private PhotonView view;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
     private Rigidbody rb;
-    [SerializeField] GameObject gunView;
     public Text healthView;
     public Text bulletsView;
 
-    // Start is called before the first frame update
+    private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
 
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
         }
-    }
 
-    void Start()
-    {
+
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -56,7 +60,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        health = 100;
         bullets = 5;
     }
 
@@ -89,6 +92,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }
+         
     }
 
     private void FixedUpdate()
@@ -250,16 +254,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        if (!view.IsMine)
-            return;
-
-        health -= damage;
-        healthView.text = health.ToString();
-
-        if (health <= 0)
+        foreach (string subscriberType in observers.Keys)
         {
-            Die();
-            
+            if (subscriberType.Equals("IDamageObserver"))
+            {
+                foreach (IObserver subscriber in observers[subscriberType])
+                {
+                    (subscriber as IDamageObserver).Notify(damage);
+                }
+            }
         }
     }
 
@@ -295,11 +298,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         StopRemote(sound);
     }
 
-    private void Die()
-    {
-        playerManager.Die();
-    }
-
     public void Reload()
     {
         if (bullets < 5)
@@ -307,6 +305,33 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             bullets = 5;
             bulletsView.text = bullets.ToString();
             FindObjectOfType<AudioManager>().Play("Reload");
+        }
+    }
+
+    public void addObserver<T>(IObserver observer)
+    {
+        //if the key element exists in observers.keys
+        foreach (string observerType in observers.Keys)
+        {
+            if (typeof(T).Name == observerType)
+            {
+                observers[typeof(T).Name].Add(observer);
+                return;
+            }
+        }
+
+        observers.Add(typeof(T).Name, new List<IObserver>());
+        observers[typeof(T).Name].Add(observer);
+    }
+
+    public void unsubscribeObserver<T>(IObserver observer)
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (typeof(T).Equals(subscriberType))
+            {
+                observers[subscriberType].Remove(observer);
+            }
         }
     }
 }

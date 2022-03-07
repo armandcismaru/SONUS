@@ -58,6 +58,13 @@ MonoBehaviour:
   - rpcDestroyObject
   - RPC_PlaySound
   - RPC_StopSound
+  - rpcGetDamage
+  - rpcGetDamageAll
+  - replicateIncrementFood
+  - replicateIncrementHealth
+  - rpcIncrementFood
+  - rpcIncrementHealth
+  - RPCCallDie
   - RPC_SwapTeams
   - RPC_BroadcastSound
   - RPC_BroadcastSoundS

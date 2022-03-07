@@ -111,11 +111,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            if (supplies != null)
-            {
-                PhotonNetwork.Destroy(supplies);
-                supplies = null;
-            }
             supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 0, suppliesZ), Quaternion.identity);
 
             Timer.Instance.StartTimer(90f);

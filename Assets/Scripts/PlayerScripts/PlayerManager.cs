@@ -79,18 +79,15 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void Die()
-    {
-        if (view.IsMine)
+    {       
+        DestroyController();
+        if (PhotonNetwork.IsMasterClient)
         {
-            DestroyController();
-            if (PhotonNetwork.IsMasterClient)
-            {
-                RoomManager.Instance.PlayerDied(team);
-            }
-            else
-            {
-                view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
-            }
+            RoomManager.Instance.PlayerDied(team);
+        }
+        else
+        {
+            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
     }
 

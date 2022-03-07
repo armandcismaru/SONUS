@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 /*Meant to create the Canvas */
 public class UIScriptPlayer : MonoBehaviour
-{
-    public Canvas prefabPlayerCanvas; //prefab
-   // public GameObject HealthUI; //prefab
+{ 
+    // public GameObject HealthUI; //prefab
 
     //Instances 
     private Canvas playerCanvas;
+    //private Canvas canvas;
     //private GameObject InstanceOfHealthUI;
 
     //List of different UI elements
@@ -20,7 +20,8 @@ public class UIScriptPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerCanvas = Instantiate(prefabPlayerCanvas);
+        playerCanvas = GetComponentInChildren<Canvas>();
+        //canvas = Instantiate(prefabPlayerCanvas);
         uiElements = new List<GameObject>(); 
     }
 
@@ -37,11 +38,12 @@ public class UIScriptPlayer : MonoBehaviour
     //absolutely the same principle for supplies.
     // AttachUI() passes as parameters are the UI element (a prefab - which has already been initialized-),
     // then the location of where the prefab is placed on the screen 
-    public void AttachUI(GameObject uiObject, Vector3 localPosition, Quaternion localRotation)
+    public void AttachUI(GameObject uiObject, Vector3 localPosition, Quaternion localRotation, Vector3 localScale)
     {
         uiObject.transform.SetParent(playerCanvas.transform);
         uiObject.transform.localPosition = localPosition;
         uiObject.transform.localRotation = localRotation;
+        uiObject.transform.localScale = localScale;
         uiElements.Add(uiObject);
     }
 
