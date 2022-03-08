@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>{{{ PRODUCT_NAME }}}</title>
-  <style>
+  <!-- <style>
     * {
       padding: 0;
       margin: 0;
@@ -46,11 +46,33 @@
       border-radius: 10px;
       transition: 400ms linear;
     }
-  </style>
+  </style> -->
 </head>
 
 <body>
-  <canvas id="unity-canvas"></canvas>
+  <div>
+  <h2>PocketSphinx.js Test</h2>
+  <ul>
+    <li>This demo works on recent versions of Chrome and Firefox with the Web Audio API, make sure it works for you and actually records audio.</li>
+    <li>Press "Start" and speak</li>
+  </ul>
+  <select id="grammars"></select>
+  <button id="startBtn">Start</button>
+  <button id="stopBtn">Stop</button>
+  <span id="recording-indicator" style="border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 20px; height: 20px; background: red;"></span>
+  <h2>Recognition Output</h2>
+  <div id="output" style="height:150px;overflow:auto;" >
+  </div>
+  <h2>Status</h2>
+  <div id="current-status">Loading page</div>
+
+  <script src="js/mainScript.js"></script>
+  <!-- These are the two JavaScript files you must load in the HTML,
+  The recognizer is loaded through a Web Worker -->
+  <script src="js/audioRecorder.js"></script>
+  <script src="js/callbackManager.js"></script>
+  </div>
+  <!-- <canvas id="unity-canvas"></canvas>
   <div id="unity-loading-bar">
     <div id="unity-progress-bar">
     </div>
@@ -99,7 +121,7 @@
       });
     };
     document.body.appendChild(script);
-  </script>
+  </script> -->
 </body>
 
 </html>
