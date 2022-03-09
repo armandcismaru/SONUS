@@ -20,8 +20,8 @@ function spawnWorker(workerURL, onReady) {
       onReady(recognizer);
     };
     // As arguments, you can pass non-default path to pocketsphinx.js and pocketsphinx.wasm:
-    recognizer.postMessage({'pocketsphinx.wasm': 'SONUS/js/pocketsphinx.wasm'});
-    // recognizer.postMessage({});
+    // recognizer.postMessage({'pocketsphinx.wasm': '/path/to/pocketsphinx.wasm', 'pocketsphinx.js': '/path/to/pocketsphinx.js'});
+    recognizer.postMessage({});
 };
 
 // To display the hypothesis sent by the recognizer
