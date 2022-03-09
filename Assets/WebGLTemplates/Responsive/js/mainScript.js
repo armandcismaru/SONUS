@@ -20,7 +20,7 @@ function spawnWorker(workerURL, onReady) {
       onReady(recognizer);
     };
     // As arguments, you can pass non-default path to pocketsphinx.js and pocketsphinx.wasm:
-    recognizer.postMessage({'pocketsphinx.wasm': 'js/pocketsphinx.wasm', 'pocketsphinx.js': 'js/pocketsphinx.js'});
+    recognizer.postMessage({'pocketsphinx.wasm': 'js/pocketsphinx.wasm'});
     // recognizer.postMessage({});
 };
 
