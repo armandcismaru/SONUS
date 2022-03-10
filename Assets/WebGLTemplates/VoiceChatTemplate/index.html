@@ -115,372 +115,127 @@
 
 
 
-    <h2>1. Start your Webcam</h2>
-    <div class="videos">
-      <span>
-        <h3>Local Stream</h3>
-        <video id="webcamVideo" autoplay playsinline></video>
-      </span>
-      <span>
-        <h3>Remote Stream</h3>
-        <video id="remoteVideo" autoplay playsinline></video>
-      </span>
-      <span>
-        <h3>Remote Stream2</h3>
-        <video id="remoteVideo2" autoplay playsinline></video>
-      </span>
-
-
+    <div class="audios">
+      <audio id="audio0" autoplay playsinline></audio>
+      <audio id="audio1" autoplay playsinline></audio>
+      <audio id="audio2" autoplay playsinline></audio>
+      <audio id="audio2" autoplay playsinline></audio>
+      <audio id="audio3" autoplay playsinline></audio>
+      <audio id="audio4" autoplay playsinline></audio>
+      <audio id="audio5" autoplay playsinline></audio>
     </div>
 
-    <button id="webcamButton">Start webcam</button>
-    <h2>2. Create a new Call</h2>
-    <button id="callButton" disabled>Create Call (offer)</button>
-
-    <h2>3. Join a Call</h2>
-    <p>Answer the call from a different browser window or device</p>
+    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     
-    <input id="callInput" />
-    <button id="answerButton" disabled>Answer</button>
+    <script>
+      navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
-    <h2>4. Hangup</h2>
+      const audios = [
+            document.getElementById("audio0"),
+            document.getElementById("audio1"),
+            document.getElementById("audio2"),
+            document.getElementById("audio3"),
+            document.getElementById("audio4"),
+            document.getElementById("audio5")];
 
-    <button id="hangupButton" disabled>Hangup</button>
-
-    <h2>4. ????</h2>
-    <button id="incrementButton">increment</button>
-
-    
-    <h2>4. ????</h2>
-    <button id="incrementButton2">increment</button>
-
-
-    <!-- <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script> -->
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-    <script type="module">
-      const firebaseConfig = {
-        apiKey: "AIzaSyDeZYyTRl_WtlFUo5kPBsRxxApC23ViZ4U",
-        authDomain: "testwebrtc-9b260.firebaseapp.com",
-        projectId: "testwebrtc-9b260",
-        storageBucket: "testwebrtc-9b260.appspot.com",
-        messagingSenderId: "928306188442",
-        appId: "1:928306188442:web:81d540191fe44d3a4c4f23",
-        measurementId: "G-8WSTX959QN"
-      };
-    
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-      const firestore = firebase.firestore();
-
-      const servers = {
-        iceServers: [
-          {
-            urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
-          },
-        ],
-        iceCandidatePoolSize: 10,
-      };
-
-      // Global State
-      let pc = [new RTCPeerConnection(servers),
-        new RTCPeerConnection(servers), 
-        new RTCPeerConnection(servers), 
-        new RTCPeerConnection(servers),
-        new RTCPeerConnection(servers), 
-        new RTCPeerConnection(servers)];
-      let index = 0;
-      let answerIndex = 0;
-      let localStream = null;
       let remoteStream = [new MediaStream(),
-        new MediaStream(),
-        new MediaStream(),
-        new MediaStream(),
-        new MediaStream(),
-        new MediaStream()];
+                  new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream()];
 
-      // HTML elements
-      const webcamButton = document.getElementById('webcamButton');
-      const webcamVideo = document.getElementById('webcamVideo');
-      const callButton = document.getElementById('callButton');
-      const callInput = document.getElementById('callInput');
-      const answerButton = document.getElementById('answerButton');
-      const remoteVideo = document.getElementById('remoteVideo');
-      const remoteVideo2 = document.getElementById('remoteVideo2');
-      const remoteVideos = [remoteVideo, remoteVideo2];
-      const hangupButton = document.getElementById('hangupButton');
-      const incrementButton = document.getElementById('incrementButton');
-      const incrementButton2 = document.getElementById('incrementButton2');
+      let connections = [null, null, null, null, null, null];
+      let peers = [new Peer(), 
+                  new Peer(),
+                  new Peer(),
+                  new Peer(),
+                  new Peer(),
+                  new Peer()];
 
-      pc[0].ontrack = (event) => {
-          event.streams[0].getTracks().forEach((track) => {
-          remoteStream[0].addTrack(track);
-        }); 
-      };
-      pc[1].ontrack = (event) => {
-          event.streams[0].getTracks().forEach((track) => {
-          remoteStream[1].addTrack(track);
-        }); 
-      };
-      pc[2].ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-        remoteStream[2].addTrack(track);
-        }); 
-      };
-      pc[3].ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-        remoteStream[3].addTrack(track);
-        }); 
-      };
-      pc[4].ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-        remoteStream[4].addTrack(track);
-        }); 
-      };
-      pc[5].ontrack = (event) => {
-        event.streams[0].getTracks().forEach((track) => {
-        remoteStream[5].addTrack(track);
-        }); 
-      };
-
-      // 1. Setup media sources
-      window.initializeWebRTC = async function () { 
-        console.log("web?");
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        for(let i = 0; i < pc.length; i++){
-          localStream.getTracks().forEach((track) => {
-              pc[i].addTrack(track, localStream);
-          });
+      window.returnIds = function() {
+        let ids = peers[0].id
+        for(let i = 1; i < peers.length; i++){
+            ids = ids.concat(",", peers[i].id);
         }
-        webcamVideo.srcObject = localStream;
-        remoteVideos[0].srcObject = remoteStream[0];
-        remoteVideos[1].srcObject = remoteStream[1];
-        console.log("index is %d", index);
-        callButton.disabled = false;
-        answerButton.disabled = false;
-        webcamButton.disabled = true;
-        console.log("web!");
-      };
-
-      webcamButton.onclick = async () => {
-        console.log("web?");
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-
-        // Push tracks from local stream to peer connection
-        for(let i = 0; i < pc.length; i++){
-          localStream.getTracks().forEach((track) => {
-              pc[i].addTrack(track, localStream);
-          });
-        } 
-
-        // Pull tracks from remote stream, add to video stream
-        
-
-        webcamVideo.srcObject = localStream;
-        remoteVideos[0].srcObject = remoteStream[0];
-        remoteVideos[1].srcObject = remoteStream[1];
-        console.log("index is %d", index);
-        callButton.disabled = false;
-        answerButton.disabled = false;
-        webcamButton.disabled = true;
-        console.log("web!");
-      };
-
-
-      window.createOffer = async function () { 
-          // Reference Firestore collections for signaling
-          const callDoc = firestore.collection('calls').doc();
-          const offerCandidates = callDoc.collection('offerCandidates');
-          const answerCandidates = callDoc.collection('answerCandidates');
-
-          // Get candidates for caller, save to db
-          pc[index].onicecandidate = (event) => {
-            event.candidate && offerCandidates.add(event.candidate.toJSON());
-          };
-  
-          const offerDescription = await pc[index].createOffer();
-          await pc[index].setLocalDescription(offerDescription);
-  
-          const offer = {
-            sdp: offerDescription.sdp,
-            type: offerDescription.type,
-            index: index
-          };
-  
-          await callDoc.set({ offer });
-  
-          let ind = index
-          // Listen for remote answer
-          callDoc.onSnapshot((snapshot) => {
-            const data = snapshot.data();
-            ind = parseInt(data['offer']['index'])
-            console.log(ind);
-            if (!pc[ind].currentRemoteDescription && data?.answer) {
-              const answerDescription = new RTCSessionDescription(data.answer);
-              
-              pc[ind].setRemoteDescription(answerDescription);
-            }
-          });
-  
-          // When answered, add candidate to peer connection
-          answerCandidates.onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-              if (change.type === 'added') {
-                const candidate = new RTCIceCandidate(change.doc.data());
-                console.log(ind);
-                pc[ind].addIceCandidate(candidate);
-              }
-            });
-          });
-          hangupButton.disabled = false;
-
-
-          index += 1;
-          return callDoc.id;
-      };
-
-      // 2. Create an offer
-      callButton.onclick = async () => {
-        // Reference Firestore collections for signaling
-        const callDoc = firestore.collection('calls').doc();
-        const offerCandidates = callDoc.collection('offerCandidates');
-        const answerCandidates = callDoc.collection('answerCandidates');
-
-        callInput.value = callDoc.id;
-
-        // Get candidates for caller, save to db
-        pc[index].onicecandidate = (event) => {
-          event.candidate && offerCandidates.add(event.candidate.toJSON());
-        };
-
-        // Create offer
-        const offerDescription = await pc[index].createOffer();
-        await pc[index].setLocalDescription(offerDescription);
-
-        const offer = {
-          sdp: offerDescription.sdp,
-          type: offerDescription.type,
-          index: index
-        };
-
-        await callDoc.set({ offer });
-
-        let ind = index
-        // Listen for remote answer
-        callDoc.onSnapshot((snapshot) => {
-          const data = snapshot.data();
-          ind = parseInt(data['offer']['index'])
-          console.log(ind);
-          if (!pc[ind].currentRemoteDescription && data?.answer) {
-            const answerDescription = new RTCSessionDescription(data.answer);
-            
-            pc[ind].setRemoteDescription(answerDescription);
-          }
-        });
-
-        // When answered, add candidate to peer connection
-        answerCandidates.onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach((change) => {
-            if (change.type === 'added') {
-              const candidate = new RTCIceCandidate(change.doc.data());
-              console.log(ind);
-              pc[ind].addIceCandidate(candidate);
-            }
-          });
-        });
-        hangupButton.disabled = false;
-      };
-
-      window.answerOffer = async function (name) {
-        const callId = name;
-        const callDoc = firestore.collection('calls').doc(callId);
-        const answerCandidates = callDoc.collection('answerCandidates');
-        const offerCandidates = callDoc.collection('offerCandidates');
-
-        pc[answerIndex].onicecandidate = (event) => {
-          event.candidate && answerCandidates.add(event.candidate.toJSON());
-        };
-
-        const callData = (await callDoc.get()).data();
-
-        const offerDescription = callData.offer;
-        await pc[answerIndex].setRemoteDescription(new RTCSessionDescription(offerDescription));
-
-        const answerDescription = await pc[answerIndex].createAnswer();
-        await pc[answerIndex].setLocalDescription(answerDescription);
-
-        const answer = {
-          type: answerDescription.type,
-          sdp: answerDescription.sdp,
-        };
-
-        await callDoc.update({ answer });
-        offerCandidates.onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach((change) => {
-            console.log(change.doc.data());
-            if (change.type === 'added') {
-              let data = change.doc.data();
-              pc[answerIndex].addIceCandidate(new RTCIceCandidate(data));
-            }
-          });
-        });
-      };
-
-      // 3. Answer the call with the unique ID
-      answerButton.onclick = async () => {
-        const callId = callInput.value;
-        const callDoc = firestore.collection('calls').doc(callId);
-        const answerCandidates = callDoc.collection('answerCandidates');
-        const offerCandidates = callDoc.collection('offerCandidates');
-
-        pc[answerIndex].onicecandidate = (event) => {
-          event.candidate && answerCandidates.add(event.candidate.toJSON());
-        };
-
-        const callData = (await callDoc.get()).data();
-
-        const offerDescription = callData.offer;
-        await pc[answerIndex].setRemoteDescription(new RTCSessionDescription(offerDescription));
-
-        const answerDescription = await pc[answerIndex].createAnswer();
-        await pc[answerIndex].setLocalDescription(answerDescription);
-
-        const answer = {
-          type: answerDescription.type,
-          sdp: answerDescription.sdp,
-        };
-
-        await callDoc.update({ answer });
-        offerCandidates.onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach((change) => {
-            console.log(change.doc.data());
-            if (change.type === 'added') {
-              let data = change.doc.data();
-              pc[answerIndex].addIceCandidate(new RTCIceCandidate(data));
-            }
-          });
-        });
-
-      };
-
-      incrementButton.onclick = async() =>{
-        index += 1;
-        console.log("incremented index: %d", index);
-        callButton.click()
-      };
-
-      window.answeredCall = function(){
-        answerIndex += 1;
-        console.log("incremented answerIndex: %d", index);
-      };
-
-      incrementButton2.onclick = async() =>{
-        answerIndex += 1;
-        console.log("incremented answerIndex: %d", index);
+        return ids;
       }
 
+      window.initialize = async function() {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true});
+        peers[0].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[0].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[1].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[1].addTrack(track);
+            });
+          }); 
+        });
+        
+        peers[2].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[2].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[3].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[3].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[4].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[4].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[5].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[5].addTrack(track);
+            });
+          }); 
+        });
+
+        audios[0].srcObject = remoteStream[0];
+        audios[1].srcObject = remoteStream[1];
+        audios[2].srcObject = remoteStream[2];
+        audios[3].srcObject = remoteStream[3];
+        audios[4].srcObject = remoteStream[4];
+        audios[5].srcObject = remoteStream[5];
+      }
+
+      window.createCall = function(index, id) {
+        console.log("index is ");
+        console.log(index);
+        connections[index] = peers[index].call(id, localStream);
+        connections[index].on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+                remoteStream[index].addTrack(track, localStream);
+            });
+        });
+      }
     </script>
+
   </body>
 </html>

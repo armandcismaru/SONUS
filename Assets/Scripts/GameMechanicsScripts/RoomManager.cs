@@ -27,6 +27,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private GameObject supplies;
 
+    const int maxNumOfPlayers = 6;
+    private string[] offerString = new string[maxNumOfPlayers];
+    [HideInInspector] public int index = 0;
+
     private void Awake()
     {
         if (Instance)
@@ -37,6 +41,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
+#if UNITY_WEBGL && !UNITY_EDITOR
+
+        string temp = VoiceChat.getIds();
+        offerString = temp.Split(',');
+        for (int i = 0; i < maxNumOfPlayers; i++)
+        {
+            Debug.Log(offerString[i]);
+        }
+        
+#endif
     }
 
     public override void OnEnable()
@@ -54,7 +68,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(20f);
+            Timer.Instance.StartTimer(30f);
         }
         if (scene.buildIndex == 1)
         {
@@ -150,7 +164,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-
     [PunRPC]
     void RPC_StartRound()
     {
@@ -202,5 +215,41 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void RPC_suppliesPicked()
     {
         AttackersWon();
+    }
+
+    public void StartVoiceChat()
+    {
+
+        Debug.Log("startLocal");
+        if (PhotonNetwork.IsMasterClient)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            view.RPC("RPC_StartVoiceChat", RpcTarget.All);
+#endif
+        }
+    }
+
+    [PunRPC]
+    void RPC_StartVoiceChat()
+    {
+        Debug.Log("receivedStart");
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.Log("startRemote");
+        view.RPC("RPC_SendOfferStrings", RpcTarget.Others, index, offerString);
+#endif
+    }
+
+    [PunRPC]
+    void RPC_SendOfferStrings(int fromIndex, string[] offer)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(index > fromIndex)
+        {
+            Debug.Log("ans");
+            Debug.Log(offer[index]);
+            Debug.Log(index);
+            VoiceChat.makeCall(fromIndex, offer[index]);
+        }
+#endif
     }
 }

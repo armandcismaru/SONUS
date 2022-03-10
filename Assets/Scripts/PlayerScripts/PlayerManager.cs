@@ -21,36 +21,27 @@ public class PlayerManager : MonoBehaviour
     public float maxRedZ;
 
     [HideInInspector] public int team = -1;
-    [HideInInspector] public int index = -1;
     [HideInInspector] public bool isReady = false;
     [HideInInspector] public bool isAlive = false;
 
-    const int maxNumOfPlayers = 6;
-    private string[] offerString = new string[6];
- 
+
+
+
+
 
     private void Awake()
     {
         view = GetComponent<PhotonView>();
-        if (PhotonNetwork.IsMasterClient)
-        {
-            index = 0;
-        }
-#if UNITY_WEBGL && !UNITY_EDITOR
-            WebRTC.initWebRTC();
-#endif
-        for (int i = 0; i < maxNumOfPlayers; i++)
-        {
-#if UNITY_WEBGL && !UNITY_EDITOR
-            offerString[i] = WebRTC.create();
-#endif
-        }
+
 
     }
+
+
+
     void Start()
     {
         
-        if (view.IsMine)
+        if (view.IsMine && !PhotonNetwork.IsMasterClient)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }
@@ -131,6 +122,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    
 
     [PunRPC]
     void RPC_GetTeam()
@@ -142,18 +134,23 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeamAndIndex", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
     }
 
     [PunRPC]
-    void RPC_SentTeamAndIndex(int tm)
+    void RPC_SentTeam(int tm)
     {
-        team = tm % 2;
-        index = tm;
-        if (myAvatar != null)
+        if (view.IsMine)
         {
-            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-            isReady = true;
+            RoomManager.Instance.index = tm;
+            Debug.Log("team ->");
+            Debug.Log(tm);
+            team = tm % 2;
+            if (myAvatar != null)
+            {
+                myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+                isReady = true;
+            }
         }
 
 

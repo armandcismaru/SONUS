@@ -33,10 +33,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] GameObject gunView;
     public Text healthView;
     public Text bulletsView;
-
-
-    [SerializeField] private AudioSource inputAudioSource;
-
     private AudioClip m_clipInput;
     int m_samplingFrequency = 48000;
     int m_lengthSeconds = 1;
@@ -51,36 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
 
-            //string[] devices = Microphone.devices;
-            //Debug.Log(devices[0]);
-/*            m_clipInput = Microphone.Start(devices[0], true, m_lengthSeconds, AudioSettings.outputSampleRate);
-            // GetComponent<AudioSource>().output = GetComponent<Camera>().GetComponent<AudioListener>();
-            inputAudioSource.clip = m_clipInput;*/
-
-            inputAudioSource.Play();
         }
-    }
-    public void OnGotStream(float[] streamData)
-    {// The recieved samples are placed into a buffer so that we can send them after receiving a certain amount of data at regular intervals
-        /*string[] inputStringArr = streamData.Split(","[0]);
-        float [] floatArrayToSend = new float[inputStringArr.Length];
-        for (int i = 0; i < inputStringArr.Length; i++)
-        {
-            floatArrayToSend[i] = float.Parse(inputStringArr[i]);
-        }*/
-        int channels = 1; //Assuming audio is mono because microphone input usually is
-        int sampleRate = 44100; //Assuming your samplerate is 44100 or change to 48000 or whatever is appropriate
-
-        /*float[] samples = new float[streamData.Length / 4]; //size of a float is 4 bytes
-        Buffer.BlockCopy(streamData, 0, samples, 0, streamData.Length);
-
-        int channels = 1; //Assuming audio is mono because microphone input usually is
-        int sampleRate = 44100; //Assuming your samplerate is 44100 or change to 48000 or whatever is appropriate*/
-
-        Debug.LogError(streamData.Length);
-        AudioClip clip = AudioClip.Create("ClipName", streamData.Length, channels, sampleRate, false);
-        clip.SetData(streamData, 0);
-        inputAudioSource.clip = clip;
     }
     void Start()
     {
