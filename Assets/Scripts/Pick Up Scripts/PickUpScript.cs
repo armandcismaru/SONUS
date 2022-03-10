@@ -7,7 +7,7 @@ using UnityEngine;
 public class PickUpScript : MonoBehaviour {
     public enum PickUpType {
         Food,
-        Fuel,
+        //Fuel,
         Health,
         Armor
     };
@@ -18,11 +18,14 @@ public class PickUpScript : MonoBehaviour {
 
     public PickUpType pickupType { get => _pickupType;}
 
+    private bool isDestroyed = false;
+
     public void destroyThisObject()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && GetComponent<PhotonView>().IsMine && !isDestroyed)
         {
             PhotonNetwork.Destroy(gameObject);
+            isDestroyed = true;
         }
         else
         {

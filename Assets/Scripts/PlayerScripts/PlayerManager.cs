@@ -10,10 +10,15 @@ public class PlayerManager : MonoBehaviour
     private PhotonView view;
     private object[] id;
 
-    public float minX;
-    public float maxX;
-    public float minZ;
-    public float maxZ;
+    public float minBlueX;
+    public float maxBlueX;
+    public float minBlueZ;
+    public float maxBlueZ; 
+
+    public float minRedX;
+    public float maxRedX;
+    public float minRedZ;
+    public float maxRedZ;
 
     [HideInInspector] public int team = -1;
     [HideInInspector] public bool isReady = false;
@@ -23,6 +28,7 @@ public class PlayerManager : MonoBehaviour
     {
         view = GetComponent<PhotonView>();
     }
+
     void Start()
     {
         if (view.IsMine)
@@ -33,9 +39,18 @@ public class PlayerManager : MonoBehaviour
 
     }
 
+    Vector3 getRandomPosition()
+    {
+        if (team == 0)
+        {
+            return new Vector3(Random.Range(minBlueX, maxBlueX), 3, Random.Range(minBlueZ, maxBlueZ));
+        }
+        return new Vector3(Random.Range(minRedX, maxRedX), 3, Random.Range(minRedZ, maxRedZ));
+    }
+
     private void SpawnPlayer()
     {
-        Vector3 randomPosition = new Vector3(Random.Range(minX, maxX), 3, Random.Range(minZ, maxZ));
+        Vector3 randomPosition = getRandomPosition();
         if (team == 0)
         {
             myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, id);
@@ -47,6 +62,7 @@ public class PlayerManager : MonoBehaviour
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
     }
+
     void FixedUpdate()
     {
         if (view.IsMine)
@@ -66,19 +82,24 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Die()
+    public void KillYourself()
     {
-        if (view.IsMine)
+        if (Input.GetKeyDown(KeyCode.K))
         {
-            DestroyController();
-            if (PhotonNetwork.IsMasterClient)
-            {
-                RoomManager.Instance.PlayerDied(team);
-            }
-            else
-            {
-                view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
-            }
+            Die();
+        }
+    }
+
+    public void Die()
+    {       
+        DestroyController();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            RoomManager.Instance.PlayerDied(team);
+        }
+        else
+        {
+            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
     }
 
@@ -88,6 +109,14 @@ public class PlayerManager : MonoBehaviour
         {
             PhotonNetwork.Destroy(myAvatar.gameObject);
             myAvatar = null;
+        }
+    }
+
+    public void SwapTeams()
+    {
+        if (view.IsMine)
+        {
+            team = 1 - team;
         }
     }
 
@@ -120,5 +149,15 @@ public class PlayerManager : MonoBehaviour
     void RPC_PlayerDied(int tm)
     {
         RoomManager.Instance.PlayerDied(tm);
+    }
+
+    [PunRPC]
+    void RPC_SwapTeams()
+    {
+        if (view.IsMine)
+        {
+            team = 1 - team;
+            myAvatar.GetComponent<PlayerController>().team = team;
+        }
     }
 }

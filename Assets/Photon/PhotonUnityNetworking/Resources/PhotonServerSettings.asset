@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: 
+    FixedRegion: ru
     Server: 
     Port: 0
     ProxyServer: 
@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: eu
+  DevRegion: ru
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -58,8 +58,20 @@ MonoBehaviour:
   - rpcDestroyObject
   - RPC_PlaySound
   - RPC_StopSound
+  - rpcGetDamage
+  - rpcGetDamageAll
+  - replicateIncrementFood
+  - replicateIncrementHealth
+  - rpcIncrementFood
+  - rpcIncrementHealth
+  - RPCCallDie
+  - RPC_SwapTeams
   - RPC_BroadcastSound
   - RPC_BroadcastSoundS
+  - RPC_suppliesPicked
+  - RPC_ClearCanvas
+  - RPC_FreezeAndMessage
+  - RPC_PauseAndDisplay
   DisableAutoOpenWizard: 1
-  ShowSettings: 0
+  ShowSettings: 1
   DevRegionSetOnce: 1

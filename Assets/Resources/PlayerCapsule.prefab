@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 3835646438195333435}
   - component: {fileID: 3799501528888600622}
   - component: {fileID: 7642044732443253402}
-  - component: {fileID: 171896409358143141}
-  - component: {fileID: 2631397259446104029}
+  - component: {fileID: 7667295436433847157}
+  - component: {fileID: 3853771670198265052}
+  - component: {fileID: 5969690896666231942}
   - component: {fileID: 3988787732881253671}
   - component: {fileID: 5477576895150788752}
   - component: {fileID: 4726079576783015097}
@@ -36,7 +37,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3441432402261338044}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.61, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3757576989837748323}
@@ -93,7 +94,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &171896409358143141
+--- !u!136 &7667295436433847157
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,22 +108,38 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2631397259446104029
-Rigidbody:
+--- !u!136 &3853771670198265052
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3441432402261338044}
+  m_Material: {fileID: 13400000, guid: e5927ddd630fb3c47a8a8fbded4f33a0, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.55
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!143 &5969690896666231942
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3441432402261338044}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.01
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3988787732881253671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,18 +152,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8955ad2b929c2564dab20b5568de5093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 1
-  sprintSpeed: 6
-  walkSpeed: 3
-  jumpForce: 100
+  mouseSensitivity: 8
+  walkSpeed: 8
+  jumpHeight: 2
   smoothTime: 0.15
+  gravity: -9.81
+  controller: {fileID: 5969690896666231942}
   cameraHolder: {fileID: 4510523601521975064}
   RedMat: {fileID: 2100000, guid: 923df859c811aa54eac309430b953a97, type: 2}
   BlueMat: {fileID: 2100000, guid: dd7c9e202c2579f4b97d33013007fc21, type: 2}
+  blueScore: {fileID: 0}
+  redScore: {fileID: 0}
+  timer: {fileID: 0}
   team: 0
+  grounded: 0
   gun: {fileID: 0}
   knife: {fileID: 0}
-  gunView: {fileID: 0}
   healthView: {fileID: 0}
   bulletsView: {fileID: 0}
 --- !u!114 &5477576895150788752
@@ -234,6 +255,8 @@ MonoBehaviour:
   - {fileID: 4771206061125140707, guid: 233e9e65477d0e147bb4d66ca429d32a, type: 3}
   max_health: 10
   min_health: 0
+  start_health: 0
+  HealthUI: {fileID: 0}
 --- !u!114 &2706524280334559286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,6 +272,8 @@ MonoBehaviour:
   UIElements:
   - {fileID: 805976451979740137, guid: 4f5ad17c01e2137449804cda9557441e, type: 3}
   - {fileID: 8442246945765584066, guid: 5b8cc0788112a9d49aa9d3fd1772e903, type: 3}
+  max_food: 0
+  min_food: 0
 --- !u!114 &3977757422090720182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,7 +286,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3eea39bd4884b42a5025c13e45331b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPlayerCanvas: {fileID: 3586580352017611715, guid: 4034723a2be356540be1d15bf20dd5b0, type: 3}
 --- !u!114 &8010404179485702097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,7 +359,7 @@ Transform:
   m_GameObject: {fileID: 5631272350447935737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.1, z: 0.6}
+  m_LocalScale: {x: 0.3, y: 0.1, z: 0.3}
   m_Children: []
   m_Father: {fileID: 3835646438195333435}
   m_RootOrder: 1

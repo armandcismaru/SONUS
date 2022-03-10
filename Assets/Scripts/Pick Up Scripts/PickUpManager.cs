@@ -34,7 +34,7 @@ public class PickUpManager : MonoBehaviour {
                     try {
                         //Gets called based on how many pick up components it passes.
                         //Attach components to the screen based on how many they are according to each player.
-                        uiComponent.AttachUI(uiElement, uiElement.transform.position, uiElement.transform.rotation);
+                        uiComponent.AttachUI(uiElement, uiElement.transform.position, uiElement.transform.rotation, uiElement.transform.localScale);
                     }
                     catch (System.Exception e) { 
                         setUiInitialized = false;

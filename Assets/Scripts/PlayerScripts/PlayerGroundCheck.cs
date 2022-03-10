@@ -34,17 +34,16 @@ public class PlayerGroundCheck : MonoBehaviour
         }
     }
 
-    // TO FIX: GUN TOO LONG IF YOU POINT IT INTO GROUND YOU LIFT ABOVE GROUND
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject != playerController.gameObject)
         {
             playerController.SetGroundedState(true);
-            if (other.gameObject.CompareTag("Ground") &&
+            if (other.collider.gameObject.name == "Ground" &&
                 other.GetContact(0).thisCollider.transform.gameObject.name != "Gun")
             {
-                FindObjectOfType<AudioManager>().Play("Jump");
-                playerController.PlayStopSound("Jump", "play");
+                playerController.GetComponent<AudioManager>().Play("Jump");
+                playerController.BroadcastSound("Jump");
             }
         }
     }
