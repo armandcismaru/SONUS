@@ -11,6 +11,7 @@ TagManager:
   - Fuel
   - Weapon
   - TestCamDirection
+  - Canvas
   layers:
   - Default
   - TransparentFX

@@ -28,6 +28,7 @@ public class PlayerManager : MonoBehaviour
     {
         view = GetComponent<PhotonView>();
     }
+
     void Start()
     {
         if (view.IsMine)
@@ -37,6 +38,7 @@ public class PlayerManager : MonoBehaviour
         id = new object[] { view.ViewID };
 
     }
+
     Vector3 getRandomPosition()
     {
         if (team == 0)
@@ -45,6 +47,7 @@ public class PlayerManager : MonoBehaviour
         }
         return new Vector3(Random.Range(minRedX, maxRedX), 3, Random.Range(minRedZ, maxRedZ));
     }
+
     private void SpawnPlayer()
     {
         Vector3 randomPosition = getRandomPosition();
@@ -59,6 +62,7 @@ public class PlayerManager : MonoBehaviour
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
     }
+
     void FixedUpdate()
     {
         if (view.IsMine)
