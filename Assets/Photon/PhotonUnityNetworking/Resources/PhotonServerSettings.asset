@@ -69,6 +69,9 @@ MonoBehaviour:
   - RPC_BroadcastSound
   - RPC_BroadcastSoundS
   - RPC_suppliesPicked
+  - RPC_ClearCanvas
+  - RPC_FreezeAndMessage
+  - RPC_PauseAndDisplay
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

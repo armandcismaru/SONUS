@@ -3,13 +3,11 @@ using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
-    [SerializeField] private float mouseSensitivity, walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
-    [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
     [SerializeField] private TMP_Text blueScore;
@@ -19,9 +17,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [HideInInspector] public int team;
     private PlayerManager playerManager;
 
-    private float verticalLookRotation;
     public bool grounded;
     private bool isMoving;
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
@@ -33,6 +31,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public Text healthView;
     public Text bulletsView;
 
+    public bool canvasOn = true;
+
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
     void Awake()
@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         if (view.IsMine)
@@ -50,7 +49,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
         }
-
 
         if (!view.IsMine)
         {
@@ -67,13 +65,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (view.IsMine)
         {
-            LockAndUnlockCursor();
-
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Look();
-            }
-
             Shoot();
             UseKnife();
             Move();
@@ -91,8 +82,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             }
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }
-         
+        }    
     }
 
     private void FixedUpdate()
@@ -111,47 +101,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private float DampenedMovement(float value)
     {
-
         if (Mathf.Abs(value) > 1f)
         {
             return Mathf.Lerp(value, Mathf.Sign(value), 0.25f);
         }
         return value;
-    }
-    void Look()
-    {
-        var x = Input.GetAxis("Mouse X") * Time.deltaTime;
-        var y = Input.GetAxis("Mouse Y") * Time.deltaTime;
-/*        if (Application.platform == RuntimePlatform.WebGLPlayer)
-        {
-            x = DampenedMovement(x);
-            y = DampenedMovement(y);
-        }*/
-        x *= mouseSensitivity;
-        y *= mouseSensitivity;
-        transform.Rotate(Vector3.up * x * mouseSensitivity);
-
-        verticalLookRotation += y * mouseSensitivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
-
-        cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
-
-    }
-    void LockAndUnlockCursor()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }
     }
 
     void Move()
@@ -169,7 +123,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 GetComponent<AudioManager>().Play("ConcreteFootsteps");
                 BroadcastSound("ConcreteFootsteps");
-
             }
         }
         else
@@ -177,7 +130,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             BroadcastSoundS("ConcreteFootsteps");
         }
-            
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
     }
@@ -189,7 +141,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
-    
+
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -310,7 +262,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void addObserver<T>(IObserver observer)
     {
-        //if the key element exists in observers.keys
+        // If the key element exists in observers.keys
         foreach (string observerType in observers.Keys)
         {
             if (typeof(T).Name == observerType)

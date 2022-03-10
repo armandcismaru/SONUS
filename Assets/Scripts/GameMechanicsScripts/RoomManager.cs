@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -11,19 +10,23 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private PhotonView view;
 
     public GameObject playerManager;
+
+    [HideInInspector]
     public bool warmupEnded = false;
-    public int bluePlayers = 0;
-    public int redPlayers = 0;
+    private int bluePlayers = 0;
+    private int redPlayers = 0;
 
-    public int aliveBlue = 0;
-    public int aliveRed = 0;
+    private int aliveBlue = 0;
+    private int aliveRed = 0;
 
+    [HideInInspector]
     public int scoreBlue = 0;
+    [HideInInspector]
     public int scoreRed = 0;
-    public bool roundRunning = false;
 
-    public float suppliesX;
-    public float suppliesZ;
+    private bool roundRunning = false;
+    private float suppliesX;
+    private float suppliesZ;
 
     private GameObject supplies;
 
@@ -44,6 +47,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         base.OnEnable();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
     public override void OnDisable()
     {
         base.OnDisable();
@@ -108,7 +112,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void StartRound()
     {
-
         if (PhotonNetwork.IsMasterClient)
         {
             supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 0, suppliesZ), Quaternion.identity);
@@ -129,16 +132,40 @@ public class RoomManager : MonoBehaviourPunCallbacks
             warmupEnded = true;
             view.RPC("RPC_SetWarmupEnded", RpcTarget.OthersBuffered, true);
         }
+    }
 
+    public void StartPause(string msg, string team)
+    {
+        StartCoroutine(PauseGame(5f, msg, team));
+    }
+
+    public IEnumerator PauseGame(float pauseTime, string msg, string team)
+    {
+        GameObject canvas = GameObject.FindWithTag("Canvas");
+        canvas.GetComponent<DisplayMessage>().SetText(msg);
+        canvas.GetComponent<DisplayMessage>().SetColour(team);
+
+        Time.timeScale = 0f;
+        float pauseEndTime = Time.realtimeSinceStartup + pauseTime;
+        while (Time.realtimeSinceStartup < pauseEndTime)
+        {
+            yield return 0;
+        }
+
+        canvas.GetComponent<DisplayMessage>().SetText("");
+        Time.timeScale = 1f;
     }
 
     public void DefendersWon()
     {
+        view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Defenders won!", "blue");
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
     }
 
     public void AttackersWon()
     {
+        view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Attackers won!", "red");
+       
         if (Timer.Instance.GetTimeRemaining() < 85)
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
@@ -147,17 +174,26 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
 
     [PunRPC]
+    void RPC_PauseAndDisplay(string msg, string team)
+    {
+        StartPause(msg, team);
+    }
+
+    [PunRPC]
     void RPC_StartRound()
     {
         int aux = bluePlayers;
         bluePlayers = redPlayers;
         redPlayers = bluePlayers;
+
         aliveBlue = bluePlayers;
         aliveRed = redPlayers;
+
         roundRunning = true;
         aux = scoreBlue;
         scoreBlue = scoreRed;
         scoreRed = aux;
+
         playerManager.GetComponent<PlayerManager>().SwapTeams();
         playerManager.GetComponent<PlayerManager>().DestroyController();
         playerManager.GetComponent<PlayerManager>().StartRound();
