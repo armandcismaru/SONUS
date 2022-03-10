@@ -141,8 +141,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public IEnumerator PauseGame(float pauseTime, string msg, string team)
     {
-        Debug.Log("Inside PauseGame()");
-
         GameObject canvas = GameObject.FindWithTag("Canvas");
         canvas.GetComponent<DisplayMessage>().SetText(msg);
         canvas.GetComponent<DisplayMessage>().SetColour(team);
@@ -156,7 +154,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         canvas.GetComponent<DisplayMessage>().SetText("");
         Time.timeScale = 1f;
-        Debug.Log("Done with my pause");
     }
 
     public void DefendersWon()

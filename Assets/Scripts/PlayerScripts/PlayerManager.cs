@@ -82,6 +82,14 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void KillYourself()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Die();
+        }
+    }
+
     public void Die()
     {       
         DestroyController();
