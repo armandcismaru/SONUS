@@ -146,12 +146,31 @@
                   new MediaStream()];
 
       let connections = [null, null, null, null, null, null];
-      let peers = [new Peer(), 
-                  new Peer(),
-                  new Peer(),
-                  new Peer(),
-                  new Peer(),
-                  new Peer()];
+      let conf = {"iceServers" :[
+            {
+              urls: "stun:openrelay.metered.ca:80"
+            },
+            {
+              urls: "turn:openrelay.metered.ca:80",
+              username: "openrelayproject",
+              credential: "openrelayproject"
+            },
+            {
+              urls: "turn:openrelay.metered.ca:443",
+              username: "openrelayproject",
+              credential: "openrelayproject"
+            },
+            {
+              urls: "turn:openrelay.metered.ca:443?transport=tcp",
+              username: "openrelayproject",
+              credential: "openrelayproject"
+            }]};
+      let peers = [new Peer(conf), 
+                  new Peer(conf),
+                  new Peer(conf),
+                  new Peer(conf),
+                  new Peer(conf),
+                  new Peer(conf)];
 
       window.returnIds = function() {
         let ids = peers[0].id
