@@ -27,6 +27,8 @@ function spawnWorker(workerURL, onReady) {
 // To display the hypothesis sent by the recognizer
 function updateHyp(hyp) {
   if (outputContainer) outputContainer.innerHTML = hyp;
+  // if (unityInstance) 
+  window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hyp);
   console.log(hyp);
 };
 
