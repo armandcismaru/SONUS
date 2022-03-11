@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6546441185249325188}
   - component: {fileID: 1964086940055531790}
+  - component: {fileID: 6887767759143743060}
   m_Layer: 5
   m_Name: FoodUI
   m_TagString: Food
@@ -26,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 805976451979740137}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.3, z: 1}
+  m_LocalScale: {x: 4.5715, y: 2.7429, z: 1}
   m_Children:
   - {fileID: 6448480971539395166}
   m_Father: {fileID: 0}
@@ -34,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -29.7, y: -13.9}
+  m_AnchoredPosition: {x: -310, y: -127.0877}
   m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1964086940055531790
@@ -88,6 +89,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6887767759143743060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805976451979740137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc940d86c6b10649beccee6762e806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceResolution: {x: 1920, y: 1080}
 --- !u!1 &7042107228313264565
 GameObject:
   m_ObjectHideFlags: 0

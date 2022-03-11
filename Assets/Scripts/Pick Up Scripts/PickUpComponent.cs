@@ -7,21 +7,20 @@ using UnityEngine.UI;
 public class PickUpComponent : MonoBehaviour
 {
     [SerializeField] private List<GameObject> UIElements; //references to the UI componenets that can be attached.
-    internal List<GameObject> instancesUIElements;
-    //Called in PickUpManager
-    public virtual List<GameObject> GetUIElements()
+    public List<GameObject> instancesUIElements;
+
+    public List<GameObject> getUIElements()
     {
-        if (instancesUIElements == null)
+        return UIElements;
+    }
+
+    //Called in PickUpManager
+    public void setInstancesUI(Component component, List<GameObject> instancesUI)
+    {
+        if (component.gameObject == this.gameObject)
         {
-            instancesUIElements = new List<GameObject>();
-            //Initialize the UI components
-            //Create instances for the prefabs (object templates)
-            foreach (GameObject uiElement in UIElements)
-            {
-                instancesUIElements.Add(Instantiate(uiElement, uiElement.transform.position, uiElement.transform.rotation));
-            }
+            instancesUIElements = instancesUI;
         }
-        return instancesUIElements;
     }
 
     internal void setSlider(int filterLayer, string filterTag, float value)
@@ -34,6 +33,11 @@ public class PickUpComponent : MonoBehaviour
                     slider.value = value;
                 }
             }
+    }
+
+    public virtual void updateUI()
+    {
+
     }
 
     public virtual void pickupTrigger(PickUpScript pickup)
