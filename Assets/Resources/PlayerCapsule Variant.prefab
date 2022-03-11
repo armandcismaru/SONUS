@@ -1593,7 +1593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd118287b3574e9ba3b225f943d0ad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSpeed: 2.5
+  mouseSpeed: 3
   cameraHolder: {fileID: 2779937163149696908}
 --- !u!114 &4818349871344008530
 MonoBehaviour:

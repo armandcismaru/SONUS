@@ -65,6 +65,7 @@ public class PlayerManager : MonoBehaviour
 
     void FixedUpdate()
     {
+        KillYourself();
         if (view.IsMine)
         {
             if (!RoomManager.Instance.warmupEnded && myAvatar == null && team != -1)
@@ -91,7 +92,8 @@ public class PlayerManager : MonoBehaviour
     }
 
     public void Die()
-    {       
+    {
+        Debug.Log("OH LALA");
         DestroyController();
         if (PhotonNetwork.IsMasterClient)
         {

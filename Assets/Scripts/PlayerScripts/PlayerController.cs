@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public Text healthView;
     public Text bulletsView;
 
-    public bool canvasOn = true;
+    bool hasJumped = false;
 
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
@@ -65,6 +65,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (view.IsMine)
         {
+            grounded = controller.isGrounded;
+            if (grounded == true && hasJumped == true)
+            {
+                hasJumped = false;
+                GetComponent<AudioManager>().Play("Jump");
+                BroadcastSound("Jump");
+            }
+            if (grounded == false && hasJumped == false)
+            {
+                hasJumped = true;
+            }
+            
+
             Shoot();
             UseKnife();
             Move();
@@ -96,7 +109,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             velocity.y += gravity * Time.fixedDeltaTime;
             controller.Move(transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
             controller.Move(velocity * Time.fixedDeltaTime);
-            //rb.AddForce(velocity * Time.fixedDeltaTime);
         }
     }
 
@@ -118,7 +130,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         else
             isMoving = false;
 
-        if (isMoving)
+        if (isMoving && controller.isGrounded)
         {
             if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
@@ -139,7 +151,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
-            Debug.Log("miosugi");
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
