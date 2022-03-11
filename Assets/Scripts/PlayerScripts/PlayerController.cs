@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     private Vector3 moveAmount;
     private Vector3 velocity;
     private int health;
-    private int bullets;
+    public int bullets;
     private PhotonView view;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;

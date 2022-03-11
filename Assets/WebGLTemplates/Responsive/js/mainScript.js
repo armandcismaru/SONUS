@@ -28,7 +28,7 @@ function spawnWorker(workerURL, onReady) {
 function updateHyp(hyp) {
   if (outputContainer) outputContainer.innerHTML = hyp;
   // if (unityInstance) 
-  window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hyp);
+  if (hyp) window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hyp);
   console.log(hyp);
 };
 
