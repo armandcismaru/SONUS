@@ -51,28 +51,22 @@
 
 <body>
   <div>
-  <h2>PocketSphinx.js Test</h2>
-  <ul>
-    <li>This demo works on recent versions of Chrome and Firefox with the Web Audio API, make sure it works for you and actually records audio.</li>
-    <li>Press "Start" and speak</li>
-  </ul>
-  <select id="grammars"></select>
-  <button id="startBtn">Start</button>
-  <button id="stopBtn">Stop</button>
-  <span id="recording-indicator" style="border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 20px; height: 20px; background: red;"></span>
-  <h2>Recognition Output</h2>
-  <div id="output" style="height:150px;overflow:auto;" >
+    <h2>PocketSphinx.js Test</h2>
+    <ul>
+      <li>This demo works on recent versions of Chrome and Firefox with the Web Audio API, make sure it works for you and actually records audio.</li>
+      <li>Press "Start" and speak</li>
+    </ul>
+    <select id="grammars"></select>
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+    <span id="recording-indicator" style="border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 20px; height: 20px; background: red;"></span>
+    <h2>Recognition Output</h2>
+    <div id="output" style="height:150px;overflow:auto;" >
+    </div>
+    <h2>Status</h2>
+    <div id="current-status">Loading page</div>
   </div>
-  <h2>Status</h2>
-  <div id="current-status">Loading page</div>
-
-  <script src="js/mainScript.js"></script>
-  <!-- These are the two JavaScript files you must load in the HTML,
-  The recognizer is loaded through a Web Worker -->
-  <script src="js/audioRecorder.js"></script>
-  <script src="js/callbackManager.js"></script>
-  </div>
-  <!-- <canvas id="unity-canvas"></canvas>
+  <canvas id="unity-canvas"></canvas>
   <div id="unity-loading-bar">
     <div id="unity-progress-bar">
     </div>
@@ -95,7 +89,7 @@
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "game",
-      productVersion: "0.0.48",
+      productVersion: "0.0.49",
       devicePixelRatio: pixelRatio
     };
 
@@ -110,12 +104,20 @@
         progressBar.style.width = 100 * progress + "%";
       }).then(function(unityInstance) {
         loadingBar.style.display = "none";
+        window.unityInstance = unityInstance;
       }).catch(function(message) {
         alert(message);
       });
     };
     document.body.appendChild(script);
-  </script> -->
+  </script>
+
+  <script src="js/mainScript.js"></script>
+  <!-- These are the two JavaScript files you must load in the HTML,
+  The recognizer is loaded through a Web Worker -->
+  <script src="js/audioRecorder.js"></script>
+  <script src="js/callbackManager.js"></script>
+
 </body>
 
 </html>
