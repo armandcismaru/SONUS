@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             velocity.y += gravity * Time.fixedDeltaTime;
             controller.Move(transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
             controller.Move(velocity * Time.fixedDeltaTime);
+            //rb.AddForce(velocity * Time.fixedDeltaTime);
         }
     }
 
@@ -138,6 +139,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
+            Debug.Log("miosugi");
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }

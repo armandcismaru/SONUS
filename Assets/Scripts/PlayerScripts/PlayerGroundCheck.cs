@@ -12,6 +12,7 @@ public class PlayerGroundCheck : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("eu");
         if (other.gameObject != playerController.gameObject)
         {
             playerController.SetGroundedState(true);
@@ -36,10 +37,11 @@ public class PlayerGroundCheck : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        Debug.Log(other.gameObject.name);
         if (other.gameObject != playerController.gameObject)
         {
             playerController.SetGroundedState(true);
-            if (other.collider.gameObject.name == "Ground" &&
+            if (other.collider.gameObject.tag == "Ground" &&
                 other.GetContact(0).thisCollider.transform.gameObject.name != "Gun")
             {
                 playerController.GetComponent<AudioManager>().Play("Jump");

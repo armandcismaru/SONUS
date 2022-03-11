@@ -43,9 +43,9 @@ public class PlayerManager : MonoBehaviour
     {
         if (team == 0)
         {
-            return new Vector3(Random.Range(minBlueX, maxBlueX), 3, Random.Range(minBlueZ, maxBlueZ));
+            return new Vector3(Random.Range(minBlueX, maxBlueX), 30, Random.Range(minBlueZ, maxBlueZ));
         }
-        return new Vector3(Random.Range(minRedX, maxRedX), 3, Random.Range(minRedZ, maxRedZ));
+        return new Vector3(Random.Range(minRedX, maxRedX), 30, Random.Range(minRedZ, maxRedZ));
     }
 
     private void SpawnPlayer()
