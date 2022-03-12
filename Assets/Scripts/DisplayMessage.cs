@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DisplayMessage : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class DisplayMessage : MonoBehaviour
 
     public void SetText(string msg)
     {
-        GetComponent<Text>().text = msg;
+        GetComponent<TMP_Text>().text = msg;
     }
 
     public void MakeVisible(bool visible)
@@ -26,8 +27,8 @@ public class DisplayMessage : MonoBehaviour
     public void SetColour(string team)
     {
         if (team == "red")
-            GetComponent<Text>().color = new Color(1, 0, 0, 1);
+            GetComponent<TMP_Text>().color = new Color(1, 0, 0, 1);
         else if (team == "blue")
-            GetComponent<Text>().color = new Color(0, 0, 1, 1);
+            GetComponent<TMP_Text>().color = new Color(0, 0, 1, 1);
     }
 }
