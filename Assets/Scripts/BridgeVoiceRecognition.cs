@@ -19,8 +19,8 @@ public class BridgeVoiceRecognition : MonoBehaviour
         
     }
 
-    void TriggerSpell(string hyp) {
-        Debug.Log("AICI E DIN UNITY:" + hyp);
+    void TriggerSpell(string hypseg) {
+        Debug.Log("AICI E DIN UNITY:" + hypseg);
         playerController.GetComponent<AudioManager>().Play("Gunshot");
         // if (true)
         // {
