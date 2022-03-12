@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 4771206061125140706}
   - component: {fileID: 4771206061125140708}
   - component: {fileID: 8161518619510630743}
+  - component: {fileID: 2209774918032354912}
   m_Layer: 5
   m_Name: HealthUI
   m_TagString: Health
@@ -102,7 +103,7 @@ RectTransform:
   m_GameObject: {fileID: 4771206061125140707}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.3, z: 1}
+  m_LocalScale: {x: 4.5715, y: 2.7429, z: 1}
   m_Children:
   - {fileID: 5926183359862827507}
   m_Father: {fileID: 0}
@@ -110,7 +111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -29.7, y: -27.5}
+  m_AnchoredPosition: {x: -313, y: -251.4325}
   m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4771206061125140708
@@ -172,3 +173,16 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2209774918032354912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4771206061125140707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc940d86c6b10649beccee6762e806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceResolution: {x: 1920, y: 1080}

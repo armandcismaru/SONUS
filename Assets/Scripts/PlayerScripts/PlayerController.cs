@@ -10,13 +10,20 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private CharacterController controller;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
-    [SerializeField] private TMP_Text blueScore;
-    [SerializeField] private TMP_Text redScore;
-    [SerializeField] private TMP_Text timer;
-    [SerializeField] private TMP_Text Team;
+    private TMP_Text blueScore;
+    private TMP_Text redScore;
+    private TMP_Text timer;
+
+    [SerializeField] private GameObject blueScorePrefab;
+    [SerializeField] private GameObject redScorePrefab;
+    [SerializeField] private GameObject timerPrefab;
+    [SerializeField] private GameObject scorelinePrefab;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
+
+    private TMP_Text Team;
+    [SerializeField] private GameObject TeamPrefab;
 
     public bool grounded;
     private bool isMoving;
@@ -29,12 +36,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
     private Rigidbody rb;
-    public Text healthView;
     public Text bulletsView;
 
+    [SerializeField] private GameObject bulletsViewPrefab; 
     bool hasJumped = false;
 
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
+
+    private UIScriptPlayer uiComponent;
 
     void Awake()
     {
@@ -44,6 +53,33 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     void Start()
     {
+        //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
+        uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
+        if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
+
+        GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, blueScorePrefab.transform.localPosition,
+                                                               blueScorePrefab.transform.rotation, blueScorePrefab.transform.localScale);
+        blueScore = uiComponentBlueScore.GetComponent<TMP_Text>();
+
+        GameObject uiComponentRedScore = uiComponent.AttachUI(redScorePrefab, redScorePrefab.transform.localPosition,
+                                                              redScorePrefab.transform.rotation, redScorePrefab.transform.localScale);
+        redScore = uiComponentRedScore.GetComponent<TMP_Text>();
+
+        GameObject uiComponentTimer = uiComponent.AttachUI(timerPrefab, timerPrefab.transform.localPosition,
+                                                           timerPrefab.transform.rotation, timerPrefab.transform.localScale);
+        timer = uiComponentTimer.GetComponent<TMP_Text>();
+
+        GameObject uiComponentLine = uiComponent.AttachUI(scorelinePrefab, scorelinePrefab.transform.localPosition,
+                                                           scorelinePrefab.transform.rotation, scorelinePrefab.transform.localScale);
+
+        GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, bulletsViewPrefab.transform.localPosition,
+                                                           bulletsViewPrefab.transform.rotation, bulletsViewPrefab.transform.localScale);
+        bulletsView = uiComponentBullets.GetComponent<Text>();
+
+        GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
+                                                           TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
+        Team = uiComponentTeam.GetComponent<TMP_Text>();
+
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
@@ -92,8 +128,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             Move();
             Jump();
 
+           
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
+
+
 
             if(secs < 10)
             {

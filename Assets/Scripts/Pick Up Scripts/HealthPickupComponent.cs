@@ -31,12 +31,9 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         }
     }
 
-    public override List<GameObject> GetUIElements()
+    public override void updateUI()
     {
-        var elements = base.GetUIElements();
         base.setSlider(5, "Health", current_health / max_health);
-
-        return elements;
     }
 
     private void incrementHealth(float value)
@@ -66,7 +63,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         current_health = Mathf.Clamp(current_health + value, min_health, max_health);
         if (view.IsMine)
         {
-            base.setSlider(5, "Health", current_health / max_health);
+            updateUI();
         }
     }
     public void decrementHealth(float value)
@@ -74,7 +71,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         current_health = Mathf.Clamp(current_health - value, min_health, max_health);
         if (view.IsMine)
         {
-            base.setSlider(5, "Health", current_health / max_health);
+           updateUI();
         }
     }
 
