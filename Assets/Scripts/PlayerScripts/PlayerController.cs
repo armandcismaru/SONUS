@@ -3,13 +3,11 @@ using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
-    [SerializeField] private float mouseSensitivity, walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
-    [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
     private TMP_Text blueScore;
@@ -24,9 +22,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [HideInInspector] public int team;
     private PlayerManager playerManager;
 
-    private float verticalLookRotation;
+    private TMP_Text Team;
+    [SerializeField] private GameObject TeamPrefab;
+
     public bool grounded;
     private bool isMoving;
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public Text bulletsView;
 
     [SerializeField] private GameObject bulletsViewPrefab; 
+    bool hasJumped = false;
 
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
@@ -47,29 +49,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
-
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        if (view.IsMine)
-        {
-            playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
-            team = playerManager.team;
-        }
-
-
-        if (!view.IsMine)
-        {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
-            Destroy(rb);
-        }
-
-        Cursor.lockState = CursorLockMode.Locked;
-        isMoving = false;
-        bullets = 5;
-
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -81,7 +64,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentRedScore = uiComponent.AttachUI(redScorePrefab, redScorePrefab.transform.localPosition,
                                                               redScorePrefab.transform.rotation, redScorePrefab.transform.localScale);
         redScore = uiComponentRedScore.GetComponent<TMP_Text>();
-        
+
         GameObject uiComponentTimer = uiComponent.AttachUI(timerPrefab, timerPrefab.transform.localPosition,
                                                            timerPrefab.transform.rotation, timerPrefab.transform.localScale);
         timer = uiComponentTimer.GetComponent<TMP_Text>();
@@ -91,20 +74,55 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, bulletsViewPrefab.transform.localPosition,
                                                            bulletsViewPrefab.transform.rotation, bulletsViewPrefab.transform.localScale);
-        bulletsView = uiComponentBullets.GetComponent<Text>(); 
+        bulletsView = uiComponentBullets.GetComponent<Text>();
+
+        GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
+                                                           TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
+        Team = uiComponentTeam.GetComponent<TMP_Text>();
+
+        if (view.IsMine)
+        {
+            playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
+            team = playerManager.team;
+            if (team == 0)
+            {
+                Team.text = "Defenders";
+                Team.color = Color.blue;
+            }
+            else
+            {
+                Team.text = "Attackers";
+                Team.color = Color.red;
+            }
+        }
+
+        if (!view.IsMine)
+        {
+            Destroy(GetComponentInChildren<Camera>().gameObject);
+            Destroy(rb);
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+        isMoving = false;
+        bullets = 5;
     }
 
     void Update()
     {
         if (view.IsMine)
         {
-            LockAndUnlockCursor();
-
-            if (Cursor.lockState == CursorLockMode.Locked)
+            grounded = controller.isGrounded;
+            if (grounded == true && hasJumped == true)
             {
-                Look();
+                hasJumped = false;
+                GetComponent<AudioManager>().Play("Jump");
+                BroadcastSound("Jump");
             }
-
+            if (grounded == false && hasJumped == false)
+            {
+                hasJumped = true;
+            }
+            
             Shoot();
             UseKnife();
             Move();
@@ -125,8 +143,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             }
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }
-         
+        }    
     }
 
     private void FixedUpdate()
@@ -145,47 +162,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private float DampenedMovement(float value)
     {
-
         if (Mathf.Abs(value) > 1f)
         {
             return Mathf.Lerp(value, Mathf.Sign(value), 0.25f);
         }
         return value;
-    }
-    void Look()
-    {
-        var x = Input.GetAxis("Mouse X") * Time.deltaTime;
-        var y = Input.GetAxis("Mouse Y") * Time.deltaTime;
-/*        if (Application.platform == RuntimePlatform.WebGLPlayer)
-        {
-            x = DampenedMovement(x);
-            y = DampenedMovement(y);
-        }*/
-        x *= mouseSensitivity;
-        y *= mouseSensitivity;
-        transform.Rotate(Vector3.up * x * mouseSensitivity);
-
-        verticalLookRotation += y * mouseSensitivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
-
-        cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
-
-    }
-    void LockAndUnlockCursor()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }
     }
 
     void Move()
@@ -197,13 +178,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         else
             isMoving = false;
 
-        if (isMoving)
+        if (isMoving && controller.isGrounded)
         {
             if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
                 GetComponent<AudioManager>().Play("ConcreteFootsteps");
                 BroadcastSound("ConcreteFootsteps");
-
             }
         }
         else
@@ -211,8 +191,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             BroadcastSoundS("ConcreteFootsteps");
         }
-            
-
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
     }
 
@@ -223,7 +201,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
-    
+
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -344,7 +322,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void addObserver<T>(IObserver observer)
     {
-        //if the key element exists in observers.keys
+        // If the key element exists in observers.keys
         foreach (string observerType in observers.Keys)
         {
             if (typeof(T).Name == observerType)
@@ -353,7 +331,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 return;
             }
         }
-
         observers.Add(typeof(T).Name, new List<IObserver>());
         observers[typeof(T).Name].Add(observer);
     }

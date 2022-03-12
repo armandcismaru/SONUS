@@ -28,6 +28,7 @@ public class PlayerManager : MonoBehaviour
     {
         view = GetComponent<PhotonView>();
     }
+
     void Start()
     {
         if (view.IsMine)
@@ -37,14 +38,16 @@ public class PlayerManager : MonoBehaviour
         id = new object[] { view.ViewID };
 
     }
+
     Vector3 getRandomPosition()
     {
         if (team == 0)
         {
-            return new Vector3(Random.Range(minBlueX, maxBlueX), 3, Random.Range(minBlueZ, maxBlueZ));
+            return new Vector3(Random.Range(minBlueX, maxBlueX), 30, Random.Range(minBlueZ, maxBlueZ));
         }
-        return new Vector3(Random.Range(minRedX, maxRedX), 3, Random.Range(minRedZ, maxRedZ));
+        return new Vector3(Random.Range(minRedX, maxRedX), 30, Random.Range(minRedZ, maxRedZ));
     }
+
     private void SpawnPlayer()
     {
         Vector3 randomPosition = getRandomPosition();
@@ -59,8 +62,10 @@ public class PlayerManager : MonoBehaviour
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
     }
+
     void FixedUpdate()
     {
+        KillYourself();
         if (view.IsMine)
         {
             if (!RoomManager.Instance.warmupEnded && myAvatar == null && team != -1)
@@ -78,8 +83,16 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void KillYourself()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Die();
+        }
+    }
+
     public void Die()
-    {       
+    {
         DestroyController();
         if (PhotonNetwork.IsMasterClient)
         {
