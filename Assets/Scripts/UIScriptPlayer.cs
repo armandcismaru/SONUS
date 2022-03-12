@@ -43,9 +43,9 @@ public class UIScriptPlayer : MonoBehaviour
         //uiObject.transform.SetParent(playerCanvas.transform);
         //uiObject.transform.parent = playerCanvas.transform;
         uiObject = Instantiate(uiObject, playerCanvas.transform);
-        uiObject.transform.localPosition = localPosition * screenMultiplier;
+        uiObject.transform.localPosition = localPosition; //* screenMultiplier;
         uiObject.transform.localRotation = localRotation; //multiply rotation later @TODO
-        uiObject.transform.localScale = localScale * screenMultiplier;
+        uiObject.transform.localScale = localScale; //* screenMultiplier;
         uiElements.Add(uiObject);
 
         return uiObject;
