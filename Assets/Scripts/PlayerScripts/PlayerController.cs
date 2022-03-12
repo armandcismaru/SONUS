@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private TMP_Text blueScore;
     [SerializeField] private TMP_Text redScore;
     [SerializeField] private TMP_Text timer;
+    [SerializeField] private TMP_Text Team;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
@@ -39,7 +40,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
-
     }
 
     void Start()
@@ -48,6 +48,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
+            if (team == 0)
+            {
+                Team.text = "Defenders";
+                Team.color = Color.blue;
+            }
+            else
+            {
+                Team.text = "Attackers";
+                Team.color = Color.red;
+            }
         }
 
         if (!view.IsMine)
@@ -77,7 +87,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 hasJumped = true;
             }
             
-
             Shoot();
             UseKnife();
             Move();
@@ -143,7 +152,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             BroadcastSoundS("ConcreteFootsteps");
         }
-
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
     }
 
@@ -284,7 +292,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 return;
             }
         }
-
         observers.Add(typeof(T).Name, new List<IObserver>());
         observers[typeof(T).Name].Add(observer);
     }

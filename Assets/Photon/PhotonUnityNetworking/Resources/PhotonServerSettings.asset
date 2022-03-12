@@ -72,6 +72,7 @@ MonoBehaviour:
   - RPC_ClearCanvas
   - RPC_FreezeAndMessage
   - RPC_PauseAndDisplay
+  - RPC_KillAndDisplay
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

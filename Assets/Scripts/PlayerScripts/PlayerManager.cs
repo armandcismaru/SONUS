@@ -93,7 +93,6 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("OH LALA");
         DestroyController();
         if (PhotonNetwork.IsMasterClient)
         {
