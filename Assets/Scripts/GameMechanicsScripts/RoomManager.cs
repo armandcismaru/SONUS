@@ -30,6 +30,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private GameObject supplies;
     private GameObject healthBox;
+    private GameObject healthBox1;
+    private GameObject healthBox2;
 
     private void Awake()
     {
@@ -118,7 +120,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
-            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(suppliesX - 5, 24, suppliesZ + 5), Quaternion.identity);
+            
+            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
+            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
+            healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
