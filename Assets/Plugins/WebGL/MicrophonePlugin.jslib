@@ -4,7 +4,7 @@ var MicrophonePlugin = {
 
   Init: function() {
 
-    ////console.log("Init:");
+    //console.log("Init:");
   
 	// START - used to read the volume
 	document.volume = 0;
@@ -83,14 +83,14 @@ var MicrophonePlugin = {
 
 
 		}, function(error) {
-		  console.error('navigator.getUserMedia errorCallback: ', error);
+		 // console.error('navigator.getUserMedia errorCallback: ', error);
 		});
 	}
   },
   
   QueryAudioInput: function() {
 
-    //console.log("QueryAudioInput");
+   // console.log("QueryAudioInput");
 
     document.mMicrophones = [];
 
@@ -108,7 +108,7 @@ var MicrophonePlugin = {
         });
       })
       .catch(function(err) {
-        console.error(err.name + ": " + err.message);
+        //console.error(err.name + ": " + err.message);
       });
     }
   },

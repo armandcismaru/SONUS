@@ -2,13 +2,12 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
-using System;
+using System.Collections.Generic;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
-    [SerializeField] private float mouseSensitivity, walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
-    [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
     [SerializeField] private TMP_Text blueScore;
@@ -18,39 +17,39 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [HideInInspector] public int team;
     private PlayerManager playerManager;
 
-    private float verticalLookRotation;
     public bool grounded;
     private bool isMoving;
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
-    private int health;
     private int bullets;
     private PhotonView view;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
     private Rigidbody rb;
-    [SerializeField] GameObject gunView;
     public Text healthView;
     public Text bulletsView;
-    private AudioClip m_clipInput;
-    int m_samplingFrequency = 48000;
-    int m_lengthSeconds = 1;
-    // Start is called before the first frame update
+
+    bool hasJumped = false;
+
+    private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
 
+    }
+
+    void Start()
+    {
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
 
         }
-    }
-    void Start()
-    {
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -59,7 +58,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        health = 100;
         bullets = 5;
 
     }
@@ -68,12 +66,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (view.IsMine)
         {
-            LockAndUnlockCursor();
-
-            if (Cursor.lockState == CursorLockMode.Locked)
+            grounded = controller.isGrounded;
+            if (grounded == true && hasJumped == true)
             {
-                Look();
+                hasJumped = false;
+                GetComponent<AudioManager>().Play("Jump");
+                BroadcastSound("Jump");
             }
+            if (grounded == false && hasJumped == false)
+            {
+                hasJumped = true;
+            }
+            
 
             Shoot();
             UseKnife();
@@ -92,7 +96,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             }
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }
+        }    
     }
 
     private void FixedUpdate()
@@ -111,47 +115,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     private float DampenedMovement(float value)
     {
-
         if (Mathf.Abs(value) > 1f)
         {
             return Mathf.Lerp(value, Mathf.Sign(value), 0.25f);
         }
         return value;
-    }
-    void Look()
-    {
-        var x = Input.GetAxis("Mouse X") * Time.deltaTime;
-        var y = Input.GetAxis("Mouse Y") * Time.deltaTime;
-/*        if (Application.platform == RuntimePlatform.WebGLPlayer)
-        {
-            x = DampenedMovement(x);
-            y = DampenedMovement(y);
-        }*/
-        x *= mouseSensitivity;
-        y *= mouseSensitivity;
-        transform.Rotate(Vector3.up * x * mouseSensitivity);
-
-        verticalLookRotation += y * mouseSensitivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
-
-        cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
-
-    }
-    void LockAndUnlockCursor()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }
     }
 
     void Move()
@@ -163,13 +131,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         else
             isMoving = false;
 
-        if (isMoving)
+        if (isMoving && controller.isGrounded)
         {
             if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
                 GetComponent<AudioManager>().Play("ConcreteFootsteps");
                 BroadcastSound("ConcreteFootsteps");
-
             }
         }
         else
@@ -177,7 +144,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             BroadcastSoundS("ConcreteFootsteps");
         }
-            
 
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
     }
@@ -189,7 +155,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
-    
+
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -254,16 +220,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        if (!view.IsMine)
-            return;
-
-        health -= damage;
-        healthView.text = health.ToString();
-
-        if (health <= 0)
+        foreach (string subscriberType in observers.Keys)
         {
-            Die();
-            
+            if (subscriberType.Equals("IDamageObserver"))
+            {
+                foreach (IObserver subscriber in observers[subscriberType])
+                {
+                    (subscriber as IDamageObserver).Notify(damage);
+                }
+            }
         }
     }
 
@@ -299,11 +264,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         StopRemote(sound);
     }
 
-    private void Die()
-    {
-        playerManager.Die();
-    }
-
     public void Reload()
     {
         if (bullets < 5)
@@ -311,6 +271,33 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             bullets = 5;
             bulletsView.text = bullets.ToString();
             FindObjectOfType<AudioManager>().Play("Reload");
+        }
+    }
+
+    public void addObserver<T>(IObserver observer)
+    {
+        // If the key element exists in observers.keys
+        foreach (string observerType in observers.Keys)
+        {
+            if (typeof(T).Name == observerType)
+            {
+                observers[typeof(T).Name].Add(observer);
+                return;
+            }
+        }
+
+        observers.Add(typeof(T).Name, new List<IObserver>());
+        observers[typeof(T).Name].Add(observer);
+    }
+
+    public void unsubscribeObserver<T>(IObserver observer)
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (typeof(T).Equals(subscriberType))
+            {
+                observers[subscriberType].Remove(observer);
+            }
         }
     }
 }
