@@ -32,6 +32,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox;
     private GameObject healthBox1;
     private GameObject healthBox2;
+    private GameObject healthBox3;
+    private GameObject healthBox4;
+    private GameObject healthBox5;
 
     private void Awake()
     {
@@ -121,9 +124,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
             
+            //Defenders' Spot
             healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
             healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
             healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
+
+            //Attackers' Spot
+            //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
+            healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
+            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 25, -55), Quaternion.identity);
+
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
