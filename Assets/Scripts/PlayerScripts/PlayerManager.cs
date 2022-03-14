@@ -132,18 +132,26 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
     }
 
     [PunRPC]
     void RPC_SentTeam(int tm)
     {
-        team = tm;
-        if (myAvatar != null)
+        if (view.IsMine)
         {
-            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-            isReady = true;
+            RoomManager.Instance.index = tm;
+            Debug.Log("team ->");
+            Debug.Log(tm);
+            team = tm % 2;
+            if (myAvatar != null)
+            {
+                myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+                isReady = true;
+            }
         }
+
+
     }
 
     [PunRPC]
