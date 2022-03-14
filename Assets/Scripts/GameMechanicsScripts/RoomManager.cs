@@ -256,6 +256,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Timer.Instance.StopTimer();
+
+            if (supplies != null) PhotonNetwork.Destroy(supplies);
+            if (healthBox != null) PhotonNetwork.Destroy(healthBox);
+            if (healthBox1 != null) PhotonNetwork.Destroy(healthBox1);
+            if (healthBox2 != null) PhotonNetwork.Destroy(healthBox2);
+            if (healthBox4 != null) PhotonNetwork.Destroy(healthBox4);
+            if (healthBox5 != null) PhotonNetwork.Destroy(healthBox5);
+
+
             StartRound();
         }
     }
