@@ -31,7 +31,7 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
-        if (view.IsMine)
+        if (view.IsMine && !PhotonNetwork.IsMasterClient)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }

@@ -146,7 +146,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             //Attackers' Spot
             //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
             healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
-            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 25, -55), Quaternion.identity);
+            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
 
 
             Timer.Instance.StartTimer(90f);
