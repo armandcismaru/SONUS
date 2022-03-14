@@ -96,7 +96,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             }
         }
 
-        }
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
