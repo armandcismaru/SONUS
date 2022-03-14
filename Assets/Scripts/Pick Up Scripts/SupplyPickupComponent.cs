@@ -12,12 +12,9 @@ public class SupplyPickupComponent : PickUpComponent
 
     private bool picked;
 
-    public override List<GameObject> GetUIElements()
+    public override void updateUI()
     {
-        var elements = base.GetUIElements();
         base.setSlider(5, "Food", current_food / max_food);
-
-        return elements;
     }
 
     private void incrementFood(float value)
@@ -47,7 +44,7 @@ public class SupplyPickupComponent : PickUpComponent
     {
         current_food = Mathf.Clamp(current_food + value, min_food, max_food);
         if (GetComponent<PhotonView>().IsMine)
-            base.setSlider(5, "Food", current_food / max_food); 
+            updateUI(); 
     }
     
     public override void pickupTrigger(PickUpScript pickup)

@@ -107,10 +107,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             if (team == 0)
             {
+                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team);
                 aliveBlue--;
             }
             else
             {
+                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team);
                 aliveRed--;
             }
             if (aliveBlue == 0)
@@ -183,6 +185,30 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (Timer.Instance.GetTimeRemaining() < 85)
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
+        }
+    }
+
+    [PunRPC]
+    void RPC_KillAndDisplay(int team)
+    {
+        DisplayKill(team);
+    }
+
+    private void DisplayKill(int team)
+    {
+        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
+
+        if (team == 0)
+        {
+            kill.SetText("");
+            kill.SetText("              Defender died");
+            kill.SetColour("blue");
+        }
+        else
+        {
+            kill.SetText("");
+            kill.SetText("              Attacker died");
+            kill.SetColour("red");
         }
     }
 

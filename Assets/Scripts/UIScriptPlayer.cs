@@ -6,12 +6,8 @@ using UnityEngine.UI;
 /*Meant to create the Canvas */
 public class UIScriptPlayer : MonoBehaviour
 { 
-    // public GameObject HealthUI; //prefab
-
     //Instances 
     private Canvas playerCanvas;
-    //private Canvas canvas;
-    //private GameObject InstanceOfHealthUI;
 
     //List of different UI elements
     //Is obsolete if nothing is attached to the Canvas.
@@ -38,13 +34,20 @@ public class UIScriptPlayer : MonoBehaviour
     //absolutely the same principle for supplies.
     // AttachUI() passes as parameters are the UI element (a prefab - which has already been initialized-),
     // then the location of where the prefab is placed on the screen 
-    public void AttachUI(GameObject uiObject, Vector3 localPosition, Quaternion localRotation, Vector3 localScale)
+    public GameObject AttachUI(GameObject uiObject, Vector3 localPosition, Quaternion localRotation, Vector3 localScale)
     {
-        uiObject.transform.SetParent(playerCanvas.transform);
-        uiObject.transform.localPosition = localPosition;
-        uiObject.transform.localRotation = localRotation;
-        uiObject.transform.localScale = localScale;
-        uiElements.Add(uiObject);
-    }
 
+        Vector2 referenceResolution = uiObject.GetComponent<UIElementData>().referenceResolution;
+        float screenMultiplier = Screen.currentResolution.width / referenceResolution.x;
+        
+        //uiObject.transform.SetParent(playerCanvas.transform);
+        //uiObject.transform.parent = playerCanvas.transform;
+        uiObject = Instantiate(uiObject, playerCanvas.transform);
+        uiObject.transform.localPosition = localPosition; //* screenMultiplier;
+        uiObject.transform.localRotation = localRotation; //multiply rotation later @TODO
+        uiObject.transform.localScale = localScale; //* screenMultiplier;
+        uiElements.Add(uiObject);
+
+        return uiObject;
+    }
 }
