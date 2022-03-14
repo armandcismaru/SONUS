@@ -29,9 +29,14 @@ function updateHyp(hyp) {
   if (outputContainer) outputContainer.innerHTML = hyp;
 };
 
+var newWords = 0;
 function updateHypSeg(hypseg) {
-  if (hypseg.length > 0 && hypseg[hypseg.length - 1].word.localeCompare("<sil>") != 0) window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[hypseg.length - 1].word);
-  
+  //console.log(hypseg);
+  //if (hypseg.length > 0 && hypseg[hypseg.length - 1].word.localeCompare("<sil>") != 0) window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[hypseg.length - 1].word);
+  if (newWords < hypseg.length) {
+    newWords++;
+    window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[0].word);
+  }
 }
 
 // This updates the UI when the app might get ready
@@ -67,13 +72,15 @@ function startUserMedia(stream) {
 };
 
 // This starts recording. We first need to get the id of the grammar to use
-var startRecording = function() {
+//var startRecording = function() {
+function startRecording() {
   var id = document.getElementById('grammars').value;
   if (recorder && recorder.start(id)) displayRecording(true);
 };
 
 // Stops recording
-var stopRecording = function() {
+//var stopRecording = function() {
+function stopRecording() {
   recorder && recorder.stop();
   displayRecording(false);
 };
@@ -125,7 +132,7 @@ var feedWords = function(words) {
 // This initializes the recognizer. When it calls back, we add words
 var initRecognizer = function() {
     // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-    postRecognizerJob({command: 'initialize', data: [["-kws", "kws.txt"], ["-dict","kws.dict"]]},
+    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-35"], ["-kws", "kws.txt"], ["-dict","kws.dict"]]},
                       function() {
                                   if (recorder) recorder.consumers = [recognizer];
                                   feedWords(wordList);});
@@ -188,20 +195,36 @@ window.onload = function() {
 // Wiring JavaScript to the UI
 var startBtn = document.getElementById('startBtn');
 var stopBtn = document.getElementById('stopBtn');
+
+var recordingOn = false;
+document.addEventListener("keydown", function(event) {
+  if (event.key == "e" && recordingOn == false) {
+    recordingOn = true;
+    newWords = 0;
+    startRecording();
+  }
+});
+document.addEventListener("keyup", function(event) {
+  if (event.key == "e" && recordingOn == true) {
+    recordingOn = false;
+    stopRecording();
+  }
+});
+
 startBtn.disabled = true;
 stopBtn.disabled = true;
-startBtn.onclick = startRecording;
-stopBtn.onclick = stopRecording;
+//startBtn.onclick = startRecording;
+//stopBtn.onclick = stopRecording;
 };
 
  // This is the list of words that need to be added to the recognizer
  // This follows the CMU dictionary format
-var wordList = [["ACTION", "AE K SH AH N"], ["WAREHOUSES", "W EH R HH AW Z IH Z"]];
+//var wordList = [["ACTION", "AE K SH AH N"], ["WAREHOUSES", "W EH R HH AW Z IH Z"]];
 // This grammar recognizes digits
-var grammarDigits = {numStates: 1, start: 0, end: 0, transitions: [{from: 0, to: 0, word: "ACTION"}, {from: 0, to: 0, word: "WAREHOUSES"}]};
+//var grammarDigits = {numStates: 1, start: 0, end: 0, transitions: [{from: 0, to: 0, word: "ACTION"}, {from: 0, to: 0, word: "WAREHOUSES"}]};
 // This grammar recognizes a few cities names
 // var grammarCities = {numStates: 1, start: 0, end: 0, transitions: [{from: 0, to: 0, word: "NEW-YORK"}, {from: 0, to: 0, word: "NEW-YORK-CITY"}, {from: 0, to: 0, word: "PARIS"}, {from: 0, to: 0, word: "SHANGHAI"}, {from: 0, to: 0, word: "SAN-FRANCISCO"}, {from: 0, to: 0, word: "LONDON"}, {from: 0, to: 0, word: "BERLIN"}]};
 // // This is to play with beloved or belated OSes
 // var grammarOses = {numStates: 7, start: 0, end: 6, transitions: [{from: 0, to: 1, word: "WINDOWS"}, {from: 0, to: 1, word: "LINUX"}, {from: 0, to: 1, word: "UNIX"}, {from: 1, to: 2, word: "IS"}, {from: 2, to: 2, word: "NOT"}, {from: 2, to: 6, word: "GOOD"}, {from: 2, to: 6, word: "GREAT"}, {from: 1, to: 6, word: "ROCKS"}, {from: 1, to: 6, word: "SUCKS"}, {from: 0, to: 4, word: "MAC"}, {from: 4, to: 5, word: "O"}, {from: 5, to: 3, word: "S"}, {from: 3, to: 1, word: "X"}, {from: 6, to: 0, word: "AND"}]};
-var grammars = [{title: "Digits", g: grammarDigits}];
+//var grammars = [{title: "Digits", g: grammarDigits}];
 var grammarIds = [];
