@@ -55,6 +55,7 @@ public class SupplyPickupComponent : PickUpComponent
             {
                 incrementFood(5f);                
                 pickup.destroyThisObject();
+                RoomManager.Instance.AttackersWon();
             }
         }
     } 

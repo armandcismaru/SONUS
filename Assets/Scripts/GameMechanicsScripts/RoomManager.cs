@@ -29,6 +29,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private float suppliesZ;
 
     private GameObject supplies;
+    private GameObject healthBox;
+    private GameObject healthBox1;
+    private GameObject healthBox2;
+    private GameObject healthBox3;
+    private GameObject healthBox4;
+    private GameObject healthBox5;
 
     private void Awake()
     {
@@ -116,7 +122,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 0, suppliesZ), Quaternion.identity);
+            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
+            
+            //Defenders' Spot
+            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
+            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
+            healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
+
+            //Attackers' Spot
+            //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
+            healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
+            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 25, -55), Quaternion.identity);
+
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
@@ -239,6 +256,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Timer.Instance.StopTimer();
+
+            if (supplies != null) PhotonNetwork.Destroy(supplies);
+            if (healthBox != null) PhotonNetwork.Destroy(healthBox);
+            if (healthBox1 != null) PhotonNetwork.Destroy(healthBox1);
+            if (healthBox2 != null) PhotonNetwork.Destroy(healthBox2);
+            if (healthBox4 != null) PhotonNetwork.Destroy(healthBox4);
+            if (healthBox5 != null) PhotonNetwork.Destroy(healthBox5);
+
+
             StartRound();
         }
     }
