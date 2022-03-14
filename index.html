@@ -64,7 +64,7 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "game",
-        productVersion: "0.0.48",
+        productVersion: "0.0.50",
         showBanner: unityShowBanner,
       };
 
@@ -103,5 +103,166 @@
       };
       document.body.appendChild(script);
     </script>
+
+
+
+    <div class="audios">
+      <audio id="audio0" autoplay playsinline></audio>
+      <audio id="audio1" autoplay playsinline></audio>
+      <audio id="audio2" autoplay playsinline></audio>
+      <audio id="audio2" autoplay playsinline></audio>
+      <audio id="audio3" autoplay playsinline></audio>
+      <audio id="audio4" autoplay playsinline></audio>
+      <audio id="audio5" autoplay playsinline></audio>
+    </div>
+
+    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+    
+    <script>
+      navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+      const audios = [
+            document.getElementById("audio0"),
+            document.getElementById("audio1"),
+            document.getElementById("audio2"),
+            document.getElementById("audio3"),
+            document.getElementById("audio4"),
+            document.getElementById("audio5")];
+
+      let remoteStream = [new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream(),
+                  new MediaStream()];
+
+      let connections = [null, null, null, null, null, null];
+      let conf = {"iceServers" :[
+            {
+              urls: "turn:openrelay.metered.ca:80",
+              username: "openrelayproject",
+              credential: "openrelayproject"
+            }]};
+      let peers = [new Peer({config:{"iceServers" :[
+                  {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                  }]}}), 
+                  new Peer({config:{"iceServers" :[
+                  {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                  }]}}),
+                  new Peer({config:{"iceServers" :[
+                  {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                  }]}}),
+                  new Peer({config:{"iceServers" :[
+                  {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                  }]}}),
+                  new Peer({config:{"iceServers" :[
+                  {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                  }]}}),
+                  new Peer({config:{"iceServers" :[
+                  {
+                    urls: "turn:openrelay.metered.ca:80",
+                    username: "openrelayproject",
+                    credential: "openrelayproject"
+                  }]}})];
+
+      window.returnIds = function() {
+        let ids = peers[0].id
+        for(let i = 1; i < peers.length; i++){
+            ids = ids.concat(",", peers[i].id);
+        }
+        return ids;
+      }
+
+      window.initialize = async function() {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true});
+        peers[0].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[0].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[1].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[1].addTrack(track);
+            });
+          }); 
+        });
+        
+        peers[2].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[2].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[3].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[3].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[4].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[4].addTrack(track);
+            });
+          }); 
+        });
+
+        peers[5].on('call', function(mediaConnection) {
+          mediaConnection.answer(localStream);
+          mediaConnection.on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+              remoteStream[5].addTrack(track);
+            });
+          }); 
+        });
+
+        audios[0].srcObject = remoteStream[0];
+        audios[1].srcObject = remoteStream[1];
+        audios[2].srcObject = remoteStream[2];
+        audios[3].srcObject = remoteStream[3];
+        audios[4].srcObject = remoteStream[4];
+        audios[5].srcObject = remoteStream[5];
+      }
+
+      window.createCall = function(index, id) {
+        console.log("index is ");
+        console.log(index);
+        connections[index] = peers[index].call(id, localStream);
+        connections[index].on('stream', function(stream) {
+            stream.getTracks().forEach((track) => {
+                remoteStream[index].addTrack(track, localStream);
+            });
+        });
+      }
+    </script>
+
   </body>
 </html>
