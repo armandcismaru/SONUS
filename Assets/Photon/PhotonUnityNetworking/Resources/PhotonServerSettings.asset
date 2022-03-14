@@ -73,6 +73,8 @@ MonoBehaviour:
   - RPC_FreezeAndMessage
   - RPC_PauseAndDisplay
   - RPC_KillAndDisplay
+  - RPC_StartVoiceChat
+  - RPC_SendOfferStrings
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

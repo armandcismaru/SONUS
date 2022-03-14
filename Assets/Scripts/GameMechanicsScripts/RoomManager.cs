@@ -36,6 +36,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox4;
     private GameObject healthBox5;
 
+    const int maxNumOfPlayers = 6;
+    private string[] offerString = new string[maxNumOfPlayers];
+    [HideInInspector] public int index = 0;
+
     private void Awake()
     {
         if (Instance)
@@ -46,6 +50,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
+#if UNITY_WEBGL && !UNITY_EDITOR
+
+        string temp = VoiceChat.getIds();
+        offerString = temp.Split(',');
+        for (int i = 0; i < maxNumOfPlayers; i++)
+        {
+            Debug.Log(offerString[i]);
+        }
+        
+#endif
     }
 
     public override void OnEnable()
@@ -132,7 +146,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             //Attackers' Spot
             //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
             healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
-            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 25, -55), Quaternion.identity);
+            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
 
 
             Timer.Instance.StartTimer(90f);
@@ -189,6 +203,42 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
         }
+    }
+
+    public void StartVoiceChat()
+    {
+
+        //Debug.Log("startLocal");
+        if (PhotonNetwork.IsMasterClient)
+        {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            view.RPC("RPC_StartVoiceChat", RpcTarget.All);
+#endif
+        }
+    }
+
+    [PunRPC]
+    void RPC_StartVoiceChat()
+    {
+        //Debug.Log("receivedStart");
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Debug.Log("startRemote");
+        view.RPC("RPC_SendOfferStrings", RpcTarget.Others, index, offerString);
+#endif
+    }
+
+    [PunRPC]
+    void RPC_SendOfferStrings(int fromIndex, string[] offer)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(index > fromIndex)
+        {
+            Debug.Log("ans");
+            Debug.Log(offer[index]);
+            Debug.Log(index);
+            VoiceChat.makeCall(fromIndex, offer[index]);
+        }
+#endif
     }
 
     [PunRPC]

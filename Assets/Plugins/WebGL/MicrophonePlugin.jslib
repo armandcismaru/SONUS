@@ -125,7 +125,7 @@ var MicrophonePlugin = {
   },
   
   GetMicrophoneDeviceName: function(index) {
-	//console.log("GetMicrophoneDeviceName");
+	////console.log("GetMicrophoneDeviceName");
 	var returnStr = "Not Set";
 	var microphones = document.mMicrophones;
     if (microphones != undefined) {
@@ -150,4 +150,5 @@ var MicrophonePlugin = {
     return document.volume;
   }
 };
+
 mergeInto(LibraryManager.library, MicrophonePlugin);

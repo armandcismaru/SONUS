@@ -8,6 +8,9 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 {
     void Start()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        VoiceChat.initializeVoiceChat();
+#endif
         PhotonNetwork.ConnectUsingSettings();
     }
 

@@ -9,6 +9,7 @@ public class Timer : MonoBehaviour
     public static Timer Instance;
 
     private PhotonView view;
+    private bool voiceChatInit = false;
     private bool timerIsRunning = false;
     public const float roundTime = 90f;
     private float timeRemaining = roundTime;
@@ -31,6 +32,12 @@ public class Timer : MonoBehaviour
         {
             if (timeRemaining > 0)
             {
+                if(!voiceChatInit && timeRemaining < 15)
+                {
+                    voiceChatInit = true;
+                    RoomManager.Instance.StartVoiceChat();
+                }
+
                 timeRemaining -= Time.fixedDeltaTime;
                 view.RPC("RPC_UpdateTime", RpcTarget.Others, timeRemaining);
 
