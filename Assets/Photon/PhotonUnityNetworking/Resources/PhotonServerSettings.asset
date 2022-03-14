@@ -69,9 +69,6 @@ MonoBehaviour:
   - RPC_BroadcastSound
   - RPC_BroadcastSoundS
   - RPC_suppliesPicked
-  - RPC_SentTeamAndIndex
-  - RPC_SendOfferStrings
-  - RPC_StartVoiceChat
   - RPC_ClearCanvas
   - RPC_FreezeAndMessage
   - RPC_PauseAndDisplay

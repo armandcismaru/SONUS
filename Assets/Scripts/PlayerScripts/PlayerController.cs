@@ -105,7 +105,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         bullets = 5;
-
     }
 
     void Update()

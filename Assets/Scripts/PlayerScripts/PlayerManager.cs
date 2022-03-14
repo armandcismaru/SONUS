@@ -24,22 +24,14 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public bool isReady = false;
     [HideInInspector] public bool isAlive = false;
 
-
-
-
-
-
     private void Awake()
     {
         view = GetComponent<PhotonView>();
-
-
     }
 
     void Start()
     {
-        
-        if (view.IsMine && !PhotonNetwork.IsMasterClient)
+        if (view.IsMine)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }
@@ -129,7 +121,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    
 
     [PunRPC]
     void RPC_GetTeam()
@@ -141,26 +132,18 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
     }
 
     [PunRPC]
     void RPC_SentTeam(int tm)
     {
-        if (view.IsMine)
+        team = tm;
+        if (myAvatar != null)
         {
-            RoomManager.Instance.index = tm;
-            Debug.Log("team ->");
-            Debug.Log(tm);
-            team = tm % 2;
-            if (myAvatar != null)
-            {
-                myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-                isReady = true;
-            }
+            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+            isReady = true;
         }
-
-
     }
 
     [PunRPC]

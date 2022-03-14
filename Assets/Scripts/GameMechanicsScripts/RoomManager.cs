@@ -29,10 +29,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private float suppliesZ;
 
     private GameObject supplies;
-
-    const int maxNumOfPlayers = 6;
-    private string[] offerString = new string[maxNumOfPlayers];
-    [HideInInspector] public int index = 0;
+    private GameObject healthBox;
+    private GameObject healthBox1;
+    private GameObject healthBox2;
+    private GameObject healthBox3;
+    private GameObject healthBox4;
+    private GameObject healthBox5;
 
     private void Awake()
     {
@@ -44,16 +46,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
-#if UNITY_WEBGL && !UNITY_EDITOR
-
-        string temp = VoiceChat.getIds();
-        offerString = temp.Split(',');
-        for (int i = 0; i < maxNumOfPlayers; i++)
-        {
-            Debug.Log(offerString[i]);
-        }
-        
-#endif
     }
 
     public override void OnEnable()
@@ -72,7 +64,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(30f);
+            Timer.Instance.StartTimer(20f);
         }
         if (scene.buildIndex == 1)
         {
@@ -130,7 +122,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 0, suppliesZ), Quaternion.identity);
+            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
+            
+            //Defenders' Spot
+            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
+            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
+            healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
+
+            //Attackers' Spot
+            //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
+            healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
+            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 25, -55), Quaternion.identity);
+
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
@@ -253,6 +256,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             Timer.Instance.StopTimer();
+
+            if (supplies != null) PhotonNetwork.Destroy(supplies);
+            if (healthBox != null) PhotonNetwork.Destroy(healthBox);
+            if (healthBox1 != null) PhotonNetwork.Destroy(healthBox1);
+            if (healthBox2 != null) PhotonNetwork.Destroy(healthBox2);
+            if (healthBox4 != null) PhotonNetwork.Destroy(healthBox4);
+            if (healthBox5 != null) PhotonNetwork.Destroy(healthBox5);
+
+
             StartRound();
         }
     }
@@ -272,41 +284,5 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void RPC_suppliesPicked()
     {
         AttackersWon();
-    }
-
-    public void StartVoiceChat()
-    {
-
-        Debug.Log("startLocal");
-        if (PhotonNetwork.IsMasterClient)
-        {
-#if UNITY_WEBGL && !UNITY_EDITOR
-            view.RPC("RPC_StartVoiceChat", RpcTarget.All);
-#endif
-        }
-    }
-
-    [PunRPC]
-    void RPC_StartVoiceChat()
-    {
-        Debug.Log("receivedStart");
-#if UNITY_WEBGL && !UNITY_EDITOR
-        Debug.Log("startRemote");
-        view.RPC("RPC_SendOfferStrings", RpcTarget.Others, index, offerString);
-#endif
-    }
-
-    [PunRPC]
-    void RPC_SendOfferStrings(int fromIndex, string[] offer)
-    {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        if(index > fromIndex)
-        {
-            Debug.Log("ans");
-            Debug.Log(offer[index]);
-            Debug.Log(index);
-            VoiceChat.makeCall(fromIndex, offer[index]);
-        }
-#endif
     }
 }
