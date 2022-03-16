@@ -64,7 +64,7 @@
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "game",
-        productVersion: "0.0.50",
+        productVersion: "0.0.66",
         showBanner: unityShowBanner,
       };
 
@@ -94,6 +94,7 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
+          window.unityInstance = unityInstance;
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
           };
@@ -263,6 +264,11 @@
         });
       }
     </script>
+    <script src="js/mainScript.js"></script>
+    <!-- These are the two JavaScript files you must load in the HTML,
+    The recognizer is loaded through a Web Worker -->
+    <script src="js/audioRecorder.js"></script>
+    <script src="js/callbackManager.js"></script>
 
   </body>
 </html>
