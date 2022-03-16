@@ -47,13 +47,13 @@ function updateHypSeg(hypseg) {
 
 // This is just a logging window where we display the status
 function updateStatus(newStatus) {
-  console.log("Status: " + newStatus);
+  // console.log("Status: " + newStatus);
 };
 
 // A not-so-great recording indicator
 function displayRecording(display) {
-  if (display) console.log("Recording Started");
-  else console.log("Recording Stopped");
+  // if (display) console.log("Recording Started");
+  // else console.log("Recording Stopped");
   // if (display) document.getElementById('recording-indicator').innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
   // else document.getElementById('recording-indicator').innerHTML = "";
 };
@@ -135,7 +135,7 @@ var feedWords = function(words) {
 var initRecognizer = function() {
     // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
     postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-50"], ["-kws", "kws.txt"], ["-dict","kws.dict"]]},
-                      function() {console.log("Initialized");});
+                      function() {console.log("Speech Recognition Initialized");});
 };
 
 // When the page is loaded, we spawn a new recognizer worker and call getUserMedia to

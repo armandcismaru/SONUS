@@ -20,7 +20,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
     }
 
     void TriggerSpell(string hypseg) {
-        Debug.Log("AICI E DIN UNITY:" + hypseg);
+        Debug.Log("From Unity:" + hypseg);
         playerController.GetComponent<AudioManager>().Play("Gunshot");
         // if (true)
         // {
