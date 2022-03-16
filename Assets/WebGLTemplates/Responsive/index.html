@@ -8,22 +8,6 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
-    <div>
-      <h2>PocketSphinx.js Test</h2>
-      <ul>
-        <li>This demo works on recent versions of Chrome and Firefox with the Web Audio API, make sure it works for you and actually records audio.</li>
-        <li>Press "Start" and speak</li>
-      </ul>
-      <select id="grammars"></select>
-      <button id="startBtn">Start</button>
-      <button id="stopBtn">Stop</button>
-      <span id="recording-indicator" style="border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; width: 20px; height: 20px; background: red;"></span>
-      <h2>Recognition Output</h2>
-      <div id="output" style="height:150px;overflow:auto;" >
-      </div>
-      <h2>Status</h2>
-      <div id="current-status">Loading page</div>
-    </div>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}}></canvas>
       <div id="unity-loading-bar">

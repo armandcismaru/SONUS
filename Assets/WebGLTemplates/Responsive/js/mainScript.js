@@ -25,9 +25,9 @@ function spawnWorker(workerURL, onReady) {
 };
 
 // To display the hypothesis sent by the recognizer
-function updateHyp(hyp) {
-  if (outputContainer) outputContainer.innerHTML = hyp;
-};
+// function updateHyp(hyp) {
+//   if (outputContainer) outputContainer.innerHTML = hyp;
+// };
 
 var newWords = 0;
 function updateHypSeg(hypseg) {
@@ -41,19 +41,21 @@ function updateHypSeg(hypseg) {
 
 // This updates the UI when the app might get ready
 // Only when both recorder and recognizer are ready do we enable the buttons
-function updateUI() {
-  if (isRecorderReady && isRecognizerReady) startBtn.disabled = stopBtn.disabled = false;
-};
+// function updateUI() {
+//   if (isRecorderReady && isRecognizerReady) startBtn.disabled = stopBtn.disabled = false;
+// };
 
 // This is just a logging window where we display the status
 function updateStatus(newStatus) {
-  document.getElementById('current-status').innerHTML += "<br/>" + newStatus;
+  console.log("Status: " + newStatus);
 };
 
 // A not-so-great recording indicator
 function displayRecording(display) {
-  if (display) document.getElementById('recording-indicator').innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-  else document.getElementById('recording-indicator').innerHTML = "";
+  if (display) console.log("Recording Started");
+  else console.log("Recording Stopped");
+  // if (display) document.getElementById('recording-indicator').innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  // else document.getElementById('recording-indicator').innerHTML = "";
 };
 
 // Callback function once the user authorises access to the microphone
@@ -67,15 +69,15 @@ function startUserMedia(stream) {
   // If a recognizer is ready, we pass it to the recorder
   if (recognizer) recorder.consumers = [recognizer];
   isRecorderReady = true;
-  updateUI();
+  // updateUI();
   updateStatus("Audio recorder ready");
 };
 
 // This starts recording. We first need to get the id of the grammar to use
 //var startRecording = function() {
 function startRecording() {
-  var id = document.getElementById('grammars').value;
-  if (recorder && recorder.start(id)) displayRecording(true);
+  // var id = document.getElementById('grammars').value;
+  if (recorder && recorder.start(0)) displayRecording(true);
 };
 
 // Stops recording
@@ -88,22 +90,22 @@ function stopRecording() {
 // Called once the recognizer is ready
 // We then add the grammars to the input select tag and update the UI
 var recognizerReady = function() {
-     updateGrammars();
+    //  updateGrammars();
      isRecognizerReady = true;
-     updateUI();
+    //  updateUI();
      updateStatus("Recognizer ready");
 };
 
 // We get the grammars defined below and fill in the input select tag
-var updateGrammars = function() {
-  var selectTag = document.getElementById('grammars');
-  for (var i = 0 ; i < grammarIds.length ; i++) {
-      var newElt = document.createElement('option');
-      newElt.value=grammarIds[i].id;
-      newElt.innerHTML = grammarIds[i].title;
-      selectTag.appendChild(newElt);
-  }                          
-};
+// var updateGrammars = function() {
+//   var selectTag = document.getElementById('grammars');
+//   for (var i = 0 ; i < grammarIds.length ; i++) {
+//       var newElt = document.createElement('option');
+//       newElt.value=grammarIds[i].id;
+//       newElt.innerHTML = grammarIds[i].title;
+//       selectTag.appendChild(newElt);
+//   }                          
+// };
 
 // This adds a grammar from the grammars array
 // We add them one by one and call it again as
@@ -132,16 +134,14 @@ var feedWords = function(words) {
 // This initializes the recognizer. When it calls back, we add words
 var initRecognizer = function() {
     // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-35"], ["-kws", "kws.txt"], ["-dict","kws.dict"]]},
-                      function() {
-                                  if (recorder) recorder.consumers = [recognizer];
-                                  feedWords(wordList);});
+    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-50"], ["-kws", "kws.txt"], ["-dict","kws.dict"]]},
+                      function() {console.log("Initialized");});
 };
 
 // When the page is loaded, we spawn a new recognizer worker and call getUserMedia to
 // request access to the microphone
 window.onload = function() {
-  outputContainer = document.getElementById("output");
+  // outputContainer = document.getElementById("output");
   updateStatus("Initializing web audio and speech recognizer, waiting for approval to access the microphone");
   callbackManager = new CallbackManager();
   spawnWorker("js/recognizer.js", function(worker) {
@@ -156,9 +156,9 @@ window.onload = function() {
           }
           // This is a case when the recognizer has a new hypothesis
           if (e.data.hasOwnProperty('hyp')) {
-            var newHyp = e.data.hyp;
-            if (e.data.hasOwnProperty('final') &&  e.data.final) newHyp = "Final: " + newHyp;
-            updateHyp(newHyp, newHypSeg);
+            // var newHyp = e.data.hyp;
+            // if (e.data.hasOwnProperty('final') &&  e.data.final) newHyp = "Final: " + newHyp;
+            // updateHyp(newHyp, newHypSeg);
             if (e.data.hasOwnProperty('hypseg')) {
               var newHypSeg = e.data.hypseg;
               updateHypSeg(newHypSeg);
@@ -193,8 +193,8 @@ window.onload = function() {
   else updateStatus("No web audio support in this browser");
 
 // Wiring JavaScript to the UI
-var startBtn = document.getElementById('startBtn');
-var stopBtn = document.getElementById('stopBtn');
+// var startBtn = document.getElementById('startBtn');
+// var stopBtn = document.getElementById('stopBtn');
 
 var recordingOn = false;
 document.addEventListener("keydown", function(event) {
@@ -211,8 +211,8 @@ document.addEventListener("keyup", function(event) {
   }
 });
 
-startBtn.disabled = true;
-stopBtn.disabled = true;
+// startBtn.disabled = true;
+// stopBtn.disabled = true;
 //startBtn.onclick = startRecording;
 //stopBtn.onclick = stopRecording;
 };
@@ -226,5 +226,5 @@ stopBtn.disabled = true;
 // var grammarCities = {numStates: 1, start: 0, end: 0, transitions: [{from: 0, to: 0, word: "NEW-YORK"}, {from: 0, to: 0, word: "NEW-YORK-CITY"}, {from: 0, to: 0, word: "PARIS"}, {from: 0, to: 0, word: "SHANGHAI"}, {from: 0, to: 0, word: "SAN-FRANCISCO"}, {from: 0, to: 0, word: "LONDON"}, {from: 0, to: 0, word: "BERLIN"}]};
 // // This is to play with beloved or belated OSes
 // var grammarOses = {numStates: 7, start: 0, end: 6, transitions: [{from: 0, to: 1, word: "WINDOWS"}, {from: 0, to: 1, word: "LINUX"}, {from: 0, to: 1, word: "UNIX"}, {from: 1, to: 2, word: "IS"}, {from: 2, to: 2, word: "NOT"}, {from: 2, to: 6, word: "GOOD"}, {from: 2, to: 6, word: "GREAT"}, {from: 1, to: 6, word: "ROCKS"}, {from: 1, to: 6, word: "SUCKS"}, {from: 0, to: 4, word: "MAC"}, {from: 4, to: 5, word: "O"}, {from: 5, to: 3, word: "S"}, {from: 3, to: 1, word: "X"}, {from: 6, to: 0, word: "AND"}]};
-//var grammars = [{title: "Digits", g: grammarDigits}];
+var grammars = [];
 var grammarIds = [];
