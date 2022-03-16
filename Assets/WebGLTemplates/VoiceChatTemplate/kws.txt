@@ -1,2 +1,2 @@
-warehouses
-action
+go left
+straight
