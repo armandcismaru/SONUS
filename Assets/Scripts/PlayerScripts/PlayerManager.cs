@@ -28,23 +28,26 @@ public class PlayerManager : MonoBehaviour
     {
         view = GetComponent<PhotonView>();
     }
+
     void Start()
     {
-        if (view.IsMine)
+        if (view.IsMine && !PhotonNetwork.IsMasterClient)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }
         id = new object[] { view.ViewID };
 
     }
+
     Vector3 getRandomPosition()
     {
         if (team == 0)
         {
-            return new Vector3(Random.Range(minBlueX, maxBlueX), 3, Random.Range(minBlueZ, maxBlueZ));
+            return new Vector3(Random.Range(minBlueX, maxBlueX), 30, Random.Range(minBlueZ, maxBlueZ));
         }
-        return new Vector3(Random.Range(minRedX, maxRedX), 3, Random.Range(minRedZ, maxRedZ));
+        return new Vector3(Random.Range(minRedX, maxRedX), 30, Random.Range(minRedZ, maxRedZ));
     }
+
     private void SpawnPlayer()
     {
         Vector3 randomPosition = getRandomPosition();
@@ -59,8 +62,10 @@ public class PlayerManager : MonoBehaviour
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
     }
+
     void FixedUpdate()
     {
+        KillYourself();
         if (view.IsMine)
         {
             if (!RoomManager.Instance.warmupEnded && myAvatar == null && team != -1)
@@ -78,19 +83,24 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void KillYourself()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Die();
+        }
+    }
+
     public void Die()
     {
-        if (view.IsMine)
+        DestroyController();
+        if (PhotonNetwork.IsMasterClient)
         {
-            DestroyController();
-            if (PhotonNetwork.IsMasterClient)
-            {
-                RoomManager.Instance.PlayerDied(team);
-            }
-            else
-            {
-                view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
-            }
+            RoomManager.Instance.PlayerDied(team);
+        }
+        else
+        {
+            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
     }
 
@@ -122,18 +132,26 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
     }
 
     [PunRPC]
     void RPC_SentTeam(int tm)
     {
-        team = tm;
-        if (myAvatar != null)
+        if (view.IsMine)
         {
-            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-            isReady = true;
+            RoomManager.Instance.index = tm;
+            Debug.Log("team ->");
+            Debug.Log(tm);
+            team = tm % 2;
+            if (myAvatar != null)
+            {
+                myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
+                isReady = true;
+            }
         }
+
+
     }
 
     [PunRPC]

@@ -2,52 +2,100 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
-public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
+public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
-    [SerializeField] private float mouseSensitivity, walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
-    [SerializeField] GameObject cameraHolder;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
-    [SerializeField] private TMP_Text blueScore;
-    [SerializeField] private TMP_Text redScore;
-    [SerializeField] private TMP_Text timer;
+    private TMP_Text blueScore;
+    private TMP_Text redScore;
+    private TMP_Text timer;
+
+    [SerializeField] private GameObject blueScorePrefab;
+    [SerializeField] private GameObject redScorePrefab;
+    [SerializeField] private GameObject timerPrefab;
+    [SerializeField] private GameObject scorelinePrefab;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
 
-    private float verticalLookRotation;
+    private TMP_Text Team;
+    [SerializeField] private GameObject TeamPrefab;
+
     public bool grounded;
     private bool isMoving;
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
-    private int health;
-    public int bullets;
+    private int bullets;
     private PhotonView view;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
     private Rigidbody rb;
-    [SerializeField] GameObject gunView;
-    public Text healthView;
     public Text bulletsView;
 
-    // Start is called before the first frame update
+    [SerializeField] private GameObject bulletsViewPrefab; 
+    bool hasJumped = false;
+
+    private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
+
+    private UIScriptPlayer uiComponent;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
+    }
+
+    void Start()
+    {
+        //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
+        uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
+        if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
+
+        GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, blueScorePrefab.transform.localPosition,
+                                                               blueScorePrefab.transform.rotation, blueScorePrefab.transform.localScale);
+        blueScore = uiComponentBlueScore.GetComponent<TMP_Text>();
+
+        GameObject uiComponentRedScore = uiComponent.AttachUI(redScorePrefab, redScorePrefab.transform.localPosition,
+                                                              redScorePrefab.transform.rotation, redScorePrefab.transform.localScale);
+        redScore = uiComponentRedScore.GetComponent<TMP_Text>();
+
+        GameObject uiComponentTimer = uiComponent.AttachUI(timerPrefab, timerPrefab.transform.localPosition,
+                                                           timerPrefab.transform.rotation, timerPrefab.transform.localScale);
+        timer = uiComponentTimer.GetComponent<TMP_Text>();
+
+        GameObject uiComponentLine = uiComponent.AttachUI(scorelinePrefab, scorelinePrefab.transform.localPosition,
+                                                           scorelinePrefab.transform.rotation, scorelinePrefab.transform.localScale);
+
+        GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, bulletsViewPrefab.transform.localPosition,
+                                                           bulletsViewPrefab.transform.rotation, bulletsViewPrefab.transform.localScale);
+        bulletsView = uiComponentBullets.GetComponent<Text>();
+
+        GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
+                                                           TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
+        Team = uiComponentTeam.GetComponent<TMP_Text>();
 
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
+            if (team == 0)
+            {
+                Team.text = "Defenders";
+                Team.color = Color.blue;
+            }
+            else
+            {
+                Team.text = "Attackers";
+                Team.color = Color.red;
+            }
         }
-    }
 
-    void Start()
-    {
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -56,7 +104,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        health = 100;
         bullets = 5;
     }
 
@@ -64,20 +111,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (view.IsMine)
         {
-            LockAndUnlockCursor();
-
-            if (Cursor.lockState == CursorLockMode.Locked)
+            grounded = controller.isGrounded;
+            if (grounded == true && hasJumped == true)
             {
-                Look();
+                hasJumped = false;
+                GetComponent<AudioManager>().Play("Jump");
+                BroadcastSound("Jump");
             }
-
+            if (grounded == false && hasJumped == false)
+            {
+                hasJumped = true;
+            }
+            
             Shoot();
             UseKnife();
             Move();
             Jump();
 
+           
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
+
+
 
             if(secs < 10)
             {
@@ -88,7 +143,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             }
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }
+        }    
     }
 
     private void FixedUpdate()
@@ -107,47 +162,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
 
     private float DampenedMovement(float value)
     {
-
         if (Mathf.Abs(value) > 1f)
         {
             return Mathf.Lerp(value, Mathf.Sign(value), 0.25f);
         }
         return value;
-    }
-    void Look()
-    {
-        var x = Input.GetAxis("Mouse X") * Time.deltaTime;
-        var y = Input.GetAxis("Mouse Y") * Time.deltaTime;
-/*        if (Application.platform == RuntimePlatform.WebGLPlayer)
-        {
-            x = DampenedMovement(x);
-            y = DampenedMovement(y);
-        }*/
-        x *= mouseSensitivity;
-        y *= mouseSensitivity;
-        transform.Rotate(Vector3.up * x * mouseSensitivity);
-
-        verticalLookRotation += y * mouseSensitivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, -90f, 90f);
-
-        cameraHolder.transform.localEulerAngles = Vector3.left * verticalLookRotation;
-
-    }
-    void LockAndUnlockCursor()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }
     }
 
     void Move()
@@ -159,13 +178,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         else
             isMoving = false;
 
-        if (isMoving)
+        if (isMoving && controller.isGrounded)
         {
             if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
                 GetComponent<AudioManager>().Play("ConcreteFootsteps");
                 BroadcastSound("ConcreteFootsteps");
-
             }
         }
         else
@@ -173,8 +191,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             BroadcastSoundS("ConcreteFootsteps");
         }
-            
-
         moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
     }
 
@@ -185,7 +201,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
     }
-    
+
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -250,16 +266,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
-        if (!view.IsMine)
-            return;
-
-        health -= damage;
-        healthView.text = health.ToString();
-
-        if (health <= 0)
+        foreach (string subscriberType in observers.Keys)
         {
-            Die();
-            
+            if (subscriberType.Equals("IDamageObserver"))
+            {
+                foreach (IObserver subscriber in observers[subscriberType])
+                {
+                    (subscriber as IDamageObserver).Notify(damage);
+                }
+            }
         }
     }
 
@@ -295,11 +310,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
         StopRemote(sound);
     }
 
-    private void Die()
-    {
-        playerManager.Die();
-    }
-
     public void Reload()
     {
         if (bullets < 5)
@@ -307,6 +317,32 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable
             bullets = 5;
             bulletsView.text = bullets.ToString();
             FindObjectOfType<AudioManager>().Play("Reload");
+        }
+    }
+
+    public void addObserver<T>(IObserver observer)
+    {
+        // If the key element exists in observers.keys
+        foreach (string observerType in observers.Keys)
+        {
+            if (typeof(T).Name == observerType)
+            {
+                observers[typeof(T).Name].Add(observer);
+                return;
+            }
+        }
+        observers.Add(typeof(T).Name, new List<IObserver>());
+        observers[typeof(T).Name].Add(observer);
+    }
+
+    public void unsubscribeObserver<T>(IObserver observer)
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (typeof(T).Equals(subscriberType))
+            {
+                observers[subscriberType].Remove(observer);
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 public class PickUpScript : MonoBehaviour {
     public enum PickUpType {
         Food,
-        Fuel,
+        //Fuel,
         Health,
         Armor
     };

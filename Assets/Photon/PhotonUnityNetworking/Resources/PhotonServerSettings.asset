@@ -58,10 +58,23 @@ MonoBehaviour:
   - rpcDestroyObject
   - RPC_PlaySound
   - RPC_StopSound
+  - rpcGetDamage
+  - rpcGetDamageAll
+  - replicateIncrementFood
+  - replicateIncrementHealth
+  - rpcIncrementFood
+  - rpcIncrementHealth
+  - RPCCallDie
   - RPC_SwapTeams
   - RPC_BroadcastSound
   - RPC_BroadcastSoundS
   - RPC_suppliesPicked
+  - RPC_ClearCanvas
+  - RPC_FreezeAndMessage
+  - RPC_PauseAndDisplay
+  - RPC_KillAndDisplay
+  - RPC_StartVoiceChat
+  - RPC_SendOfferStrings
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

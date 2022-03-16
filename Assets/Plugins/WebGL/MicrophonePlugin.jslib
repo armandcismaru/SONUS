@@ -26,7 +26,7 @@ var MicrophonePlugin = {
 		  }
 		};
 		navigator.getUserMedia(constraints, function(stream) {
-		  console.log('navigator.getUserMedia successCallback: ', stream);
+		  //console.log('navigator.getUserMedia successCallback: ', stream);
 	  
 		  document.position = 0;
 
@@ -83,7 +83,7 @@ var MicrophonePlugin = {
 
 
 		}, function(error) {
-		  console.error('navigator.getUserMedia errorCallback: ', error);
+		 // console.error('navigator.getUserMedia errorCallback: ', error);
 		});
 	}
   },
@@ -95,7 +95,7 @@ var MicrophonePlugin = {
     document.mMicrophones = [];
 
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-      console.log("enumerateDevices() not supported.");
+      //console.log("enumerateDevices() not supported.");
     } else {
       // List microphones
       navigator.mediaDevices.enumerateDevices()
@@ -108,7 +108,7 @@ var MicrophonePlugin = {
         });
       })
       .catch(function(err) {
-        console.error(err.name + ": " + err.message);
+        //console.error(err.name + ": " + err.message);
       });
     }
   },
@@ -125,7 +125,7 @@ var MicrophonePlugin = {
   },
   
   GetMicrophoneDeviceName: function(index) {
-	//console.log("GetMicrophoneDeviceName");
+	////console.log("GetMicrophoneDeviceName");
 	var returnStr = "Not Set";
 	var microphones = document.mMicrophones;
     if (microphones != undefined) {
@@ -150,4 +150,5 @@ var MicrophonePlugin = {
     return document.volume;
   }
 };
+
 mergeInto(LibraryManager.library, MicrophonePlugin);

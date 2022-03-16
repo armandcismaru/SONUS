@@ -16,7 +16,6 @@ public class PickUpManager : MonoBehaviour {
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
-
     }
 
     // Update is called once per frame
@@ -29,19 +28,22 @@ public class PickUpManager : MonoBehaviour {
             foreach (PickUpComponent pickupComponent in instancePickupComponents)
             {
                 bool toBreak = false;
-                foreach (GameObject uiElement in pickupComponent.GetUIElements())
+                List<GameObject> objects = new List<GameObject>();
+                foreach (GameObject uiElement in pickupComponent.getUIElements())
                 { 
                     try {
                         //Gets called based on how many pick up components it passes.
                         //Attach components to the screen based on how many they are according to each player.
-                        uiComponent.AttachUI(uiElement, uiElement.transform.position, uiElement.transform.rotation);
+                         objects.Add(uiComponent.AttachUI(uiElement, uiElement.transform.position, uiElement.transform.rotation, uiElement.transform.localScale));
                     }
                     catch (System.Exception e) { 
                         setUiInitialized = false;
                         toBreak = true; 
                     }
+                    if (toBreak) break;
                 }
-                if (toBreak) break;
+                pickupComponent.setInstancesUI(this, objects);
+                pickupComponent.updateUI();
             }
             uiInitialized = setUiInitialized;
         }
