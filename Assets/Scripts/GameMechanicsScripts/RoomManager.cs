@@ -6,14 +6,13 @@ using System.Collections;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
-    [HideInInspector] public int currentTeam = 0;
+    [HideInInspector] public int currentTeam = 1;
     private PhotonView view;
 
     public GameObject playerManager;
 
-    [HideInInspector]
-    public bool warmupEnded = false;
-    private int bluePlayers = 0;
+    [HideInInspector] public bool warmupEnded = false;
+    private int bluePlayers = 1;
     private int redPlayers = 0;
 
     private int aliveBlue = 0;
@@ -276,7 +275,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         int aux = bluePlayers;
         bluePlayers = redPlayers;
-        redPlayers = bluePlayers;
+        redPlayers = aux;
 
         aliveBlue = bluePlayers;
         aliveRed = redPlayers;
