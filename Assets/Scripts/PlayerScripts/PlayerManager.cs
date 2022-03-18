@@ -31,17 +31,17 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
+        id = new object[] { view.ViewID, -1 };
         if (PhotonNetwork.IsMasterClient)
         {
             team = 0;
+            id[1] = 0;
         }
 
         if (view.IsMine && !PhotonNetwork.IsMasterClient)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }
-        id = new object[] { view.ViewID };
-
     }
 
     Vector3 getRandomPosition()
@@ -130,14 +130,15 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     void RPC_GetTeam()
     {
-        team = RoomManager.Instance.currentTeam % 2;
+        /*team = RoomManager.Instance.currentTeam % 2;
+        id[1] = RoomManager.Instance.currentTeam;*//*
         if (myAvatar != null)
         {
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
             isReady = true;
-        }
+        }*/
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam - 1);
     }
 
     [PunRPC]
@@ -149,6 +150,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("team ->");
             Debug.Log(tm);
             team = tm % 2;
+            id[1] = tm;
             if (myAvatar != null)
             {
                 myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
