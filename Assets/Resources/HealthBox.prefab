@@ -223,6 +223,7 @@ MonoBehaviour:
   _rotation: {x: 0, y: 0, z: 0}
   _speed: 0
   _pickupType: 1
+  amount: 5
 --- !u!54 &672519129164958760
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -634,6 +635,7 @@ MonoBehaviour:
   _rotation: {x: 0, y: 0, z: 90}
   _speed: 2.7
   _pickupType: 1
+  amount: 0
 --- !u!54 &672519130390977418
 Rigidbody:
   m_ObjectHideFlags: 0
