@@ -20,9 +20,11 @@ public class PlayerManager : MonoBehaviour
     public float minRedZ;
     public float maxRedZ;
 
-    [HideInInspector] public int team = -1;
+    public int team = -1;
     [HideInInspector] public bool isReady = false;
     [HideInInspector] public bool isAlive = false;
+
+    PlayerController playerController;
 
     private void Awake()
     {
@@ -31,6 +33,11 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            team = 0;
+        }
+
         if (view.IsMine && !PhotonNetwork.IsMasterClient)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
@@ -61,6 +68,8 @@ public class PlayerManager : MonoBehaviour
             myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, id);
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
+
+        playerController = myAvatar.gameObject.GetComponent<PlayerController>();
     }
 
     void FixedUpdate()
@@ -93,7 +102,8 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
-        DestroyController();
+        playerController.Die();
+        DestroyMyAvatar();
         if (PhotonNetwork.IsMasterClient)
         {
             RoomManager.Instance.PlayerDied(team);
@@ -104,7 +114,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void DestroyController()
+    public void DestroyMyAvatar()
     {
         if (view.IsMine && myAvatar != null)
         {
@@ -132,7 +142,7 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
     }
 
     [PunRPC]

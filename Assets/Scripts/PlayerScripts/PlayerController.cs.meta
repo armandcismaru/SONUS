@@ -3,7 +3,19 @@ guid: 8955ad2b929c2564dab20b5568de5093
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - controller: {instanceID: 0}
+  - RedMat: {instanceID: 0}
+  - BlueMat: {instanceID: 0}
+  - blueScorePrefab: {fileID: 2882387710771375417, guid: bf7b35dc3049be841aa6fd36a412ce10, type: 3}
+  - redScorePrefab: {fileID: 3765238879110094288, guid: 29d6447fcd31fc04cac06f6137348a49, type: 3}
+  - timerPrefab: {fileID: 4769776762714279213, guid: 2203a4840f3e0214b9b7fde6d495fa75, type: 3}
+  - scorelinePrefab: {fileID: 491197630680243195, guid: 31a74f3a5b6fd264eb733c8e1a558f63, type: 3}
+  - TeamPrefab: {fileID: 9086295897165062077, guid: d703a0455cbfb6144927a2fbfc13c220, type: 3}
+  - gun: {instanceID: 0}
+  - knife: {instanceID: 0}
+  - bulletsView: {instanceID: 0}
+  - bulletsViewPrefab: {fileID: 3865361391602357689, guid: fa4f42298d57fb3408081045f9c52629, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

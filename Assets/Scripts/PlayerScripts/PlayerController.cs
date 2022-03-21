@@ -278,6 +278,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    public void Die()
+    {
+        view.RPC("RPC_Die", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void RPC_Die()
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (subscriberType.Equals("IDieObserver"))
+            {
+                foreach (IObserver subscriber in observers[subscriberType])
+                {
+                    (subscriber as IDieObserver).Notify();
+                }
+            }
+        }
+    }
+
     public void BroadcastSound(string sound)
     {
         view.RPC("RPC_BroadcastSound", RpcTarget.Others, sound);

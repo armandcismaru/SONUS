@@ -641,6 +641,10 @@ PrefabInstance:
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2706524280334559286, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: prefabType
+      value: 
+      objectReference: {fileID: 5821829878314043119, guid: f74ab7fb8e4b53d48bd7591b0d94ac6a, type: 3}
+    - target: {fileID: 2706524280334559286, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: UIElements.Array.size
       value: 1
       objectReference: {fileID: 0}
