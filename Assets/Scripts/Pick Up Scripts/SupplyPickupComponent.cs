@@ -1,18 +1,22 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SupplyPickupComponent : PickUpComponent, IDieObserver
 {
-    private float current_food;
-    [SerializeField] private float max_food;
+    public float current_food = 0;
+
+    [Tooltip("Only one supply can be picked by an attacker. Leave value as 1 by default.")]
+    [ReadOnly]
+    [SerializeField] private float max_food = 1;
     [SerializeField] private float min_food;
 
-    private bool picked;
-
     [SerializeField] private GameObject prefabType;
+
+    public int supplyCharge;
 
     private PhotonView view;
     private void Awake()
@@ -24,6 +28,8 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
     {
         var playerController = GetComponent<PlayerController>();
         playerController.addObserver<IDieObserver>(this);
+
+        supplyCharge = prefabType.GetComponent<PickUpScript>().amount;
     }
 
     public void Notify()
@@ -37,14 +43,11 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         PickUpScript pickup = prefabType.GetComponent<PickUpScript>();
         if (pickup != null && pickup.pickupType == PickUpScript.PickUpType.Food)
         {
-            for (int i = 0; i < current_food / pickup.amount; i++)
+            for (int i = 0; i < current_food / supplyCharge; i++)
             {
                 
                 GameObject supply =  PhotonNetwork.Instantiate(prefabType.name, gameObject.transform.position, Quaternion.identity);
                 RoomManager.collectables.Add(supply);
-                //PhotonNetwork.Instantiate(prefabType.name, gameObject.transform.position, Quaternion.identity);
-                /*PhotonNetwork.Instantiate(prefabType.name, new Vector3(5, 30, 5), Quaternion.identity);
-                Debug.Log("ATTACKER HAS DIED AND FOOD WAS SPAWNED");   /// DOESN T GET CALLED*/
             }
         } else
         {
@@ -54,7 +57,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
 
     public override void updateUI()
     {
-        base.setSlider(5, "Food", current_food / max_food);
+        base.setSlider(5, "Food", current_food / (max_food * supplyCharge));
     }
 
     private void incrementFood(float value)
@@ -82,7 +85,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
     [PunRPC]
     private void replicateIncrementFood(float value)
     {
-        current_food = Mathf.Clamp(current_food + value, min_food, max_food);
+        current_food = Mathf.Clamp(current_food + value, min_food, max_food * supplyCharge);
         if (GetComponent<PhotonView>().IsMine)
             updateUI(); 
     }
@@ -91,8 +94,10 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
     {
         if (gameObject.GetComponent<PlayerController>().team == 1)
         {
-            if (pickup.pickupType == PickUpScript.PickUpType.Food)
+            if (pickup.pickupType == PickUpScript.PickUpType.Food && current_food < max_food * supplyCharge)
             {
+                //if current_food <= pickup.amount --- because my peers want to be able to pick one supply at a time, take it to shelter,
+                //then be able to pick one more
                 incrementFood(pickup.amount);
                 pickup.destroyThisObject();
                 //RoomManager.Instance.AttackersWon();

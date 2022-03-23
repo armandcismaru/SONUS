@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponent<AudioManager>().Stop("ConcreteFootsteps");
             BroadcastSoundS("ConcreteFootsteps");
         }
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed, ref smoothMoveVelocity, smoothTime);
+        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed * 2, ref smoothMoveVelocity, smoothTime); //TODO
     }
 
     void Jump()

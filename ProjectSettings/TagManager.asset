@@ -13,6 +13,8 @@ TagManager:
   - TestCamDirection
   - Canvas
   - Kill
+  - Shelter
+  - RoomManager
   layers:
   - Default
   - TransparentFX
