@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                                                            TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
 
+
         if (view.IsMine)
         {
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
