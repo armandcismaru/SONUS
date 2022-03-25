@@ -258,7 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fpsCam: {fileID: 1586748792}
   AddBulletSpread: 1
-  BulletSpreadVariance: {x: 0.01, y: 0.03, z: 0.01}
+  BulletSpreadVariance: {x: 0.01, y: 0.02, z: 0.01}
   ShootingSystem: {fileID: 1807293313415984417}
   BulletSpawnPoint: {fileID: 7091753315451185684}
   ImpactParticleSystem: {fileID: 9064919875212695174, guid: a5e1e2c4d2cd81f4abed6272a2b8187a, type: 3}

@@ -21,74 +21,48 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private TrailRenderer BulletTrail;
     [SerializeField]
-    private float ShootDelay = 0.5f;
-    [SerializeField]
     private LayerMask Mask;
     [SerializeField]
     private Transform GunTip;
 
     private Animator Animator;
-    private float LastShootTime;
 
     private void Awake()
     {
         Animator = GetComponent<Animator>();
     }
 
-    /*public void Shoot()
-    {
-        // Things to check as rpcs might not be the issue
-        // 1. is it called: 
-        // a. It is not - why? 
-        // b. It is 
-        // 2. Is it shooting towards the right direction?
-        // Check the direction of the camera? - check the forward vector 
-        // 3. Check if there is collision with anything? 
-        // a. There is not - check colliders, check raycast profile 
-        // b. There is
-        // 4. Is take damage called ..... 
-
-        RaycastHit hit;
-        if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, range))
-        {
-           // Debug.Log(hit.collider.gameObject.name);
-           //Debug.Log();
-            var iDamagableComponent = hit.collider.gameObject.GetComponent<IDamageable>();
-            if (iDamagableComponent != null)
-            {
-               // Debug.Log(iDamagableComponent);
-                iDamagableComponent.TakeDamage(damage);
-            } 
-        }
-    }*/
+    // Things to check as rpcs might not be the issue
+    // 1. is it called: 
+    // a. It is not - why? 
+    // b. It is 
+    // 2. Is it shooting towards the right direction?
+    // Check the direction of the camera? - check the forward vector 
+    // 3. Check if there is collision with anything? 
+    // a. There is not - check colliders, check raycast profile 
+    // b. There is
+    // 4. Is take damage called .....
 
     public void Shoot()
     {
-        if (LastShootTime + ShootDelay < Time.time)
+        // Use an object pool instead for these! To keep this tutorial focused, we'll skip implementing one.
+        // For more details you can see: https://youtu.be/fsDE_mO4RZM or if using Unity 2021+: https://youtu.be/zyzqA_CPz2E
+
+        Animator.SetBool("IsShooting", true);      
+        ShootingSystem.Play();
+        Vector3 direction = GetDirection();
+
+        if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, range))
         {
-            // Use an object pool instead for these! To keep this tutorial focused, we'll skip implementing one.
-            // For more details you can see: https://youtu.be/fsDE_mO4RZM or if using Unity 2021+: https://youtu.be/zyzqA_CPz2E
+            TrailRenderer trail = Instantiate(BulletTrail, GunTip.position, Quaternion.identity);
 
-            Animator.SetBool("IsShooting", true);
-            
-            ShootingSystem.Play();
-            Vector3 direction = GetDirection();
-
-            //if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, float.MaxValue, Mask))
-            if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, range))
+            var iDamagableComponent = hit.collider.gameObject.GetComponent<IDamageable>();
+            if (iDamagableComponent != null)
             {
-                TrailRenderer trail = Instantiate(BulletTrail, GunTip.position, Quaternion.identity);
-
-                var iDamagableComponent = hit.collider.gameObject.GetComponent<IDamageable>();
-                if (iDamagableComponent != null)
-                {
-                    iDamagableComponent.TakeDamage(damage);
-                }
-
-                StartCoroutine(SpawnTrail(trail, hit));
-
-                LastShootTime = Time.time;
+                iDamagableComponent.TakeDamage(damage);
             }
+
+            StartCoroutine(SpawnTrail(trail, hit));
         }
     }
 
