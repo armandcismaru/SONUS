@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 [RequireComponent(typeof(Animator))]
@@ -24,6 +25,8 @@ public class Gun : MonoBehaviour
     private LayerMask Mask;
     [SerializeField]
     private Transform GunTip;
+    [SerializeField]
+    private GameObject HitMarker;
 
     private Animator Animator;
 
@@ -56,13 +59,15 @@ public class Gun : MonoBehaviour
         {
             TrailRenderer trail = Instantiate(BulletTrail, GunTip.position, Quaternion.identity);
 
+            StartCoroutine(SpawnTrail(trail, hit));
+
             var iDamagableComponent = hit.collider.gameObject.GetComponent<IDamageable>();
+     
             if (iDamagableComponent != null)
             {
+                StartCoroutine(ActivateHitmarker());
                 iDamagableComponent.TakeDamage(damage);
             }
-
-            StartCoroutine(SpawnTrail(trail, hit));
         }
     }
 
@@ -82,6 +87,15 @@ public class Gun : MonoBehaviour
         }
 
         return direction;
+    }
+
+    private IEnumerator ActivateHitmarker()
+    {
+        HitMarker.GetComponent<Image>().color = Color.red;
+
+        yield return new WaitForSeconds(0.35f);
+
+        HitMarker.GetComponent<Image>().color = Color.white;
     }
 
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
