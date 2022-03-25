@@ -45,14 +45,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private UIScriptPlayer uiComponent;
 
+    GameObject[] pauseObject;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
     }
-
     void Start()
-    {
+    {   
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -105,12 +106,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         bullets = 5;
+
+        pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
 
     void Update()
     {
         if (view.IsMine)
-        {
+        {   
+            PauseMenu();
+
             grounded = controller.isGrounded;
             if (grounded == true && hasJumped == true)
             {
@@ -122,17 +127,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 hasJumped = true;
             }
-            
+
+            if (!Pause.paused) {
             Shoot();
             UseKnife();
             Move();
             Jump();
-
+            }
            
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
-
-
 
             if(secs < 10)
             {
@@ -148,8 +152,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private void FixedUpdate()
     {
-        if (view.IsMine)
-        {
+        if (view.IsMine && !Pause.paused)
+        {    
             if (grounded && velocity.y < 0)
             {
                 velocity.y = -1f;
@@ -168,7 +172,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         return value;
     }
-
+    void PauseMenu() {
+        if (Input.GetKeyDown(KeyCode.T)) {
+            Debug.Log("Am apasat T");
+           pauseObject[0].GetComponent<Pause>().TogglePause();
+        }
+    }
     void Move()
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
