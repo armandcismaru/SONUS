@@ -31,7 +31,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
-    private int bullets;
+
+    [SerializeField]
+    private int bullets = 100;
     private PhotonView view;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
@@ -104,7 +106,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
-        bullets = 5;
+        bullets = 100;
     }
 
     void Update()
