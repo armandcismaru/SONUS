@@ -129,6 +129,7 @@ MonoBehaviour:
   _rotation: {x: 0, y: 0, z: 0}
   _speed: 0
   _pickupType: 0
+  amount: 5
 --- !u!54 &5821829878314043116
 Rigidbody:
   m_ObjectHideFlags: 0
