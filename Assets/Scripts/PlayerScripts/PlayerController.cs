@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private UIScriptPlayer uiComponent;
 
-    GameObject[] pauseObject;
+    [SerializeField] private GameObject pauseObject;
 
     void Awake()
     {
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         isMoving = false;
         bullets = 5;
 
-        pauseObject = GameObject.FindGameObjectsWithTag("Pause");
+        // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
 
     void Update()
@@ -152,8 +152,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private void FixedUpdate()
     {
-        if (view.IsMine && !Pause.paused)
+        if (view.IsMine)
         {    
+            if (grounded && Pause.paused) {
+                return;
+            }
             if (grounded && velocity.y < 0)
             {
                 velocity.y = -1f;
@@ -175,7 +178,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     void PauseMenu() {
         if (Input.GetKeyDown(KeyCode.T)) {
             Debug.Log("Am apasat T");
-           pauseObject[0].GetComponent<Pause>().TogglePause();
+           pauseObject.GetComponent<Pause>().TogglePause();
         }
     }
     void Move()
@@ -187,7 +190,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         else
             isMoving = false;
 
-        if (isMoving && controller.isGrounded)
+        if (isMoving && controller.isGrounded && !Pause.paused)
         {
             if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
             {
