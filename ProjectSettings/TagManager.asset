@@ -13,6 +13,8 @@ TagManager:
   - TestCamDirection
   - Canvas
   - Kill
+  - Hitmarker
+  - Blood
   layers:
   - Default
   - TransparentFX

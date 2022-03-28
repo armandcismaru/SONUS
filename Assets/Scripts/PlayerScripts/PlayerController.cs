@@ -33,14 +33,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private Vector3 moveAmount;
     private Vector3 velocity;
 
-    [SerializeField] private int bullets = 100;
+    [SerializeField] private int bullets = 5;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
 
     private Rigidbody rb;
     public Text bulletsView;
-    //[SerializeField]
-    //public GameObject bloodSplatter;
     private float LastShootTime;
 
     [SerializeField]
