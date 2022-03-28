@@ -176,8 +176,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         return value;
     }
     void PauseMenu() {
-        if (Input.GetKeyDown(KeyCode.T)) {
-            Debug.Log("Am apasat T");
+        if (Input.GetKeyDown(KeyCode.Escape)) {
            pauseObject.GetComponent<Pause>().TogglePause();
         }
     }
