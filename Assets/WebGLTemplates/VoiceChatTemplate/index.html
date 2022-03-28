@@ -177,6 +177,7 @@
                   new Peer(conf)];
         
       let panner = [null, null, null, null, null, null];
+      let gain = [null, null, null, null, null, null];
 
       const pannerSettings = {
             panningModel:      'HRTF',
@@ -206,6 +207,12 @@
         //aContext.listener.forwardZ.value = z;
       }
 
+      window.setGainValue = function(index, value){
+        if(gain[index] != null){
+          gain[index].gain.setValueAtTime(value, aContext.currentTime);
+        }
+      }
+
       window.returnIds = function() {
         let ids = peers[0].id
         for(let i = 1; i < peers.length; i++){
@@ -223,9 +230,9 @@
               aContext.resume();
             }
             panner[0] = aContext.createPanner(pannerSettings);
+            gain[0] = aContext.createGain();
             const source = aContext.createMediaStreamSource(stream);
-            source.connect(panner[0]).connect(aContext.destination);
-            console.log(stream.getTracks().length);
+            source.connect(gain[0]).connect(panner[0]).connect(aContext.destination);
             audios[0].srcObject = stream;
           }); 
         });
@@ -237,9 +244,9 @@
               aContext.resume();
             }
             panner[1] = aContext.createPanner(pannerSettings);
+            gain[1] = aContext.createGain();
             const source = aContext.createMediaStreamSource(stream);
-            source.connect(panner[1]).connect(aContext.destination);
-            console.log(stream.getTracks().length);
+            source.connect(gain[1]).connect(panner[1]).connect(aContext.destination);
             audios[1].srcObject = stream;
           }); 
         });
@@ -251,8 +258,9 @@
               aContext.resume();
             }
             panner[2] = aContext.createPanner(pannerSettings);
+            gain[2] = aContext.createGain();
             const source = aContext.createMediaStreamSource(stream);
-            source.connect(panner[2]).connect(aContext.destination);
+            source.connect(gain[2]).connect(panner[2]).connect(aContext.destination);
             console.log(stream.getTracks().length);
             audios[2].srcObject = stream;
           }); 

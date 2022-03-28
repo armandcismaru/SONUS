@@ -24,10 +24,7 @@ namespace UnityEngine
         public static extern void setMyOrientation(float x, float y, float z);
 
         [DllImport("__Internal")]
-        public static extern void mutePlayer(int index);
-
-        [DllImport("__Internal")]
-        public static extern void unmutePlayer(int index);
+        public static extern void setPlayerVolume(int index, float value);
     }
 }
 #endif

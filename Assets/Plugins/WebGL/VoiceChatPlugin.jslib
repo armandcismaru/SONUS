@@ -24,12 +24,8 @@ var voiceChat = {
         window.setOrientation(x, y, z);
     },
 
-    mutePlayer: function(index){
-        window.muteIndex(index);
-    },
-
-    unmutePlayer: function(index){
-        window.unmuteIndex(index);
-    },
+    setPlayerVolume: function(index, value){
+        window.setGainValue(index, value);
+    }
 };
 mergeInto(LibraryManager.library, voiceChat);

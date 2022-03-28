@@ -112,7 +112,7 @@ public class PlayerManager : MonoBehaviour
 #if UNITY_WEBGL && !UNITY_EDITOR
         if(RoomManager.Instance.index != -1)
         {
-            //VoiceChat.mutePlayer(RoomManager.Instance.index);
+            VoiceChat.setPlayerVolume(RoomManager.Instance.index, 0);
         }
 #endif
     }
