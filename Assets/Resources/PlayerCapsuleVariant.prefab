@@ -1048,6 +1048,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4769776762714279213, guid: 2203a4840f3e0214b9b7fde6d495fa75, type: 3}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: bloodSplatter
+      value: 
+      objectReference: {fileID: 8659907042090090361, guid: f9b66d97037d446e6a488b083d6fd698, type: 3}
+    - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: redScorePrefab
       value: 
       objectReference: {fileID: 3765238879110094288, guid: 29d6447fcd31fc04cac06f6137348a49, type: 3}

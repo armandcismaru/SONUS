@@ -39,7 +39,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private Rigidbody rb;
     public Text bulletsView;
-    public GameObject bloodSplatter;
+    //[SerializeField]
+    //public GameObject bloodSplatter;
     private float LastShootTime;
 
     [SerializeField]
@@ -135,6 +136,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             Move();
             Jump();
 
+            FadeBloodDamage();
+            SelfHit();
+
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -178,9 +182,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     void Move()
     {
-    Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
-                                    0,
-                                    Input.GetAxisRaw("Vertical")).normalized;
+        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
+                                      0,
+                                      Input.GetAxisRaw("Vertical")).normalized;
 
         if (moveDir.x != 0f || moveDir.z != 0f)
             isMoving = true;
@@ -205,6 +209,39 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                                         moveDir * walkSpeed,
                                         ref smoothMoveVelocity,
                                         smoothTime);
+    }
+
+    private void FadeBloodDamage()
+    {
+        GameObject bloodSplatter = GameObject.FindWithTag("Blood");
+
+        if (bloodSplatter != null)
+        {
+            if (bloodSplatter.GetComponent<Image>().color.a > 0)
+            {
+                var color = bloodSplatter.GetComponent<Image>().color;
+                color.a -= 0.01f;
+
+                bloodSplatter.GetComponent<Image>().color = color;
+            }
+        }
+    }
+
+    // ---- TESTING PURPOSES ----
+    void SelfHit()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(50);
+        }
+    }
+
+    void GotHurt()
+    {
+        GameObject bloodSplatter = GameObject.FindWithTag("Blood");
+        var color = bloodSplatter.GetComponent<Image>().color;
+        color.a = 0.8f;
+        bloodSplatter.GetComponent<Image>().color = color;
     }
 
     void Jump()
@@ -274,6 +311,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void TakeDamage(int damage)
     {
+        GotHurt();
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
