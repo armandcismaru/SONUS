@@ -21,7 +21,7 @@ public class Timer : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
     }
