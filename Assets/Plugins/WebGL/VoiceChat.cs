@@ -16,6 +16,18 @@ namespace UnityEngine
 
         [DllImport("__Internal")]
         public static extern void makeCall(int index, string id);
+
+        [DllImport("__Internal")]
+        public static extern void setPosition(int index, float x, float y, float z);
+
+        [DllImport("__Internal")]
+        public static extern void setMyOrientation(float x, float y, float z);
+
+        [DllImport("__Internal")]
+        public static extern void mutePlayer(int index);
+
+        [DllImport("__Internal")]
+        public static extern void unmutePlayer(int index);
     }
 }
 #endif

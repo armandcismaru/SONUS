@@ -117,13 +117,13 @@
 
 
     <div class="audios">
-      <audio id="audio0" autoplay playsinline></audio>
-      <audio id="audio1" autoplay playsinline></audio>
-      <audio id="audio2" autoplay playsinline></audio>
-      <audio id="audio2" autoplay playsinline></audio>
-      <audio id="audio3" autoplay playsinline></audio>
-      <audio id="audio4" autoplay playsinline></audio>
-      <audio id="audio5" autoplay playsinline></audio>
+      <audio id="audio0"></audio>
+      <audio id="audio1"></audio>
+      <audio id="audio2"></audio>
+      <audio id="audio2"></audio>
+      <audio id="audio3"></audio>
+      <audio id="audio4"></audio>
+      <audio id="audio5"></audio>
     </div>
 
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
@@ -147,48 +147,64 @@
                   new MediaStream()];
 
       let connections = [null, null, null, null, null, null];
-      let conf = {"iceServers" :[
-            {
-              urls: "turn:openrelay.metered.ca:80",
-              username: "openrelayproject",
-              credential: "openrelayproject"
-            }]};
-      let peers = [new Peer({config:{"iceServers" :[
+
+      let conf = {
+        secure : true,
+        host: 'sonus-server.herokuapp.com',
+        config:{"iceServers" :[
                   {
                     urls: "turn:openrelay.metered.ca:80",
                     username: "openrelayproject",
                     credential: "openrelayproject"
-                  }]}}), 
-                  new Peer({config:{"iceServers" :[
+                  },
                   {
-                    urls: "turn:openrelay.metered.ca:80",
+                    urls: "turn:openrelay.metered.ca:443",
                     username: "openrelayproject",
-                    credential: "openrelayproject"
-                  }]}}),
-                  new Peer({config:{"iceServers" :[
+                    credential: "openrelayproject",
+                  },
                   {
-                    urls: "turn:openrelay.metered.ca:80",
+                    urls: "turn:openrelay.metered.ca:443?transport=tcp",
                     username: "openrelayproject",
-                    credential: "openrelayproject"
-                  }]}}),
-                  new Peer({config:{"iceServers" :[
-                  {
-                    urls: "turn:openrelay.metered.ca:80",
-                    username: "openrelayproject",
-                    credential: "openrelayproject"
-                  }]}}),
-                  new Peer({config:{"iceServers" :[
-                  {
-                    urls: "turn:openrelay.metered.ca:80",
-                    username: "openrelayproject",
-                    credential: "openrelayproject"
-                  }]}}),
-                  new Peer({config:{"iceServers" :[
-                  {
-                    urls: "turn:openrelay.metered.ca:80",
-                    username: "openrelayproject",
-                    credential: "openrelayproject"
-                  }]}})];
+                    credential: "openrelayproject",
+                  }]}
+      };
+
+      let peers = [new Peer(conf), 
+                  new Peer(conf),
+                  new Peer(conf),
+                  new Peer(conf),
+                  new Peer(conf),
+                  new Peer(conf)];
+        
+      let panner = [null, null, null, null, null, null];
+
+      const pannerSettings = {
+            panningModel:      'HRTF',
+            distanceModel:     'linear',
+            refDistance:       1,
+            maxDistance:       400,
+            rolloffFactor:     1,
+            coneInnerAngle:    360,
+            coneOuterAngle:    0,
+            coneOuterGain:     0
+      };
+
+      let aContext = new AudioContext();
+      aContext.listener.setPosition(0, 0, 0);
+      
+      window.setPlayerPosition = function(index, x, y, z){
+        //console.log("ind %d, %f %f %f", index, x, y, z);
+        if(panner[index] != null){
+          panner[index].setPosition(x, y, z);
+        }
+      }
+
+      window.setOrientation = function(x, y, z){
+        aContext.listener.setOrientation(x, y, z, 0, 1, 0);
+        //aContext.listener.forwardX.value = x;
+        //aContext.listener.forwardY.value = y;
+        //aContext.listener.forwardZ.value = z;
+      }
 
       window.returnIds = function() {
         let ids = peers[0].id
@@ -203,63 +219,87 @@
         peers[0].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-              remoteStream[0].addTrack(track);
-            });
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[0] = aContext.createPanner(pannerSettings);
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(panner[0]).connect(aContext.destination);
+            console.log(stream.getTracks().length);
+            audios[0].srcObject = stream;
           }); 
         });
 
         peers[1].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-              remoteStream[1].addTrack(track);
-            });
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[1] = aContext.createPanner(pannerSettings);
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(panner[1]).connect(aContext.destination);
+            console.log(stream.getTracks().length);
+            audios[1].srcObject = stream;
           }); 
         });
         
         peers[2].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-              remoteStream[2].addTrack(track);
-            });
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[2] = aContext.createPanner(pannerSettings);
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(panner[2]).connect(aContext.destination);
+            console.log(stream.getTracks().length);
+            audios[2].srcObject = stream;
           }); 
         });
 
         peers[3].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-              remoteStream[3].addTrack(track);
-            });
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[3] = aContext.createPanner(pannerSettings);
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(panner[3]).connect(aContext.destination);
+            console.log(stream.getTracks().length);
+            audios[3].srcObject = stream;
           }); 
         });
 
         peers[4].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-              remoteStream[4].addTrack(track);
-            });
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[4] = aContext.createPanner(pannerSettings);
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(panner[4]).connect(aContext.destination);
+            console.log(stream.getTracks().length);
+            audios[4].srcObject = stream;
           }); 
         });
 
         peers[5].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-              remoteStream[5].addTrack(track);
-            });
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[5] = aContext.createPanner(pannerSettings);
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(panner[5]).connect(aContext.destination);
+            console.log(stream.getTracks().length);
+            audios[5].srcObject = stream;
           }); 
         });
-
-        audios[0].srcObject = remoteStream[0];
-        audios[1].srcObject = remoteStream[1];
-        audios[2].srcObject = remoteStream[2];
-        audios[3].srcObject = remoteStream[3];
-        audios[4].srcObject = remoteStream[4];
-        audios[5].srcObject = remoteStream[5];
+        
       }
 
       window.createCall = function(index, id) {
@@ -267,11 +307,18 @@
         console.log(index);
         connections[index] = peers[index].call(id, localStream);
         connections[index].on('stream', function(stream) {
-            stream.getTracks().forEach((track) => {
-                remoteStream[index].addTrack(track, localStream);
-            });
+          if (aContext.state === 'suspended') {
+            aContext.resume();
+          }
+          panner[index] = aContext.createPanner(pannerSettings);
+          const source = aContext.createMediaStreamSource(stream);
+          source.connect(panner[index]).connect(aContext.destination);
+          aContext.listener.setPosition(0, 0, 0);
+          audios[index].srcObject = stream;
         });
       }
+
+    
     </script>
     <script src="js/mainScript.js"></script>
     <!-- These are the two JavaScript files you must load in the HTML,

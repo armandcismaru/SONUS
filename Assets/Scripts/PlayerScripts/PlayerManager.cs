@@ -98,6 +98,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
+
         DestroyController();
         if (PhotonNetwork.IsMasterClient)
         {
@@ -107,6 +108,13 @@ public class PlayerManager : MonoBehaviour
         {
             view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(RoomManager.Instance.index != -1)
+        {
+            //VoiceChat.mutePlayer(RoomManager.Instance.index);
+        }
+#endif
     }
 
     public void DestroyController()
@@ -124,6 +132,11 @@ public class PlayerManager : MonoBehaviour
         {
             team = 1 - team;
         }
+    }
+
+    public GameObject getAvatar()
+    {
+        return myAvatar;
     }
 
 
