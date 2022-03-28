@@ -13,6 +13,7 @@ TagManager:
   - TestCamDirection
   - Canvas
   - Kill
+  - Pause
   layers:
   - Default
   - TransparentFX
