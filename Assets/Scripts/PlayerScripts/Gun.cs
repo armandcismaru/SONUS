@@ -22,8 +22,6 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private TrailRenderer BulletTrail;
     [SerializeField]
-    private LayerMask Mask;
-    [SerializeField]
     private Transform GunTip;
     [SerializeField]
     private GameObject HitMarker;
