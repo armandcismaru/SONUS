@@ -1216,8 +1216,8 @@ MonoBehaviour:
   sounds:
   - name: ConcreteFootsteps
     clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
-    volume: 0.432
-    pitch: 1.01
+    volume: 0.57
+    pitch: 0.96
     source: {fileID: 0}
     spatialBlend: 1
     dopplerLevel: 3.79
@@ -1255,13 +1255,13 @@ MonoBehaviour:
     minDistance: 1
     maxDistance: 40
   - name: Jump
-    clip: {fileID: 8300000, guid: c4cd7b41e0acd44e1ba6fdfd8b8cd9ab, type: 3}
-    volume: 0.241
-    pitch: 1.13
+    clip: {fileID: 8300000, guid: cc95c417e33254ae194d4d0f810083d9, type: 3}
+    volume: 0.32
+    pitch: 0.52
     source: {fileID: 0}
     spatialBlend: 1
     dopplerLevel: 2.08
-    spread: 173
+    spread: 139
     minDistance: 1
     maxDistance: 50
   - name: Reload
@@ -1274,6 +1274,26 @@ MonoBehaviour:
     spread: 63
     minDistance: 1
     maxDistance: 25
+  - name: ShortFootstep
+    clip: {fileID: 8300000, guid: 9d5d05aebd2dc4199aa8a075e7045a81, type: 3}
+    volume: 0.67
+    pitch: 1.24
+    source: {fileID: 0}
+    spatialBlend: 0.83
+    dopplerLevel: 2.92
+    spread: 93
+    minDistance: 1
+    maxDistance: 25
+  - name: GetShot
+    clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
+    volume: 0.5
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.23
+    dopplerLevel: 0.42
+    spread: 24
+    minDistance: 1
+    maxDistance: 2
 --- !u!114 &104123427400230039
 MonoBehaviour:
   m_ObjectHideFlags: 0

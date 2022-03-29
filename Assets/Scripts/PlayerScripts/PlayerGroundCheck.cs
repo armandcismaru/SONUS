@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerGroundCheck : MonoBehaviour
@@ -42,8 +40,8 @@ public class PlayerGroundCheck : MonoBehaviour
             if (other.collider.gameObject.tag == "Ground" &&
                 other.GetContact(0).thisCollider.transform.gameObject.name != "Gun")
             {
-                playerController.GetComponent<AudioManager>().Play("Jump");
-                playerController.BroadcastSound("Jump");
+                playerController.GetComponent<AudioManager>().Play(playerController.JUMP_SOUND);
+                playerController.BroadcastSound(playerController.JUMP_SOUND);
             }
         }
     }

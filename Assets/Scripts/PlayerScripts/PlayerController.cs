@@ -6,6 +6,14 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
+    public readonly string FOOTSTEP_SOUND = "ConcreteFootsteps";
+    public readonly string GUN_SOUND = "Gunshot";
+    public readonly string JUMP_SOUND = "Jump";
+    public readonly string STAB_SOUND = "stab";
+    public readonly string DRYFIRE_SOUND = "DryFire";
+    public readonly string RELOAD_SOUND = "Reload";
+    public readonly string GETSHOT_SOUND = "GetShot";
+
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Material RedMat;
@@ -116,17 +124,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (view.IsMine)
         {
-            grounded = controller.isGrounded;
-            if (grounded == true && hasJumped == true)
-            {
-                hasJumped = false;
-                GetComponent<AudioManager>().Play("Jump");
-                BroadcastSound("Jump");
-            }
-
             if (grounded == false && hasJumped == false)
             {
                 hasJumped = true;
+            }
+            grounded = controller.isGrounded;
+
+            if (grounded == true && hasJumped == true)
+            {
+                GetComponent<AudioManager>().Play(JUMP_SOUND);
+                hasJumped = false; 
+                BroadcastSound(JUMP_SOUND);
             }
             
             Shoot();
@@ -191,16 +199,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (isMoving && controller.isGrounded)
         {
-            if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
+            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded)
             {
-                GetComponent<AudioManager>().Play("ConcreteFootsteps");
-                BroadcastSound("ConcreteFootsteps");
+                GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
+                BroadcastSound(FOOTSTEP_SOUND);
             }
         }
         else
         {
-            GetComponent<AudioManager>().Stop("ConcreteFootsteps");
-            BroadcastSoundS("ConcreteFootsteps");
+            GetComponent<AudioManager>().Stop(FOOTSTEP_SOUND);
+            BroadcastSoundS(FOOTSTEP_SOUND);
         }
 
         moveAmount = Vector3.SmoothDamp(moveAmount,
@@ -236,6 +244,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     void GotHurt()
     {
+        GetComponent<AudioManager>().Play(GETSHOT_SOUND);
         GameObject bloodSplatter = GameObject.FindWithTag("Blood");
         var color = bloodSplatter.GetComponent<Image>().color;
         color.a = 0.8f;
@@ -256,8 +265,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             if (bullets > 0)
             {
-                GetComponent<AudioManager>().Play("Gunshot");
-                BroadcastSound("Gunshot");
+                GetComponent<AudioManager>().Play(GUN_SOUND);
+                BroadcastSound(GUN_SOUND);
 
                 bullets -= 1;
                 bulletsView.text = bullets.ToString();
@@ -266,8 +275,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             }
             else
             {
-                GetComponent<AudioManager>().Play("DryFire");
-                BroadcastSound("DryFire");
+                GetComponent<AudioManager>().Play(DRYFIRE_SOUND);
+                BroadcastSound(DRYFIRE_SOUND);
             }
         }
     }
@@ -276,8 +285,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            GetComponent<AudioManager>().Play("stab");
-            BroadcastSound("stab");
+            GetComponent<AudioManager>().Play(STAB_SOUND);
+            BroadcastSound(STAB_SOUND);
             knife.UseKnife();
         }
     }
@@ -386,7 +395,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             bullets = 5;
             bulletsView.text = bullets.ToString();
-            FindObjectOfType<AudioManager>().Play("Reload");
+            FindObjectOfType<AudioManager>().Play(RELOAD_SOUND);
         }
     }
 
