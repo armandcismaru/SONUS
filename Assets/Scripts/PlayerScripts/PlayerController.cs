@@ -58,14 +58,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private UIScriptPlayer uiComponent;
 
+    [SerializeField] private GameObject pauseObject;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
     }
-
     void Start()
-    {
+    {   
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -118,12 +119,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         bullets = 5;
+
+        // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
 
     void Update()
     {
         if (view.IsMine)
-        {
+        {   
+            PauseMenu();
+
             if (grounded == false && hasJumped == false)
             {
                 hasJumped = true;
@@ -137,14 +142,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 BroadcastSound(JUMP_SOUND);
             }
             
-            Shoot();
-            UseKnife();
-            Move();
-            Jump();
+            if (!Pause.paused) {
+                Shoot();
+                UseKnife();
+                Move();
+                Jump();
 
-            FadeBloodDamage();
-            SelfHit();
-
+                FadeBloodDamage();
+                SelfHit();
+            }
+           
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -165,7 +172,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private void FixedUpdate()
     {
         if (view.IsMine)
-        {
+        {    
+            if (grounded && Pause.paused) {
+                return;
+            }
             if (grounded && velocity.y < 0)
             {
                 velocity.y = -1f;
@@ -185,7 +195,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         return value;
     }
-
+    void PauseMenu() {
+        if (Input.GetKeyDown(KeyCode.Tab)) {
+           pauseObject.GetComponent<Pause>().TogglePause();
+        }
+    }
     void Move()
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
@@ -197,7 +211,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         else
             isMoving = false;
 
-        if (isMoving && controller.isGrounded)
+        if (isMoving && controller.isGrounded && !Pause.paused)
         {
             if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded)
             {

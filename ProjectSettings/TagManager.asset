@@ -15,6 +15,7 @@ TagManager:
   - Kill
   - Hitmarker
   - Blood
+  - Pause
   layers:
   - Default
   - TransparentFX
