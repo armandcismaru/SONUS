@@ -13,6 +13,8 @@ TagManager:
   - TestCamDirection
   - Canvas
   - Kill
+  - Hitmarker
+  - Blood
   - Pause
   layers:
   - Default
