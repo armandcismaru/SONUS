@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
@@ -23,6 +21,8 @@ public class PlayerManager : MonoBehaviour
     public int team = -1;
     [HideInInspector] public bool isReady = false;
     [HideInInspector] public bool isAlive = false;
+
+    PlayerController playerController;
 
     private void Awake()
     {
@@ -66,6 +66,8 @@ public class PlayerManager : MonoBehaviour
             myAvatar = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity, 0, id);
             myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
         }
+
+        playerController = myAvatar.gameObject.GetComponent<PlayerController>();
     }
 
     void FixedUpdate()
@@ -111,7 +113,8 @@ public class PlayerManager : MonoBehaviour
         }
 #endif
 
-        DestroyController();
+        playerController.Die();
+        DestroyMyAvatar();
         if (PhotonNetwork.IsMasterClient)
         {
             RoomManager.Instance.PlayerDied(team);
@@ -135,7 +138,7 @@ public class PlayerManager : MonoBehaviour
 #endif
     }
 
-    public void DestroyController()
+    public void DestroyMyAvatar()
     {
         if (view.IsMine && myAvatar != null)
         {

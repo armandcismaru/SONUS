@@ -11,3 +11,7 @@ public interface IDamageObserver : IObserver
 {
     public void Notify(int damage);
 }
+
+public interface IDieObserver : IObserver
+{
+}

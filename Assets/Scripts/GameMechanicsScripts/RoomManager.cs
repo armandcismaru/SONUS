@@ -2,9 +2,11 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
+    //bool ok = true;
     public static RoomManager Instance;
     [HideInInspector] public int currentTeam = 1;
     private PhotonView view;
@@ -39,6 +41,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private string[] offerString = new string[maxNumOfPlayers];
     [HideInInspector] public int index = 0;
 
+    public static List<GameObject> collectables;
+
     private void Awake()
     {
         if (Instance)
@@ -46,7 +50,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -163,8 +167,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
-            
+            /*if (ok)
+            {*/
+                supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
+                //ok = false;
+            //}
             //Defenders' Spot
             healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
             healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
@@ -175,7 +182,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
             healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
 
-
+            collectables = new List<GameObject>() {supplies, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
+            
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
         }
@@ -307,7 +315,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         scoreRed = aux;
 
         playerManager.GetComponent<PlayerManager>().SwapTeams();
-        playerManager.GetComponent<PlayerManager>().DestroyController();
+        playerManager.GetComponent<PlayerManager>().DestroyMyAvatar();
         playerManager.GetComponent<PlayerManager>().StartRound();
 
 
@@ -336,12 +344,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Timer.Instance.StopTimer();
 
-            if (supplies != null) PhotonNetwork.Destroy(supplies);
+            /*if (supplies != null) PhotonNetwork.Destroy(supplies);
             if (healthBox != null) PhotonNetwork.Destroy(healthBox);
             if (healthBox1 != null) PhotonNetwork.Destroy(healthBox1);
             if (healthBox2 != null) PhotonNetwork.Destroy(healthBox2);
             if (healthBox4 != null) PhotonNetwork.Destroy(healthBox4);
-            if (healthBox5 != null) PhotonNetwork.Destroy(healthBox5);
+            if (healthBox5 != null) PhotonNetwork.Destroy(healthBox5);*/
+
+            foreach (GameObject collectable in collectables)
+            {
+                PhotonNetwork.Destroy(collectable);
+            }
 
 
             StartRound();

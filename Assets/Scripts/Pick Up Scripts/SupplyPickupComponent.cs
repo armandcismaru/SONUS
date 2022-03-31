@@ -4,13 +4,53 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SupplyPickupComponent : PickUpComponent
+public class SupplyPickupComponent : PickUpComponent, IDieObserver
 {
     private float current_food;
     [SerializeField] private float max_food;
     [SerializeField] private float min_food;
 
     private bool picked;
+
+    [SerializeField] private GameObject prefabType;
+
+    private PhotonView view;
+    private void Awake()
+    {
+        view = GetComponent<PhotonView>();
+    }
+
+    private void Start()
+    {
+        var playerController = GetComponent<PlayerController>();
+        playerController.addObserver<IDieObserver>(this);
+    }
+
+    public void Notify()
+    {
+        if (view.IsMine)
+             DropSupplies();
+    }
+
+    public void DropSupplies()
+    {
+        PickUpScript pickup = prefabType.GetComponent<PickUpScript>();
+        if (pickup != null && pickup.pickupType == PickUpScript.PickUpType.Food)
+        {
+            for (int i = 0; i < current_food / pickup.amount; i++)
+            {
+                
+                GameObject supply =  PhotonNetwork.Instantiate(prefabType.name, gameObject.transform.position, Quaternion.identity);
+                RoomManager.collectables.Add(supply);
+                //PhotonNetwork.Instantiate(prefabType.name, gameObject.transform.position, Quaternion.identity);
+                /*PhotonNetwork.Instantiate(prefabType.name, new Vector3(5, 30, 5), Quaternion.identity);
+                Debug.Log("ATTACKER HAS DIED AND FOOD WAS SPAWNED");   /// DOESN T GET CALLED*/
+            }
+        } else
+        {
+            throw new System.Exception("Incorrect prefab type");
+        }
+    }
 
     public override void updateUI()
     {
@@ -53,9 +93,9 @@ public class SupplyPickupComponent : PickUpComponent
         {
             if (pickup.pickupType == PickUpScript.PickUpType.Food)
             {
-                incrementFood(5f);                
+                incrementFood(pickup.amount);
                 pickup.destroyThisObject();
-                RoomManager.Instance.AttackersWon();
+                //RoomManager.Instance.AttackersWon();
             }
         }
     } 
