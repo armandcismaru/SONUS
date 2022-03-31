@@ -12,15 +12,17 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
     private float current_health;
     private PlayerManager playerManager;
     private PhotonView view;
+    [SerializeField] PlayerController playerController;
 
     private void Awake()
     {
         view = GetComponent<PhotonView>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Start()
     {
-        var playerController = GetComponent<PlayerController>();
+        //var playerController = GetComponent<PlayerController>();
         playerController.addObserver<IDamageObserver>(this);
         current_health = start_health;
 
@@ -81,6 +83,9 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
     public void Notify(int damage)
     {
+        if (view.IsMine)
+            playerController.GotHurt();
+
         GetDamage(5);
     }
 
