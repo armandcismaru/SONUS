@@ -1,118 +1,110 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
-    <!-- <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css"> -->
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}}></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">{{{ PRODUCT_NAME }}}</div>
-      </div>
-    </div>
-    <script>
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      var warningBanner = document.querySelector("#unity-warning");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>{{{ PRODUCT_NAME }}}</title>
+	<style>
+		html,
+		body {
+			background: {{{ BACKGROUND || '#000' }}};
+			width: 100%;
+			height: 100%;
+			overflow: visible;
+			padding: 0;
+			margin: 0;
+		}
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
-      var config = {
-        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
-        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
-        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+		div#gameContainer {
+			background: transparent !important;
+			position: absolute;
+		}
+
+		div#gameContainer canvas {
+			position: absolute;
+		}
+
+		div#gameContainer canvas[data-pixel-art="true"] {
+			position: absolute;
+			image-rendering: optimizeSpeed;
+			image-rendering: -webkit-crisp-edges;
+			image-rendering: -moz-crisp-edges;
+			image-rendering: -o-crisp-edges;
+			image-rendering: crisp-edges;
+			image-rendering: -webkit-optimize-contrast;
+			image-rendering: optimize-contrast;
+			image-rendering: pixelated;
+			-ms-interpolation-mode: nearest-neighbor;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="gameContainer">
+		<canvas id="unity-canvas" data-pixel-art="{{{ OPTIMIZE_FOR_PIXEL_ART }}}"></canvas>
+		<script src="Build/{{{ LOADER_FILENAME }}}"></script>
+		<script>
+			var canvas = document.querySelector("#unity-canvas");
+			var config = {
+				dataUrl: "Build/{{{ DATA_FILENAME }}}",
+				frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+				codeUrl: "Build/{{{ CODE_FILENAME }}}",
 #if MEMORY_FILENAME
-        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+				memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
 #endif
 #if SYMBOLS_FILENAME
-        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+				symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
 #endif
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "{{{ COMPANY_NAME }}}",
-        productName: "{{{ PRODUCT_NAME }}}",
-        productVersion: "{{{ PRODUCT_VERSION }}}",
-        showBanner: unityShowBanner,
-      };
+				streamingAssetsUrl: "StreamingAssets",
+				companyName: "{{{ COMPANY_NAME }}}",
+				productName: "{{{ PRODUCT_NAME }}}",
+				productVersion: "{{{ PRODUCT_VERSION }}}",
+			};
+			var scaleToFit;
+			try {
+				scaleToFit = !!JSON.parse("{{{ SCALE_TO_FIT }}}");
+			} catch (e) {
+				scaleToFit = true;
+			}
+			function progressHandler(progress) {
+				var percent = progress * 100 + '%';
+				canvas.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent) no-repeat center';
+				canvas.style.backgroundSize = '100% 1rem';
+			}
+			function onResize() {
+				var container = canvas.parentElement;
+				var w;
+				var h;
 
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+				if (scaleToFit) {
+					w = window.innerWidth;
+					h = window.innerHeight;
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        // Avoid draining fillrate performance on mobile devices,
-        // and default/override low DPI mode on mobile browsers.
-        config.devicePixelRatio = 1;
-        unityShowBanner('WebGL builds are not supported on mobile devices.');
-      } else {
-        canvas.style.width = "{{{ WIDTH }}}px";
-        canvas.style.height = "{{{ HEIGHT }}}px";
-      }
-#if BACKGROUND_FILENAME
-      canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
-#endif
-      loadingBar.style.display = "block";
+					var r = {{{ HEIGHT }}} / {{{ WIDTH }}};
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          window.unityInstance = unityInstance;
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
-    </script>
+					if (w * r > window.innerHeight) {
+						w = Math.min(w, Math.ceil(h / r));
+					}
+					h = Math.floor(w * r);
+				} else {
+					w = {{{ WIDTH }}};
+					h = {{{ HEIGHT }}};
+				}
+
+				container.style.width = canvas.style.width = w + "px";
+				container.style.height = canvas.style.height = h + "px";
+				container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+			}
+			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+				canvas = instance.Module.canvas;
+				onResize();
+			});
+			window.addEventListener('resize', onResize);
+			onResize();
+		</script>
+	</div>
 
 
 
@@ -209,6 +201,7 @@
 
       window.setGainValue = function(index, value){
         if(gain[index] != null){
+          console.log("setting index %d to value %d", index, value);
           gain[index].gain.setValueAtTime(value, aContext.currentTime);
         }
       }
@@ -273,8 +266,9 @@
               aContext.resume();
             }
             panner[3] = aContext.createPanner(pannerSettings);
+            gain[3] = aContext.createGain();
             const source = aContext.createMediaStreamSource(stream);
-            source.connect(panner[3]).connect(aContext.destination);
+            source.connect(gain[3]).connect(panner[3]).connect(aContext.destination);
             console.log(stream.getTracks().length);
             audios[3].srcObject = stream;
           }); 
@@ -287,8 +281,9 @@
               aContext.resume();
             }
             panner[4] = aContext.createPanner(pannerSettings);
+            gain[4] = aContext.createGain();
             const source = aContext.createMediaStreamSource(stream);
-            source.connect(panner[4]).connect(aContext.destination);
+            source.connect(gain[4]).connect(panner[4]).connect(aContext.destination);
             console.log(stream.getTracks().length);
             audios[4].srcObject = stream;
           }); 
@@ -301,8 +296,9 @@
               aContext.resume();
             }
             panner[5] = aContext.createPanner(pannerSettings);
+            gain[5] = aContext.createGain();
             const source = aContext.createMediaStreamSource(stream);
-            source.connect(panner[5]).connect(aContext.destination);
+            source.connect(gain[5]).connect(panner[5]).connect(aContext.destination);
             console.log(stream.getTracks().length);
             audios[5].srcObject = stream;
           }); 
@@ -319,8 +315,9 @@
             aContext.resume();
           }
           panner[index] = aContext.createPanner(pannerSettings);
+          gain[index] = aContext.createGain();
           const source = aContext.createMediaStreamSource(stream);
-          source.connect(panner[index]).connect(aContext.destination);
+          source.connect(gain[index]).connect(panner[index]).connect(aContext.destination);
           aContext.listener.setPosition(0, 0, 0);
           audios[index].srcObject = stream;
         });

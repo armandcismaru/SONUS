@@ -98,6 +98,18 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
+        //dead players should not be able to communicate with the team
+        int ind = myAvatar.GetComponent<PlayerController>().index;
+        view.RPC("RPC_MuteDeadPlayer", RpcTarget.Others, RoomManager.Instance.index);
+
+        //and should not hear the team either
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++)
+        {
+        //unmutes player if he exists otherwise does nothing
+            VoiceChat.setPlayerVolume(i, 0);
+        }
+#endif
 
         DestroyController();
         if (PhotonNetwork.IsMasterClient)
@@ -109,10 +121,16 @@ public class PlayerManager : MonoBehaviour
             view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
 
+    }
+
+    [PunRPC]
+    public void RPC_MuteDeadPlayer(int index)
+    {
+        Debug.Log("index index index index");
 #if UNITY_WEBGL && !UNITY_EDITOR
-        if(RoomManager.Instance.index != -1)
+        if(index != -1)
         {
-            VoiceChat.setPlayerVolume(RoomManager.Instance.index, 0);
+            VoiceChat.setPlayerVolume(index, 0);
         }
 #endif
     }

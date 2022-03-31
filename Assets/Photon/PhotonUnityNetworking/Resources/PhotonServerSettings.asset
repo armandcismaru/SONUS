@@ -75,6 +75,7 @@ MonoBehaviour:
   - RPC_KillAndDisplay
   - RPC_StartVoiceChat
   - RPC_SendOfferStrings
+  - RPC_MuteDeadPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

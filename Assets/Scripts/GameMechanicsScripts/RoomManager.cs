@@ -317,7 +317,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         //unmutes player if he exists otherwise does nothing
             VoiceChat.setPlayerVolume(i, 1);
         }
-
 #endif
     }
 
