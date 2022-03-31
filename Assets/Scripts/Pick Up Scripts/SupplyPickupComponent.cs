@@ -16,9 +16,10 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
 
     [SerializeField] private GameObject prefabType;
 
-    public int supplyCharge;
+    [SerializeField] public int supplyCharge;
 
     private PhotonView view;
+
     private void Awake()
     {
         view = GetComponent<PhotonView>();
@@ -57,50 +58,37 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
 
     public override void updateUI()
     {
-        base.setSlider(5, "Food", current_food / (max_food * supplyCharge));
+        if (view.IsMine)
+            base.setSlider(5, "Food", current_food / (max_food * supplyCharge));
     }
 
-    private void incrementFood(float value)
+    private async void incrementFood(float value)
     {
-        if (!GetComponent<PhotonView>().IsMine)
+        if (!view.IsMine)
             return;
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            rpcIncrementFood(value);
-        }
-        else
-        {
-            GetComponent<PhotonView>().RPC("rpcIncrementFood", RpcTarget.MasterClient, value);
-        }
+        replicateIncrementFood(value);
     }
-
-    [PunRPC]
-    private void rpcIncrementFood(float value)
-    {
-        GetComponent<PhotonView>().RPC("replicateIncrementFood", RpcTarget.AllViaServer, value);
-
-    }
-
-    [PunRPC]
+    
     private void replicateIncrementFood(float value)
     {
         current_food = Mathf.Clamp(current_food + value, min_food, max_food * supplyCharge);
-        if (GetComponent<PhotonView>().IsMine)
+        if (view.IsMine)
             updateUI(); 
     }
     
     public override void pickupTrigger(PickUpScript pickup)
     {
+        if (!view.IsMine)
+            return;
+
         if (gameObject.GetComponent<PlayerController>().team == 1)
         {
             if (pickup.pickupType == PickUpScript.PickUpType.Food && current_food < max_food * supplyCharge)
             {
-                //if current_food <= pickup.amount --- because my peers want to be able to pick one supply at a time, take it to shelter,
-                //then be able to pick one more
-                incrementFood(pickup.amount);
+                float value = pickup.amount;
+                incrementFood(value);
                 pickup.destroyThisObject();
-                //RoomManager.Instance.AttackersWon();
             }
         }
     } 

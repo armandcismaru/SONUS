@@ -50,6 +50,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
+    private Shelter shelterClass;
+
     private void Awake()
     {
         if (Instance)
@@ -88,7 +90,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(5f); //TODO 20f
+            Timer.Instance.StartTimer(20f); //TODO 20f
         }
         if (scene.buildIndex == 1)
         {
@@ -338,7 +340,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         warmupEnded = value;
     }
 
-    public void suppliesPicked()
+    /*public void suppliesPicked()
     {
         view.RPC("RPC_suppliesPicked", RpcTarget.MasterClient);
     }
@@ -347,6 +349,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void RPC_suppliesPicked()
     {
         AttackersWon();
+    }*/
+
+    public void suppliesPicked()
+    {
+        view.RPC("RPC_suppliesPicked", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    public void RPC_suppliesPicked()
+    {
+        shelterClass.RoundFinishedAttackersWinningByTakingSuppliesToShelter();
     }
 
     public void SuppliesTakenSuccesfullyToShelter()
