@@ -8,7 +8,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
     public static RoomManager Instance;
-    [HideInInspector] public int currentTeam = 1;
+    [HideInInspector] private int currentTeam = 1;
     private PhotonView view;
 
     public GameObject playerManager = null;
@@ -100,6 +100,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
             redPlayers++;
         }
         currentTeam++;
+    }
+
+    public int getCurrentTeam()
+    {
+        return currentTeam;
     }
 
     private void FixedUpdate()

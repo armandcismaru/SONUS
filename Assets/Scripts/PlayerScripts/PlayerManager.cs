@@ -172,7 +172,7 @@ public class PlayerManager : MonoBehaviour
             isReady = true;
         }*/
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.currentTeam - 1);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.getCurrentTeam() - 1);
     }
 
     [PunRPC]
