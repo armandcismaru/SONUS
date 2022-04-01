@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent(typeof(Animator))]
 public class Gun : MonoBehaviour
 {
-    private int damage = 50;
+    private int damage = 5;
     private float range = 100f;
     [SerializeField] Camera fpsCam;
 
@@ -32,17 +32,6 @@ public class Gun : MonoBehaviour
     {
         Animator = GetComponent<Animator>();
     }
-
-    // Things to check as rpcs might not be the issue
-    // 1. is it called: 
-    // a. It is not - why? 
-    // b. It is 
-    // 2. Is it shooting towards the right direction?
-    // Check the direction of the camera? - check the forward vector 
-    // 3. Check if there is collision with anything? 
-    // a. There is not - check colliders, check raycast profile 
-    // b. There is
-    // 4. Is take damage called .....
 
     public void Shoot()
     {

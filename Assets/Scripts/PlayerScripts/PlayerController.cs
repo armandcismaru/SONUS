@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         moveAmount = Vector3.SmoothDamp(moveAmount,
                                         moveDir * walkSpeed,
                                         ref smoothMoveVelocity,
-                                        smoothTime);
+                                        smoothTime); //TODO
     }
 
     private void FadeBloodDamage()

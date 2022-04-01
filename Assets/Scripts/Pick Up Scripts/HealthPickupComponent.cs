@@ -37,28 +37,14 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         base.setSlider(5, "Health", current_health / max_health);
     }
 
-    private void IncrementHealth(float value)
+    private async void IncrementHealth(float value)
     {
         if (!view.IsMine)
             return;
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            rpcIncrementHealth(value);
-        }
-        else
-        {
-            view.RPC("rpcIncrementHealth", RpcTarget.MasterClient, value);
-        }
+        replicateIncrementHealth(value);
     }
 
-    [PunRPC]
-    private void rpcIncrementHealth(float value)
-    {
-        view.RPC("replicateIncrementHealth", RpcTarget.AllViaServer, value);
-    }
-
-    [PunRPC]
     private void replicateIncrementHealth(float value)
     {
         current_health = Mathf.Clamp(current_health + value, min_health, max_health);
