@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -1558052538793919156}
   - component: {fileID: 4774892308684996018}
   - component: {fileID: 6551728409190038033}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Shelter
   m_TagString: Untagged
   m_Icon: {fileID: 0}

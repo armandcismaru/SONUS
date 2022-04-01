@@ -8,7 +8,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
     public static RoomManager Instance;
-    [HideInInspector] public int currentTeam = 1;
+    private int currentTeam = 1;
     private PhotonView view;
 
     public GameObject playerManager;
@@ -96,6 +96,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             playerManager = PhotonNetwork.Instantiate("PlayerManager", Vector3.zero, Quaternion.identity);
         }
+    }
+
+    public int getCurrentTeam()
+    {
+        return currentTeam;
     }
 
     public void UpdateTeam()

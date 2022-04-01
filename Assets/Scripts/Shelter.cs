@@ -50,7 +50,6 @@ public class Shelter : MonoBehaviour, IRoundFinished
     [PunRPC]
     private void RPC_SuppliesTakenToShelter()
     {
-        Debug.Log("Win called");
         RoomManager.Instance.AttackersWon();
     }
 
