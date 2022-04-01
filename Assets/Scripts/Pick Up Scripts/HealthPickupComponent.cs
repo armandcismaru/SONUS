@@ -12,15 +12,17 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
     private float current_health;
     private PlayerManager playerManager;
     private PhotonView view;
+    [SerializeField] PlayerController playerController;
 
     private void Awake()
     {
         view = GetComponent<PhotonView>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Start()
     {
-        var playerController = GetComponent<PlayerController>();
+        //var playerController = GetComponent<PlayerController>();
         playerController.addObserver<IDamageObserver>(this);
         current_health = start_health;
 
@@ -35,7 +37,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         base.setSlider(5, "Health", current_health / max_health);
     }
 
-    private async void incrementHealth(float value)
+    private async void IncrementHealth(float value)
     {
         if (!view.IsMine)
             return;
@@ -67,7 +69,10 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
     public void Notify(int damage)
     {
-        GetDamage(damage);  
+        if (view.IsMine)
+            playerController.GotHurt();
+
+        GetDamage(5);
     }
 
     void GetDamage(int damage)
@@ -89,7 +94,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         {
             if (pickup.pickupType == PickUpScript.PickUpType.Health)
             {
-                incrementHealth(pickup.amount);
+                IncrementHealth(pickup.amount);
                 pickup.destroyThisObject();
             }
         }

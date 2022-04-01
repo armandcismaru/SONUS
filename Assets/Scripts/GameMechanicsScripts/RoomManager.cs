@@ -59,7 +59,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Destroy(gameObject);
             return;
         }
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
 #if UNITY_WEBGL && !UNITY_EDITOR

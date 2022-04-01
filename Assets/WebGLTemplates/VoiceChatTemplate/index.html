@@ -127,7 +127,7 @@
     </div>
 
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
-
+    
     <script>
       navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
@@ -147,7 +147,8 @@
                   new MediaStream()];
 
       let connections = [null, null, null, null, null, null];
-      let conf = {secure : true,
+      let conf = {
+        secure : true,
         host: 'sonus-server.herokuapp.com',
         config:{"iceServers" :[
                   {
@@ -165,8 +166,8 @@
                     username: "openrelayproject",
                     credential: "openrelayproject",
                   }]}
-                };
-      let peers = [new Peer(conf),
+      };
+      let peers = [new Peer(conf), 
                   new Peer(conf),
                   new Peer(conf),
                   new Peer(conf),
@@ -189,7 +190,7 @@
             stream.getTracks().forEach((track) => {
               remoteStream[0].addTrack(track);
             });
-          });
+          }); 
         });
 
         peers[1].on('call', function(mediaConnection) {
@@ -198,16 +199,16 @@
             stream.getTracks().forEach((track) => {
               remoteStream[1].addTrack(track);
             });
-          });
+          }); 
         });
-
+        
         peers[2].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
             stream.getTracks().forEach((track) => {
               remoteStream[2].addTrack(track);
             });
-          });
+          }); 
         });
 
         peers[3].on('call', function(mediaConnection) {
@@ -216,7 +217,7 @@
             stream.getTracks().forEach((track) => {
               remoteStream[3].addTrack(track);
             });
-          });
+          }); 
         });
 
         peers[4].on('call', function(mediaConnection) {
@@ -225,7 +226,7 @@
             stream.getTracks().forEach((track) => {
               remoteStream[4].addTrack(track);
             });
-          });
+          }); 
         });
 
         peers[5].on('call', function(mediaConnection) {
@@ -234,7 +235,7 @@
             stream.getTracks().forEach((track) => {
               remoteStream[5].addTrack(track);
             });
-          });
+          }); 
         });
 
         audios[0].srcObject = remoteStream[0];

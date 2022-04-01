@@ -13,8 +13,9 @@ TagManager:
   - TestCamDirection
   - Canvas
   - Kill
-  - Shelter
-  - RoomManager
+  - Hitmarker
+  - Blood
+  - Pause
   layers:
   - Default
   - TransparentFX

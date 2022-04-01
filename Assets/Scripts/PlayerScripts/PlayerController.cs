@@ -6,6 +6,14 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
+    public readonly string FOOTSTEP_SOUND = "ConcreteFootsteps";
+    public readonly string GUN_SOUND = "Gunshot";
+    public readonly string JUMP_SOUND = "Jump";
+    public readonly string STAB_SOUND = "stab";
+    public readonly string DRYFIRE_SOUND = "DryFire";
+    public readonly string RELOAD_SOUND = "Reload";
+    public readonly string GETSHOT_SOUND = "GetShot";
+
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Material RedMat;
@@ -13,71 +21,77 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private TMP_Text blueScore;
     private TMP_Text redScore;
     private TMP_Text timer;
+    private TMP_Text Team;
 
     [SerializeField] private GameObject blueScorePrefab;
     [SerializeField] private GameObject redScorePrefab;
     [SerializeField] private GameObject timerPrefab;
     [SerializeField] private GameObject scorelinePrefab;
+    [SerializeField] private GameObject TeamPrefab;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
-
-    private TMP_Text Team;
-    [SerializeField] private GameObject TeamPrefab;
+    private PhotonView view;
 
     public bool grounded;
     private bool isMoving;
-
+    bool hasJumped = false;
+    
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
-    private int bullets;
-    private PhotonView view;
+
+    [SerializeField] private int bullets = 5;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
+
     private Rigidbody rb;
     public Text bulletsView;
+    private float LastShootTime;
 
-    [SerializeField] private GameObject bulletsViewPrefab; 
-    bool hasJumped = false;
+    [SerializeField]
+    private float ShootDelay = 0.5f;
+    [SerializeField]
+    private GameObject bulletsViewPrefab;
 
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
     private UIScriptPlayer uiComponent;
+
+    [SerializeField] private GameObject pauseObject;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
     }
-
     void Start()
-    {
+    {   
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
 
         GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, blueScorePrefab.transform.localPosition,
-                                                               blueScorePrefab.transform.rotation, blueScorePrefab.transform.localScale);
+                                                                blueScorePrefab.transform.rotation, blueScorePrefab.transform.localScale);
         blueScore = uiComponentBlueScore.GetComponent<TMP_Text>();
 
         GameObject uiComponentRedScore = uiComponent.AttachUI(redScorePrefab, redScorePrefab.transform.localPosition,
-                                                              redScorePrefab.transform.rotation, redScorePrefab.transform.localScale);
+                                                                redScorePrefab.transform.rotation, redScorePrefab.transform.localScale);
         redScore = uiComponentRedScore.GetComponent<TMP_Text>();
 
         GameObject uiComponentTimer = uiComponent.AttachUI(timerPrefab, timerPrefab.transform.localPosition,
-                                                           timerPrefab.transform.rotation, timerPrefab.transform.localScale);
+                                                            timerPrefab.transform.rotation, timerPrefab.transform.localScale);
         timer = uiComponentTimer.GetComponent<TMP_Text>();
 
         GameObject uiComponentLine = uiComponent.AttachUI(scorelinePrefab, scorelinePrefab.transform.localPosition,
-                                                           scorelinePrefab.transform.rotation, scorelinePrefab.transform.localScale);
+                                                            scorelinePrefab.transform.rotation, scorelinePrefab.transform.localScale);
 
         GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, bulletsViewPrefab.transform.localPosition,
-                                                           bulletsViewPrefab.transform.rotation, bulletsViewPrefab.transform.localScale);
+                                                            bulletsViewPrefab.transform.rotation, bulletsViewPrefab.transform.localScale);
         bulletsView = uiComponentBullets.GetComponent<Text>();
 
         GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
-                                                           TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
+                                                            TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
 
         if (view.IsMine)
@@ -105,42 +119,51 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         bullets = 5;
+
+        // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
 
     void Update()
     {
         if (view.IsMine)
-        {
-            grounded = controller.isGrounded;
-            if (grounded == true && hasJumped == true)
-            {
-                hasJumped = false;
-                GetComponent<AudioManager>().Play("Jump");
-                BroadcastSound("Jump");
-            }
+        {   
+            PauseMenu();
+
             if (grounded == false && hasJumped == false)
             {
                 hasJumped = true;
             }
-            
-            Shoot();
-            UseKnife();
-            Move();
-            Jump();
+            grounded = controller.isGrounded;
 
+            if (grounded == true && hasJumped == true)
+            {
+                GetComponent<AudioManager>().Play(JUMP_SOUND);
+                hasJumped = false; 
+                BroadcastSound(JUMP_SOUND);
+            }
+            
+            if (!Pause.paused) {
+                Shoot();
+                UseKnife();
+                Move();
+                Jump();
+
+                FadeBloodDamage();
+                SelfHit();
+            }
            
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
-
-
             if(secs < 10)
             {
                 timer.text = mins.ToString() + ":0" + secs.ToString();
-            } else
+            }
+            else
             {
                 timer.text = mins.ToString() + ":" + secs.ToString();
             }
+
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }    
@@ -149,11 +172,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private void FixedUpdate()
     {
         if (view.IsMine)
-        {
+        {    
+            if (grounded && Pause.paused) {
+                return;
+            }
             if (grounded && velocity.y < 0)
             {
                 velocity.y = -1f;
             }
+
             velocity.y += gravity * Time.fixedDeltaTime;
             controller.Move(transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
             controller.Move(velocity * Time.fixedDeltaTime);
@@ -169,29 +196,77 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         return value;
     }
 
+    void PauseMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+           pauseObject.GetComponent<Pause>().TogglePause();
+        }
+    }
+
     void Move()
     {
-        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
+                                      0,
+                                      Input.GetAxisRaw("Vertical")).normalized;
 
         if (moveDir.x != 0f || moveDir.z != 0f)
             isMoving = true;
         else
             isMoving = false;
 
-        if (isMoving && controller.isGrounded)
+        if (isMoving && controller.isGrounded && !Pause.paused)
         {
-            if (!GetComponent<AudioManager>().isPlaying("ConcreteFootsteps") && grounded)
+            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded)
             {
-                GetComponent<AudioManager>().Play("ConcreteFootsteps");
-                BroadcastSound("ConcreteFootsteps");
+                GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
+                BroadcastSound(FOOTSTEP_SOUND);
             }
         }
         else
         {
-            GetComponent<AudioManager>().Stop("ConcreteFootsteps");
-            BroadcastSoundS("ConcreteFootsteps");
+            GetComponent<AudioManager>().Stop(FOOTSTEP_SOUND);
+            BroadcastSoundS(FOOTSTEP_SOUND);
         }
-        moveAmount = Vector3.SmoothDamp(moveAmount, moveDir *  walkSpeed * 2, ref smoothMoveVelocity, smoothTime); //TODO
+
+        moveAmount = Vector3.SmoothDamp(moveAmount,
+                                        moveDir * walkSpeed,
+                                        ref smoothMoveVelocity,
+                                        smoothTime);
+    }
+
+    private void FadeBloodDamage()
+    {
+        GameObject bloodSplatter = GameObject.FindWithTag("Blood");
+
+        if (bloodSplatter != null)
+        {
+            if (bloodSplatter.GetComponent<Image>().color.a > 0)
+            {
+                var color = bloodSplatter.GetComponent<Image>().color;
+                color.a -= 0.01f;
+
+                bloodSplatter.GetComponent<Image>().color = color;
+            }
+        }
+    }
+
+    // ---- TESTING PURPOSES ----
+    void SelfHit()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TakeDamage(50);
+        }
+    }
+
+    public void GotHurt()
+    {
+        GetComponent<AudioManager>().Play(GETSHOT_SOUND);
+        GameObject bloodSplatter = GameObject.FindWithTag("Blood");
+        var color = bloodSplatter.GetComponent<Image>().color;
+        color.a = 0.8f;
+        bloodSplatter.GetComponent<Image>().color = color;
     }
 
     void Jump()
@@ -204,21 +279,22 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     void Shoot()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && LastShootTime + ShootDelay < Time.time)
         {
             if (bullets > 0)
             {
-                GetComponent<AudioManager>().Play("Gunshot");
-                BroadcastSound("Gunshot");
+                GetComponent<AudioManager>().Play(GUN_SOUND);
+                BroadcastSound(GUN_SOUND);
 
                 bullets -= 1;
                 bulletsView.text = bullets.ToString();
                 gun.Shoot();
+                LastShootTime = Time.time;
             }
             else
             {
-                GetComponent<AudioManager>().Play("DryFire");
-                BroadcastSound("DryFire");
+                GetComponent<AudioManager>().Play(DRYFIRE_SOUND);
+                BroadcastSound(DRYFIRE_SOUND);
             }
         }
     }
@@ -227,8 +303,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            GetComponent<AudioManager>().Play("stab");
-            BroadcastSound("stab");
+            GetComponent<AudioManager>().Play(STAB_SOUND);
+            BroadcastSound(STAB_SOUND);
             knife.UseKnife();
         }
     }
@@ -260,6 +336,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void TakeDamage(int damage)
     {
+        //GotHurt();
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
@@ -336,7 +413,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             bullets = 5;
             bulletsView.text = bullets.ToString();
-            FindObjectOfType<AudioManager>().Play("Reload");
+            FindObjectOfType<AudioManager>().Play(RELOAD_SOUND);
         }
     }
 
