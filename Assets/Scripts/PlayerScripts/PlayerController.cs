@@ -197,11 +197,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         return value;
     }
-    void PauseMenu() {
-        if (Input.GetKeyDown(KeyCode.Tab)) {
+
+    void PauseMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
            pauseObject.GetComponent<Pause>().TogglePause();
         }
     }
+
     void Move()
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
@@ -230,7 +234,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         moveAmount = Vector3.SmoothDamp(moveAmount,
                                         moveDir * walkSpeed,
                                         ref smoothMoveVelocity,
-                                        smoothTime);
+                                        smoothTime); //TODO
     }
 
     private void FadeBloodDamage()
@@ -258,7 +262,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
-    void GotHurt()
+    public void GotHurt()
     {
         GetComponent<AudioManager>().Play(GETSHOT_SOUND);
         GameObject bloodSplatter = GameObject.FindWithTag("Blood");
@@ -334,7 +338,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void TakeDamage(int damage)
     {
-        GotHurt();
+        //GotHurt();
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 

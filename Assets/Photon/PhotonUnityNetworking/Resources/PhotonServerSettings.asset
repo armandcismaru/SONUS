@@ -77,6 +77,12 @@ MonoBehaviour:
   - RPC_SendOfferStrings
   - RPC_MuteDeadPlayer
   - RPC_Die
+  - RPC_AttackersWonByTakingSuppliesToShelter
+  - ReplicateSuppliesTakeToShelter
+  - RPC_SuppliesTakenToShelter
+  - RPC_lockComponent
+  - RPC_unlockComponent
+  - replicateAmountOfFoodDelievered
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -164,13 +164,6 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     void RPC_GetTeam()
     {
-        /*team = RoomManager.Instance.currentTeam % 2;
-        id[1] = RoomManager.Instance.currentTeam;*//*
-        if (myAvatar != null)
-        {
-            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-            isReady = true;
-        }*/
         RoomManager.Instance.UpdateTeam();
         view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.getCurrentTeam() - 1);
     }
