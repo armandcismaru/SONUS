@@ -98,11 +98,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public int getCurrentTeam()
-    {
-        return currentTeam;
-    }
-
     public void UpdateTeam()
     {
         if(currentTeam % 2 == 0)
