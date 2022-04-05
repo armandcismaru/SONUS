@@ -52,6 +52,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private Shelter shelterClass;
 
+    private float voiceChatVolume = 1f;
+
     private void Awake()
     {
         if (Instance)
@@ -66,10 +68,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         string temp = VoiceChat.getIds();
         offerString = temp.Split(',');
-        for (int i = 0; i < maxNumOfPlayers; i++)
+       /* for (int i = 0; i < maxNumOfPlayers; i++)
         {
             Debug.Log(offerString[i]);
-        }
+        }*/
         
 #endif
     }
@@ -115,6 +117,23 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         return currentTeam;
     }
+
+    public float getVoiceChatVolume()
+    {
+        return voiceChatVolume;
+    }
+
+    public void setVoiceChatVolume(float volume)
+    {
+        voiceChatVolume = volume;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++){
+            VoiceChat.setPlayerVolume(i, voiceChatVolume);
+        }
+#endif
+
+    }
+
 
     private void FixedUpdate()
     {
@@ -338,7 +357,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         for(int i = 0; i < 6; i++)
         {
         //unmutes player if he exists otherwise does nothing
-            VoiceChat.setPlayerVolume(i, 1);
+            VoiceChat.setPlayerVolume(i, voiceChatVolume);
         }
 #endif
     }
