@@ -11,7 +11,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private int currentTeam = 1;
     private PhotonView view;
 
-    public GameObject playerManager;
+    public GameObject playerManager = null;
 
     [HideInInspector] public bool warmupEnded = false;
     private int bluePlayers = 1;
@@ -52,6 +52,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private Shelter shelterClass;
 
+    private float voiceChatVolume = 1f;
+
     private void Awake()
     {
         if (Instance)
@@ -66,10 +68,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         string temp = VoiceChat.getIds();
         offerString = temp.Split(',');
-        for (int i = 0; i < maxNumOfPlayers; i++)
+       /* for (int i = 0; i < maxNumOfPlayers; i++)
         {
             Debug.Log(offerString[i]);
-        }
+        }*/
         
 #endif
     }
@@ -98,11 +100,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public int getCurrentTeam()
-    {
-        return currentTeam;
-    }
-
     public void UpdateTeam()
     {
         if(currentTeam % 2 == 0)
@@ -116,12 +113,62 @@ public class RoomManager : MonoBehaviourPunCallbacks
         currentTeam++;
     }
 
+    public int getCurrentTeam()
+    {
+        return currentTeam;
+    }
+
+    public float getVoiceChatVolume()
+    {
+        return voiceChatVolume;
+    }
+
+    public void setVoiceChatVolume(float volume)
+    {
+        voiceChatVolume = volume;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++){
+            VoiceChat.setPlayerVolume(i, voiceChatVolume);
+        }
+#endif
+
+    }
+
+
     private void FixedUpdate()
     {
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
         }
+
+        //get the positions of all players relative to our player and send them to their respective js panner
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(playerManager != null)
+        {
+            GameObject avatar = playerManager.GetComponent<PlayerManager>().getAvatar();
+            if(avatar != null)
+            {
+                Vector3 myPos = avatar.transform.position;
+                Vector3 myOr = avatar.transform.forward;
+
+                VoiceChat.setMyOrientation(-myOr.x, myOr.y, -myOr.z);
+                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                //Debug.Log(players.Length);
+                foreach(GameObject player in players)
+                {
+                    int playerInd = player.GetComponent<PlayerController>().index;
+                    if (playerInd != index && playerInd != -1)
+                    {
+                        //Debug.Log(playerInd);
+                        Vector3 playerPos = player.transform.position;
+                        VoiceChat.setPosition(playerInd, playerPos.x - myPos.x, playerPos.y - myPos.y, playerPos.z - myPos.z);
+                    }
+                }
+            }
+        }
+
+#endif
     }
 
     public void PlayerDied(int team)
@@ -229,22 +276,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void StartVoiceChat()
     {
-
-        //Debug.Log("startLocal");
+#if UNITY_WEBGL && !UNITY_EDITOR
         if (PhotonNetwork.IsMasterClient)
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
             view.RPC("RPC_StartVoiceChat", RpcTarget.All);
-#endif
         }
-    }
+#endif
+}
 
     [PunRPC]
     void RPC_StartVoiceChat()
     {
-        //Debug.Log("receivedStart");
 #if UNITY_WEBGL && !UNITY_EDITOR
-        Debug.Log("startRemote");
         view.RPC("RPC_SendOfferStrings", RpcTarget.Others, index, offerString);
 #endif
     }
@@ -255,9 +298,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #if UNITY_WEBGL && !UNITY_EDITOR
         if(index > fromIndex)
         {
-            Debug.Log("ans");
-            Debug.Log(offer[index]);
-            Debug.Log(index);
             VoiceChat.makeCall(fromIndex, offer[index]);
         }
 #endif
@@ -311,6 +351,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         playerManager.GetComponent<PlayerManager>().SwapTeams();
         playerManager.GetComponent<PlayerManager>().DestroyMyAvatar();
         playerManager.GetComponent<PlayerManager>().StartRound();
+
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++)
+        {
+        //unmutes player if he exists otherwise does nothing
+            VoiceChat.setPlayerVolume(i, voiceChatVolume);
+        }
+#endif
     }
 
     [PunRPC]

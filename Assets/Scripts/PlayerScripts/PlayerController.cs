@@ -58,12 +58,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private UIScriptPlayer uiComponent;
 
+    public int index = -1;
     [SerializeField] private GameObject pauseObject;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
+        index = (int)view.InstantiationData[1];
     }
     void Start()
     {   
