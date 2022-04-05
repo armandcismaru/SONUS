@@ -44,15 +44,31 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         PickUpScript pickup = prefabType.GetComponent<PickUpScript>();
         if (pickup != null && pickup.pickupType == PickUpScript.PickUpType.Food)
         {
-            for (int i = 0; i < current_food / supplyCharge; i++)
-            {
-                
-                GameObject supply =  PhotonNetwork.Instantiate(prefabType.name, gameObject.transform.position, Quaternion.identity);
-                RoomManager.collectables.Add(supply);
-            }
+            CreateFoodBox((int)current_food / supplyCharge);
         } else
         {
             throw new System.Exception("Incorrect prefab type");
+        }
+    }
+
+    public void CreateFoodBox(int amount)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            view.RPC("RPC_CreateFoodBox", RpcTarget.MasterClient, amount);
+        } else
+        {
+            RPC_CreateFoodBox(amount);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_CreateFoodBox(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+           GameObject supply = PhotonNetwork.Instantiate(prefabType.name, gameObject.transform.position, Quaternion.identity);
+           RoomManager.Instance.AddCollectable(supply);
         }
     }
 
