@@ -40,6 +40,11 @@ public class PickUpScript : MonoBehaviour {
     void rpcDestroyObject()
     {
         Destroy(gameObject);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            RoomManager.Instance.RemoveCollectable(gameObject);
+        }
     }
 
     void Update()

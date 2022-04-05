@@ -332,12 +332,48 @@ public class RoomManager : MonoBehaviourPunCallbacks
             foreach (GameObject collectable in collectables)
             {
                 if (collectable != null)
+                {
+                    Debug.Log(collectable.gameObject.name + "\n");
                     PhotonNetwork.Destroy(collectable);
+                }
             }
 
             StartRound();
         }
     }
+
+    public void AddCollectable(GameObject gameObject)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            view.RPC("RPC_AddCollectables", RpcTarget.MasterClient, gameObject);
+        else
+        {
+            collectables.Add(gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_AddCollectables(GameObject gameObject)
+    {
+        collectables.Add(gameObject);
+    }
+
+    public void RemoveCollectable(GameObject gameObject)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+               view.RPC("RPC_RemoveCollectable", RpcTarget.MasterClient, gameObject);
+        else
+        {
+            collectables.Remove(gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_RemoveCollectable(GameObject gameObject)
+    {
+        collectables.Remove(gameObject);
+    }
+
 
     [PunRPC]
     void RPC_SetWarmupEnded(bool value)
