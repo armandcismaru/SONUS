@@ -8,10 +8,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
     public static RoomManager Instance;
-    [HideInInspector] public int currentTeam = 1;
+    private int currentTeam = 1;
     private PhotonView view;
 
-    public GameObject playerManager;
+    public GameObject playerManager = null;
 
     [HideInInspector] public bool warmupEnded = false;
     private int bluePlayers = 1;
@@ -30,6 +30,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private float suppliesZ;
 
     private GameObject supplies;
+    private GameObject supplies2;
+    private GameObject supplies3;
+
+    private GameObject shelter;
+
     private GameObject healthBox;
     private GameObject healthBox1;
     private GameObject healthBox2;
@@ -42,6 +47,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [HideInInspector] public int index = 0;
 
     public static List<GameObject> collectables;
+
+    private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
+
+    private Shelter shelterClass;
+
+    private float voiceChatVolume = 1f;
 
     private void Awake()
     {
@@ -57,10 +68,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         string temp = VoiceChat.getIds();
         offerString = temp.Split(',');
-        for (int i = 0; i < maxNumOfPlayers; i++)
+       /* for (int i = 0; i < maxNumOfPlayers; i++)
         {
             Debug.Log(offerString[i]);
-        }
+        }*/
         
 #endif
     }
@@ -81,7 +92,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(20f);
+            Timer.Instance.StartTimer(20f); //TODO 20f
         }
         if (scene.buildIndex == 1)
         {
@@ -102,12 +113,62 @@ public class RoomManager : MonoBehaviourPunCallbacks
         currentTeam++;
     }
 
+    public int getCurrentTeam()
+    {
+        return currentTeam;
+    }
+
+    public float getVoiceChatVolume()
+    {
+        return voiceChatVolume;
+    }
+
+    public void setVoiceChatVolume(float volume)
+    {
+        voiceChatVolume = volume;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++){
+            VoiceChat.setPlayerVolume(i, voiceChatVolume);
+        }
+#endif
+
+    }
+
+
     private void FixedUpdate()
     {
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
         }
+
+        //get the positions of all players relative to our player and send them to their respective js panner
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(playerManager != null)
+        {
+            GameObject avatar = playerManager.GetComponent<PlayerManager>().getAvatar();
+            if(avatar != null)
+            {
+                Vector3 myPos = avatar.transform.position;
+                Vector3 myOr = avatar.transform.forward;
+
+                VoiceChat.setMyOrientation(-myOr.x, myOr.y, -myOr.z);
+                GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+                //Debug.Log(players.Length);
+                foreach(GameObject player in players)
+                {
+                    int playerInd = player.GetComponent<PlayerController>().index;
+                    if (playerInd != index && playerInd != -1)
+                    {
+                        //Debug.Log(playerInd);
+                        Vector3 playerPos = player.transform.position;
+                        VoiceChat.setPosition(playerInd, playerPos.x - myPos.x, playerPos.y - myPos.y, playerPos.z - myPos.z);
+                    }
+                }
+            }
+        }
+
+#endif
     }
 
     public void PlayerDied(int team)
@@ -139,11 +200,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            /*if (ok)
-            {*/
-                supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
-                //ok = false;
-            //}
+            supplies = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
+            supplies2 = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX - 4, 24, suppliesZ + 4), Quaternion.identity);
+            supplies3 = PhotonNetwork.Instantiate("Supplies", new Vector3(suppliesX + 4, 24, suppliesZ + 4), Quaternion.identity);
+
+            shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(suppliesX - 4, 24, suppliesZ - 4), Quaternion.identity);
+
             //Defenders' Spot
             healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
             healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
@@ -154,7 +216,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
             healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
 
-            collectables = new List<GameObject>() {supplies, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
+            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
             
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
@@ -214,22 +276,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void StartVoiceChat()
     {
-
-        //Debug.Log("startLocal");
+#if UNITY_WEBGL && !UNITY_EDITOR
         if (PhotonNetwork.IsMasterClient)
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
             view.RPC("RPC_StartVoiceChat", RpcTarget.All);
-#endif
         }
-    }
+#endif
+}
 
     [PunRPC]
     void RPC_StartVoiceChat()
     {
-        //Debug.Log("receivedStart");
 #if UNITY_WEBGL && !UNITY_EDITOR
-        Debug.Log("startRemote");
         view.RPC("RPC_SendOfferStrings", RpcTarget.Others, index, offerString);
 #endif
     }
@@ -240,9 +298,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #if UNITY_WEBGL && !UNITY_EDITOR
         if(index > fromIndex)
         {
-            Debug.Log("ans");
-            Debug.Log(offer[index]);
-            Debug.Log(index);
             VoiceChat.makeCall(fromIndex, offer[index]);
         }
 #endif
@@ -296,6 +351,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         playerManager.GetComponent<PlayerManager>().SwapTeams();
         playerManager.GetComponent<PlayerManager>().DestroyMyAvatar();
         playerManager.GetComponent<PlayerManager>().StartRound();
+
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++)
+        {
+        //unmutes player if he exists otherwise does nothing
+            VoiceChat.setPlayerVolume(i, voiceChatVolume);
+        }
+#endif
     }
 
     [PunRPC]
@@ -314,28 +378,68 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Timer.Instance.StopTimer();
 
-            /*if (supplies != null) PhotonNetwork.Destroy(supplies);
-            if (healthBox != null) PhotonNetwork.Destroy(healthBox);
-            if (healthBox1 != null) PhotonNetwork.Destroy(healthBox1);
-            if (healthBox2 != null) PhotonNetwork.Destroy(healthBox2);
-            if (healthBox4 != null) PhotonNetwork.Destroy(healthBox4);
-            if (healthBox5 != null) PhotonNetwork.Destroy(healthBox5);*/
-
             foreach (GameObject collectable in collectables)
             {
-                PhotonNetwork.Destroy(collectable);
+                if (collectable != null)
+                {
+                    Debug.Log(collectable.gameObject.name + "\n");
+                    PhotonNetwork.Destroy(collectable);
+                }
             }
-
 
             StartRound();
         }
     }
+
+    public void AddCollectable(GameObject gameObject)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            view.RPC("RPC_AddCollectables", RpcTarget.MasterClient, gameObject);
+        else
+        {
+            collectables.Add(gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_AddCollectables(GameObject gameObject)
+    {
+        collectables.Add(gameObject);
+    }
+
+    public void RemoveCollectable(GameObject gameObject)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+               view.RPC("RPC_RemoveCollectable", RpcTarget.MasterClient, gameObject);
+        else
+        {
+            collectables.Remove(gameObject);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_RemoveCollectable(GameObject gameObject)
+    {
+        collectables.Remove(gameObject);
+    }
+
 
     [PunRPC]
     void RPC_SetWarmupEnded(bool value)
     {
         warmupEnded = value;
     }
+
+    /*public void suppliesPicked()
+    {
+        view.RPC("RPC_suppliesPicked", RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    public void RPC_suppliesPicked()
+    {
+        AttackersWon();
+    }*/
 
     public void suppliesPicked()
     {
@@ -345,6 +449,52 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RPC_suppliesPicked()
     {
-        AttackersWon();
+        shelterClass.RoundFinishedAttackersWinningByTakingSuppliesToShelter();
+    }
+
+    public void SuppliesTakenSuccesfullyToShelter()
+    {
+        view.RPC("RPC_AttackersWonByTakingSuppliesToShelter", RpcTarget.All);
+    }
+
+    [PunRPC]
+    public void RPC_AttackersWonByTakingSuppliesToShelter()
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (subscriberType.Equals("IRoundFinished"))
+            {
+                foreach (IObserver subscriber in observers[subscriberType])
+                {
+                    (subscriber as IRoundFinished).Notify();
+                }
+            }
+        }
+    }
+
+    public void addObserver<T>(IObserver observer)
+    {
+        // If the key element exists in observers.keys
+        foreach (string observerType in observers.Keys)
+        {
+            if (typeof(T).Name == observerType)
+            {
+                observers[typeof(T).Name].Add(observer);
+                return;
+            }
+        }
+        observers.Add(typeof(T).Name, new List<IObserver>());
+        observers[typeof(T).Name].Add(observer);
+    }
+
+    public void unsubscribeObserver<T>(IObserver observer)
+    {
+        foreach (string subscriberType in observers.Keys)
+        {
+            if (typeof(T).Equals(subscriberType))
+            {
+                observers[subscriberType].Remove(observer);
+            }
+        }
     }
 }

@@ -1,27 +1,3 @@
-// var webRTC = {
-//     initWebRTC: function(){
-//         window.initializeWebRTC();
-//     },
-    
-//     create: function(){  
-//         window.createOffer()
-//         var str2 = document.getElementById('callInput').value;
-//         var buffer2 = _malloc(lengthBytesUTF8(str2) + 1);
-//         stringToUTF8(str2, buffer2, lengthBytesUTF8(str2) + 1);
-//         return buffer2;
-//     },
-//     answer: function(name){
-//         console.log("answer");
-//         var s = Pointer_stringify(name);
-//         console.log(s);
-//         window.answerOffer(s);
-//     },
-//     answered: function(){
-//         window.answeredCall();
-//     }
-// };
-// mergeInto(LibraryManager.library, webRTC);
-
 var voiceChat = {
     initializeVoiceChat: function(){
         window.initialize();
@@ -38,6 +14,18 @@ var voiceChat = {
         var s = Pointer_stringify(id);
         console.log("making call with index %d to id %s", index, s);
         window.createCall(index, s);
+    },
+
+    setPosition: function(index, x, y, z){
+        window.setPlayerPosition(index, x, y, z);
+    },
+
+    setMyOrientation: function(x, y, z){
+        window.setOrientation(x, y, z);
+    },
+
+    setPlayerVolume: function(index, value){
+        window.setGainValue(index, value);
     }
 };
 mergeInto(LibraryManager.library, voiceChat);

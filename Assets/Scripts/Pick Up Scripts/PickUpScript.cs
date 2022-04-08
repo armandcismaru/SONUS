@@ -22,7 +22,7 @@ public class PickUpScript : MonoBehaviour {
 
     [SerializeField] public int amount = 0;
 
-    public void destroyThisObject()
+    public async void destroyThisObject()
     {
         if (PhotonNetwork.IsMasterClient && GetComponent<PhotonView>().IsMine && !isDestroyed)
         {
@@ -31,14 +31,20 @@ public class PickUpScript : MonoBehaviour {
         }
         else
         {
-            GetComponent<PhotonView>().RPC("rpcDestroyObject", RpcTarget.MasterClient);
+            GetComponent<PhotonView>().RPC("rpcDestroyObject", RpcTarget.All);
+            //Destroy(gameObject);
         }
     }
 
     [PunRPC]
     void rpcDestroyObject()
     {
-        PhotonNetwork.Destroy(gameObject);
+        Destroy(gameObject);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            RoomManager.Instance.RemoveCollectable(gameObject);
+        }
     }
 
     void Update()

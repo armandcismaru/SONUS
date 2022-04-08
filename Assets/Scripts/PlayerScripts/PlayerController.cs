@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     private UIScriptPlayer uiComponent;
 
+    public int index = -1;
     [SerializeField] private GameObject pauseObject;
 
     [SerializeField] private GameObject playerIcon;
@@ -67,6 +68,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
+        index = (int)view.InstantiationData[1];
     }
     void Start()
     {   
@@ -236,7 +238,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         moveAmount = Vector3.SmoothDamp(moveAmount,
                                         moveDir * walkSpeed,
                                         ref smoothMoveVelocity,
-                                        smoothTime);
+                                        smoothTime); //TODO
     }
 
     private void FadeBloodDamage()

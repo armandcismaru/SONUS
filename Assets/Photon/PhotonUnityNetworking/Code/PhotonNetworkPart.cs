@@ -781,7 +781,9 @@ namespace Photon.Pun
 
             if (go == null)
             {
+                Debug.Log(go.name);
                 Debug.LogError("Failed to 'network-remove' GameObject because it's null.");
+                
                 return;
             }
 

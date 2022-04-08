@@ -31,17 +31,17 @@ public class PlayerManager : MonoBehaviour
 
     void Start()
     {
+        id = new object[] { view.ViewID, -1 };
         if (PhotonNetwork.IsMasterClient)
         {
             team = 0;
+            id[1] = 0;
         }
 
         if (view.IsMine && !PhotonNetwork.IsMasterClient)
         {
             view.RPC("RPC_GetTeam", RpcTarget.MasterClient);
         }
-        id = new object[] { view.ViewID };
-
     }
 
     Vector3 getRandomPosition()
@@ -100,6 +100,19 @@ public class PlayerManager : MonoBehaviour
 
     public void Die()
     {
+        //dead players should not be able to communicate with the team
+        int ind = myAvatar.GetComponent<PlayerController>().index;
+        view.RPC("RPC_MuteDeadPlayer", RpcTarget.Others, RoomManager.Instance.index);
+
+        //and should not hear the team either
+#if UNITY_WEBGL && !UNITY_EDITOR
+        for(int i = 0; i < 6; i++)
+        {
+        //unmutes player if he exists otherwise does nothing
+            VoiceChat.setPlayerVolume(i, 0);
+        }
+#endif
+
         playerController.Die();
         DestroyMyAvatar();
         if (PhotonNetwork.IsMasterClient)
@@ -110,6 +123,19 @@ public class PlayerManager : MonoBehaviour
         {
             view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
+
+    }
+
+    [PunRPC]
+    public void RPC_MuteDeadPlayer(int index)
+    {
+        Debug.Log("index index index index");
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if(index != -1)
+        {
+            VoiceChat.setPlayerVolume(index, 0);
+        }
+#endif
     }
 
     public void DestroyMyAvatar()
@@ -129,18 +155,17 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public GameObject getAvatar()
+    {
+        return myAvatar;
+    }
+
 
     [PunRPC]
     void RPC_GetTeam()
     {
-        team = RoomManager.Instance.currentTeam % 2;
-        if (myAvatar != null)
-        {
-            myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
-            isReady = true;
-        }
         RoomManager.Instance.UpdateTeam();
-        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, team);
+        view.RPC("RPC_SentTeam", RpcTarget.OthersBuffered, RoomManager.Instance.getCurrentTeam() - 1);
     }
 
     [PunRPC]
@@ -152,6 +177,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("team ->");
             Debug.Log(tm);
             team = tm % 2;
+            id[1] = tm;
             if (myAvatar != null)
             {
                 myAvatar.GetComponent<PlayerController>().SetTeamAndUpdateMaterials(team);
