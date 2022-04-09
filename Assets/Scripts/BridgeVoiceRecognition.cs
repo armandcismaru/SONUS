@@ -16,12 +16,16 @@ public class BridgeVoiceRecognition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void TriggerSpell(string hypseg) {
         Debug.Log("From Unity:" + hypseg);
         playerController.GetComponent<AudioManager>().Play("Gunshot");
+
+        if (hypseg == "straight") {
+            playerController.StartInvisibilitySpell();
+        }
         // if (true)
         // {
         //     if (playerController.bullets > 0)

@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public bool grounded;
     private bool isMoving;
     bool hasJumped = false;
-    
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
@@ -60,7 +60,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public int index = -1;
     [SerializeField] private GameObject pauseObject;
-
+    float time;
+    float remainingTime;
+    public bool invisibility;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -68,7 +70,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         index = (int)view.InstantiationData[1];
     }
     void Start()
-    {   
+    {
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -95,6 +97,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
                                                             TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
+
+        invisibility = false;
+        time = Time.time;
 
         if (view.IsMine)
         {
@@ -128,9 +133,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     void Update()
     {
         if (view.IsMine)
-        {   
+        {
             PauseMenu();
 
+            if (invisibility) {
+                UpdateInvisibilitySpell();
+            }
             if (grounded == false && hasJumped == false)
             {
                 hasJumped = true;
@@ -140,10 +148,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             if (grounded == true && hasJumped == true)
             {
                 GetComponent<AudioManager>().Play(JUMP_SOUND);
-                hasJumped = false; 
+                hasJumped = false;
                 BroadcastSound(JUMP_SOUND);
             }
-            
+
             if (!Pause.paused) {
                 Shoot();
                 UseKnife();
@@ -153,7 +161,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 FadeBloodDamage();
                 SelfHit();
             }
-           
+
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -168,13 +176,36 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }    
+        }
+    }
+
+    public void StartInvisibilitySpell() {
+        time = Time.time;
+        invisibility = true;
+        GetComponent<Renderer>().enabled = false;
+        gun.GetComponent<Renderer>().enabled = false;
+        view.RPC("RPC_MakeInvisible", RpcTarget.All, index);
+        Debug.Log("da");
+    }
+
+    void UpdateInvisibilitySpell()
+    {
+        remainingTime = time + 5f - Time.time;
+
+        if(remainingTime <= 0)
+        {
+            this.gameObject.GetComponent<Renderer>().enabled = true;
+            gun.GetComponent<Renderer>().enabled = true;
+            invisibility = false;
+            view.RPC("RPC_StopInvisible", RpcTarget.All, index);
+        }
+
     }
 
     private void FixedUpdate()
     {
         if (view.IsMine)
-        {    
+        {
             if (grounded && Pause.paused) {
                 return;
             }
@@ -374,6 +405,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                     (subscriber as IDieObserver).Notify();
                 }
             }
+        }
+    }
+
+    [PunRPC]
+    void RPC_MakeInvisible(int ind)
+    {
+        if (index == ind)
+        {
+            GetComponent<Renderer>().enabled = false;
+            // gun.GetComponent<Renderer>().enabled = false;
+        }
+    }
+
+    [PunRPC]
+    void RPC_StopInvisible(int ind)
+    {
+        if (index == ind)
+        {
+            GetComponent<Renderer>().enabled = true;
+            // gun.GetComponent<Renderer>().enabled = true;
         }
     }
 
