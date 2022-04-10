@@ -24,6 +24,11 @@ TagManager:
   - Water
   - UI
   - Weapon
+  - Fog
+  - Minimap
+  - Terain
+  - RedMinimap
+  - BlueMinimap
   - Shelter
   - 
   - 
