@@ -89,6 +89,8 @@ MonoBehaviour:
   - RPC_CreateFoodBox
   - RPC_MakeInvisible
   - RPC_StopInvisible
+  - RPC_DeployDecoy
+  - RPC_StopDecoy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

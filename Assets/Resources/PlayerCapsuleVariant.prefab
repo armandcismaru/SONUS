@@ -2775,6 +2775,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: decoy
+      value: 
+      objectReference: {fileID: 1134319995136194969, guid: e23b2a0b816504b0e8b00938befd3321, type: 3}
+    - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: knife
       value: 
       objectReference: {fileID: 2216203663358200940}
@@ -2842,6 +2846,10 @@ PrefabInstance:
       propertyPath: bulletsViewPrefab
       value: 
       objectReference: {fileID: 3865361391602357689, guid: fa4f42298d57fb3408081045f9c52629, type: 3}
+    - target: {fileID: 4510523601521975064, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4726079576783015097, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2991,11 +2999,11 @@ MonoBehaviour:
   sounds:
   - name: ConcreteFootsteps
     clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
-    volume: 0.57
-    pitch: 0.96
+    volume: 0.6
+    pitch: 1
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 3.79
+    dopplerLevel: 3.8
     spread: 173
     minDistance: 1
     maxDistance: 50

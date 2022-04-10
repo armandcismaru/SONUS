@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     float time;
     float remainingTime;
     public bool invisibility;
+    public GameObject decoy;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -136,6 +137,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             PauseMenu();
 
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                DeployDecoy();
+            }
+
             if (invisibility) {
                 UpdateInvisibilitySpell();
             }
@@ -179,13 +185,46 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
-    public void StartInvisibilitySpell() {
+    public void StartInvisibilitySpell()
+    {
         time = Time.time;
         invisibility = true;
         GetComponent<Renderer>().enabled = false;
         gun.GetComponent<Renderer>().enabled = false;
         view.RPC("RPC_MakeInvisible", RpcTarget.All, index);
         Debug.Log("da");
+    }
+
+    public void DeployDecoy()
+    {
+        // Instantiate(decoy, transform.position, transform.rotation);
+        // Vector3 decoy_position = GetComponentInChildren<Camera>().gameObject.transform.position;
+        // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
+        // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
+        // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
+        decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
+        decoy.GetComponent<Decoy>().direction = transform.forward;
+        if (playerManager.team == 0)
+        {
+            decoy.GetComponent<Renderer>().material = BlueMat;
+        }
+        else
+        {
+            decoy.GetComponent<Renderer>().material = RedMat;
+        }
+    }
+
+    [PunRPC]
+    void RPC_DeployDecoy(Vector3 position, Quaternion rotation, int team) {
+        Instantiate(decoy, position, rotation);
+        if (team == 0)
+        {
+            decoy.GetComponent<Renderer>().material = BlueMat;
+        }
+        else
+        {
+            decoy.GetComponent<Renderer>().material = RedMat;
+        }
     }
 
     void UpdateInvisibilitySpell()
@@ -199,7 +238,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             invisibility = false;
             view.RPC("RPC_StopInvisible", RpcTarget.All, index);
         }
-
     }
 
     private void FixedUpdate()
