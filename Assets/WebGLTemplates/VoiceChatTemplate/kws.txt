@@ -1,2 +1,2 @@
-make me invisible
-launch decoy
+decoy
+hide me
