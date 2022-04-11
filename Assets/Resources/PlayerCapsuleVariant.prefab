@@ -3072,11 +3072,11 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1.21
     source: {fileID: 0}
-    spatialBlend: 0.23
-    dopplerLevel: 0.42
+    spatialBlend: 1
+    dopplerLevel: 3.8
     spread: 24
     minDistance: 1
-    maxDistance: 2
+    maxDistance: 50
 --- !u!114 &104123427400230039
 MonoBehaviour:
   m_ObjectHideFlags: 0

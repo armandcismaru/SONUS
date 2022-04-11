@@ -271,32 +271,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             }
         }
         int closestIndex = closestPlayer.GetComponent<PlayerController>().index;
-        Debug.Log("LALALLAALLALAALLAALAALAL");
-        Debug.Log(index);
-        Debug.Log("Si totusi asta pare sa fie emitatorul");
-        Debug.Log(closestIndex);
-        Debug.Log("Asta e distanta:");
-        Debug.Log(minDistance);
-        Debug.Log("Asta e distanta de cel mai aproape cica");
-        Debug.Log((closestPlayer.transform.position - transform.position).sqrMagnitude);
-        // Debug.Log("NONNONONO");
-        // view.RPC("RPC_EmitSound", closestPlayer.GetComponent<PlayerController>().view.owner, closestIndex);
-        view.RPC("RPC_EmitSound", RpcTarget.All, closestPlayer.GetComponent<PlayerController>().index);
+        closestPlayer.GetComponent<PlayerController>().EmitSound();
     }
 
-    [PunRPC]
-    void RPC_EmitSound(int ind) {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        foreach (GameObject player in players)
-        {
-            if (player.GetComponent<PlayerController>().index == ind)
-            {
-                player.GetComponent<PlayerController>().EmitSoundCrazy();
-            }
-        }
-    }
-
-    public void EmitSoundCrazy()
+    public void EmitSound()
     {
         GetComponent<AudioManager>().Play(GETSHOT_SOUND);
         BroadcastSound(GETSHOT_SOUND);
