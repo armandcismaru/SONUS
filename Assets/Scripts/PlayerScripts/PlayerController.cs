@@ -137,11 +137,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             PauseMenu();
 
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                DeployDecoy();
-            }
-
             if (invisibility) {
                 UpdateInvisibilitySpell();
             }

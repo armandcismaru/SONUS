@@ -1,2 +1,2 @@
-go left
-straight
+make me invisible
+launch decoy
