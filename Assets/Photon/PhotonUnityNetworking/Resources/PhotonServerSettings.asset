@@ -91,6 +91,7 @@ MonoBehaviour:
   - RPC_StopInvisible
   - RPC_DeployDecoy
   - RPC_StopDecoy
+  - RPC_EmitSound
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

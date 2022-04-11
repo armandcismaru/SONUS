@@ -63,6 +63,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     float time;
     float remainingTime;
     public bool invisibility;
+    float timeSpeed;
+    float remainingTimeSpeed;
+    public bool fastSpeed;
+    private float initialSpeed;
     public GameObject decoy;
     void Awake()
     {
@@ -137,7 +141,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             PauseMenu();
 
-            if (invisibility) {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                EmittingSpell();
+            }
+            if (fastSpeed)
+            {
+                UpdateFastSpeed();
+            }
+
+            if (invisibility)
+            {
                 UpdateInvisibilitySpell();
             }
             if (grounded == false && hasJumped == false)
@@ -235,6 +249,65 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    void UpdateFastSpeed()
+    {
+        remainingTimeSpeed = timeSpeed + 5f - Time.time;
+
+        if(remainingTimeSpeed <= 0)
+        {
+            fastSpeed = false;
+            walkSpeed = initialSpeed;
+        }
+    }
+
+    void StartFastSpeed()
+    {
+        timeSpeed = Time.time;
+        fastSpeed = true;
+        initialSpeed = walkSpeed;
+        walkSpeed *= 2;
+    }
+
+    void EmittingSpell()
+    {
+        float minDistance = float.MaxValue;
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject closestPlayer = players[0];
+        foreach (GameObject player in players)
+        {
+            int playerTeam = player.GetComponent<PlayerController>().team;
+            if (Mathf.Abs(team - playerTeam) == 1)
+            {
+                float distance = Vector3.Distance(transform.position, player.transform.position);
+                if (distance < minDistance && distance > 0)
+                {
+                    closestPlayer = player;
+                }
+            }
+        }
+        Debug.Log("LALALLAALLALAALLAALAALAL");
+        Debug.Log(index);
+        Debug.Log(closestPlayer.GetComponent<PlayerController>().index);
+        Debug.Log("NONNONONO");
+        if (index != closestPlayer.GetComponent<PlayerController>().index)
+        {
+            view.RPC("RPC_EmitSound", RpcTarget.All, closestPlayer.GetComponent<PlayerController>().index);
+        }
+    }
+
+    [PunRPC]
+    void RPC_EmitSound(int ind) {
+        Debug.Log("INTRE RPC 1");
+        Debug.Log(ind);
+        Debug.Log(index);
+        Debug.Log("INTRE RPC2222");
+        if (index == ind) {
+            Debug.Log("DA MA MERGE");
+            GetComponent<AudioManager>().Play(GETSHOT_SOUND);
+            BroadcastSound(GETSHOT_SOUND);
+        }
+    }
     private void FixedUpdate()
     {
         if (view.IsMine)

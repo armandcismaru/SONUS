@@ -23,12 +23,15 @@ public class BridgeVoiceRecognition : MonoBehaviour
         Debug.Log("From Unity:" + hypseg);
         playerController.GetComponent<AudioManager>().Play("Gunshot");
 
-        if (hypseg == "make me invisible") {
+        if (hypseg == "hide me") {
             playerController.StartInvisibilitySpell();
         }
-        else if (hypseg == "launch decoy"){
+        else if (hypseg == "deploy"){
             playerController.DeployDecoy();
         }
+        // else if (hypseg) {
+        //     playerController.StartFastSpeed();
+        // }
         // if (true)
         // {
         //     if (playerController.bullets > 0)
