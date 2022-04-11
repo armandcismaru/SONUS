@@ -52,4 +52,11 @@ public class TorchControls : MonoBehaviour
             this.GetComponent<Light>().intensity = 0;
         }
     }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Vector3 direction = transform.TransformDirection(Vector3.forward) * 5;
+        Gizmos.DrawRay(this.GetComponent<Transform>().position, direction);
+    }
 }
