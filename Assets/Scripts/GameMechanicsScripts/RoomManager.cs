@@ -54,6 +54,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private float voiceChatVolume = 1f;
 
+    private float mouseSpeed = 15f;
+
     private void Awake()
     {
         if (Instance)
@@ -133,7 +135,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
 
     }
+    
+    public float getMouseSpeed()
+    {
+        return mouseSpeed;
+    }
 
+    public void setMouseSpeed(float volume)
+    {
+        mouseSpeed = volume;
+        playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>().mouseSpeed = mouseSpeed;
+    }
 
     private void FixedUpdate()
     {

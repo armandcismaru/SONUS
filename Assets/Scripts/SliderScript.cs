@@ -14,6 +14,7 @@ public class SliderScript : MonoBehaviour
     void OnEnable () 
     {
         slider.onValueChanged.AddListener(ChangeValue);
+        slider.value = RoomManager.Instance.getMouseSpeed();
         ChangeValue(slider.value);
     }
     void OnDisable()
@@ -24,6 +25,6 @@ public class SliderScript : MonoBehaviour
     void ChangeValue(float value)
     {
         text.text = value.ToString("n"+decimals) + " " + unit;
-        player.GetComponent<MouseController>().mouseSpeed = value;
+        RoomManager.Instance.setMouseSpeed(value);
     }
 }
