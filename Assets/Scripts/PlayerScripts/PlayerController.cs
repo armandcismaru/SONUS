@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
-    private PhotonView view;
+    public PhotonView view;
 
     public bool grounded;
     private bool isMoving;
@@ -213,27 +213,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
         decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
         decoy.GetComponent<Decoy>().direction = transform.forward;
-        if (playerManager.team == 0)
-        {
-            decoy.GetComponent<Renderer>().material = BlueMat;
-        }
-        else
-        {
-            decoy.GetComponent<Renderer>().material = RedMat;
-        }
     }
 
     [PunRPC]
     void RPC_DeployDecoy(Vector3 position, Quaternion rotation, int team) {
         Instantiate(decoy, position, rotation);
-        if (team == 0)
-        {
-            decoy.GetComponent<Renderer>().material = BlueMat;
-        }
-        else
-        {
-            decoy.GetComponent<Renderer>().material = RedMat;
-        }
     }
 
     void UpdateInvisibilitySpell()
@@ -271,42 +255,51 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     void EmittingSpell()
     {
         float minDistance = float.MaxValue;
-
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        GameObject closestPlayer = players[0];
-        foreach (GameObject player in players)
+        GameObject closestPlayer = null;
+        for(int i = 0; i < players.Length; i++)
         {
-            int playerTeam = player.GetComponent<PlayerController>().team;
+            int playerTeam = players[i].GetComponent<PlayerController>().team;
             if (Mathf.Abs(team - playerTeam) == 1)
             {
-                float distance = Vector3.Distance(transform.position, player.transform.position);
-                if (distance < minDistance && distance > 0)
+                float distance = (players[i].transform.position - transform.position).sqrMagnitude;
+                if (distance < minDistance)
                 {
-                    closestPlayer = player;
+                    closestPlayer = players[i];
+                    minDistance = distance;
                 }
             }
         }
+        int closestIndex = closestPlayer.GetComponent<PlayerController>().index;
         Debug.Log("LALALLAALLALAALLAALAALAL");
         Debug.Log(index);
-        Debug.Log(closestPlayer.GetComponent<PlayerController>().index);
-        Debug.Log("NONNONONO");
-        if (index != closestPlayer.GetComponent<PlayerController>().index)
-        {
-            view.RPC("RPC_EmitSound", RpcTarget.All, closestPlayer.GetComponent<PlayerController>().index);
-        }
+        Debug.Log("Si totusi asta pare sa fie emitatorul");
+        Debug.Log(closestIndex);
+        Debug.Log("Asta e distanta:");
+        Debug.Log(minDistance);
+        Debug.Log("Asta e distanta de cel mai aproape cica");
+        Debug.Log((closestPlayer.transform.position - transform.position).sqrMagnitude);
+        // Debug.Log("NONNONONO");
+        // view.RPC("RPC_EmitSound", closestPlayer.GetComponent<PlayerController>().view.owner, closestIndex);
+        view.RPC("RPC_EmitSound", RpcTarget.All, closestPlayer.GetComponent<PlayerController>().index);
     }
 
     [PunRPC]
     void RPC_EmitSound(int ind) {
-        Debug.Log("INTRE RPC 1");
-        Debug.Log(ind);
-        Debug.Log(index);
-        Debug.Log("INTRE RPC2222");
-        if (index == ind) {
-            Debug.Log("DA MA MERGE");
-            GetComponent<AudioManager>().Play(GETSHOT_SOUND);
-            BroadcastSound(GETSHOT_SOUND);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject player in players)
+        {
+            if (player.GetComponent<PlayerController>().index == ind)
+            {
+                player.GetComponent<PlayerController>().EmitSoundCrazy();
+            }
         }
+    }
+
+    public void EmitSoundCrazy()
+    {
+        GetComponent<AudioManager>().Play(GETSHOT_SOUND);
+        BroadcastSound(GETSHOT_SOUND);
     }
     private void FixedUpdate()
     {

@@ -31,7 +31,6 @@ public class Decoy : MonoBehaviourPunCallbacks
         else
         {
             MoveDecoy();
-            GetComponent<PhotonView>().RPC("RPC_BroadcastSound", RpcTarget.All);
             // GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
         }
     }
@@ -60,11 +59,5 @@ public class Decoy : MonoBehaviourPunCallbacks
     void RPC_DestroyObject()
     {
         Destroy(gameObject);
-    }
-
-    [PunRPC]
-    void RPC_BroadcastSound()
-    {
-        GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
     }
 }

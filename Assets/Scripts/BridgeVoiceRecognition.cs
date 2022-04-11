@@ -26,7 +26,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
         if (hypseg == "hide me") {
             playerController.StartInvisibilitySpell();
         }
-        else if (hypseg == "deploy"){
+        else if (hypseg == "decoy"){
             playerController.DeployDecoy();
         }
         // else if (hypseg) {
