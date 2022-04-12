@@ -11,7 +11,7 @@ public class SliderScript : MonoBehaviour
     public string unit;
     public byte decimals = 2;
 
-    void OnEnable () 
+    void OnEnable ()
     {
         slider.onValueChanged.AddListener(ChangeValue);
         slider.value = RoomManager.Instance.getMouseSpeed();
