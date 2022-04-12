@@ -3333,7 +3333,7 @@ MonoBehaviour:
     maxDistance: 25
   - name: GetShot
     clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
-    volume: 0.8
+    volume: 0.504
     pitch: 1.21
     source: {fileID: 0}
     spatialBlend: 0.815
