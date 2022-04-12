@@ -5,7 +5,6 @@ using Photon.Pun;
 
 public class Decoy : MonoBehaviourPunCallbacks
 {
-    public readonly string FOOTSTEP_SOUND = "ConcreteFootsteps";
     float remainingTime;
     float time;
     private PhotonView view;

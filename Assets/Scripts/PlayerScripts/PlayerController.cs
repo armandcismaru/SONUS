@@ -141,10 +141,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             PauseMenu();
 
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                EmittingSpell();
-            }
             if (fastSpeed)
             {
                 UpdateFastSpeed();

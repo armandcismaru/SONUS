@@ -1,2 +1,4 @@
 decoy
 hide me
+sound
+speed
