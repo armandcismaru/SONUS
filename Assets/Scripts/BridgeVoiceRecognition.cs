@@ -51,7 +51,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
         if(remainingSpellTimer <= 0)
         {
             isSpellAvailable = true;
-            Debug.Log("Poti din nou");
+            playerController.UpdateTimerSpell("SPELL ACTIVATED");
         }
     }
 
