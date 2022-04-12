@@ -132,7 +132,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 5921905632398470343}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -215,7 +216,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.512
+      value: 0.506
       inSlope: 0
       outSlope: 0
       tangentMode: 0

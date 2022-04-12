@@ -3333,14 +3333,24 @@ MonoBehaviour:
     maxDistance: 25
   - name: GetShot
     clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
-    volume: 0.5
+    volume: 0.8
     pitch: 1.21
     source: {fileID: 0}
-    spatialBlend: 0.23
-    dopplerLevel: 0.42
-    spread: 24
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
     minDistance: 1
-    maxDistance: 2
+    maxDistance: 50
+  - name: Emitter
+    clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
+    volume: 0.8
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
 --- !u!114 &104123427400230039
 MonoBehaviour:
   m_ObjectHideFlags: 0

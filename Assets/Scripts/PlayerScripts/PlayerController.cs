@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public readonly string DRYFIRE_SOUND = "DryFire";
     public readonly string RELOAD_SOUND = "Reload";
     public readonly string GETSHOT_SOUND = "GetShot";
+    public readonly string EMITTER_SOUND = "Emitter";
 
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
@@ -145,6 +146,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (view.IsMine)
         {
             PauseMenu();
+            // TEST SPELLS
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                StartInvisibilitySpell();
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                DeployDecoy();
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                EmittingSpell();
+            }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                StartFastSpeed();
+            }
 
             if (fastSpeed)
             {
@@ -247,10 +265,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void StartFastSpeed()
     {
-        timeSpeed = Time.time;
-        fastSpeed = true;
-        initialSpeed = walkSpeed;
-        walkSpeed *= 2;
+        if (!fastSpeed)
+        {
+            timeSpeed = Time.time;
+            fastSpeed = true;
+            initialSpeed = walkSpeed;
+            walkSpeed *= 1.5f;
+        }
     }
 
     public void EmittingSpell()
@@ -277,8 +298,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void EmitSound()
     {
-        GetComponent<AudioManager>().Play(GETSHOT_SOUND);
-        BroadcastSound(GETSHOT_SOUND);
+        GetComponent<AudioManager>().Play(EMITTER_SOUND);
+        BroadcastSound(EMITTER_SOUND);
     }
     private void FixedUpdate()
     {
