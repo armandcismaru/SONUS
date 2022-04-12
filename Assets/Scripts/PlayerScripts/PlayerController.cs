@@ -23,12 +23,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private TMP_Text redScore;
     private TMP_Text timer;
     private TMP_Text Team;
+    public TMP_Text timerSpell;
 
     [SerializeField] private GameObject blueScorePrefab;
     [SerializeField] private GameObject redScorePrefab;
     [SerializeField] private GameObject timerPrefab;
     [SerializeField] private GameObject scorelinePrefab;
     [SerializeField] private GameObject TeamPrefab;
+    [SerializeField] private GameObject TimerSpellPrefab;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
@@ -61,11 +63,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public int index = -1;
     [SerializeField] private GameObject pauseObject;
-    float time;
-    float remainingTime;
+    public float time;
+    public float remainingTime;
     public bool invisibility;
-    float timeSpeed;
-    float remainingTimeSpeed;
+    public float timeSpeed;
+    public float remainingTimeSpeed;
     public bool fastSpeed;
     private float initialSpeed;
     public GameObject decoy;
@@ -108,6 +110,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                                                             TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
 
+        GameObject uiComponentTimerSpell = uiComponent.AttachUI(TimerSpellPrefab, TimerSpellPrefab.transform.localPosition,
+                                                            TimerSpellPrefab.transform.rotation, TimerSpellPrefab.transform.localScale);
+        timerSpell = uiComponentTimerSpell.GetComponent<TMP_Text>();
+
         invisibility = false;
         time = Time.time;
 
@@ -146,23 +152,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (view.IsMine)
         {
             PauseMenu();
-            // TEST SPELLS
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                StartInvisibilitySpell();
-            }
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                DeployDecoy();
-            }
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                EmittingSpell();
-            }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                StartFastSpeed();
-            }
 
             if (fastSpeed)
             {
@@ -211,6 +200,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }
+    }
+
+    public void UpdateTimerSpell(string newTimerSpell)
+    {
+         timerSpell.text = newTimerSpell;
     }
 
     public void StartInvisibilitySpell()

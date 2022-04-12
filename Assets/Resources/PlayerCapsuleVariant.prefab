@@ -2793,6 +2793,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gun: {fileID: 8084043766083876516}
+  timeSpellTimer: 0
+  remainingSpellTimer: 0
+  isSpellAvailable: 0
 --- !u!1001 &1732983492859530218
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3110,6 +3113,10 @@ PrefabInstance:
       propertyPath: scorelinePrefab
       value: 
       objectReference: {fileID: 491197630680243195, guid: 31a74f3a5b6fd264eb733c8e1a558f63, type: 3}
+    - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: TimerSpellPrefab
+      value: 
+      objectReference: {fileID: 9086295897165062077, guid: 273455c69c7694c8582682bfa7c06395, type: 3}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: bulletsViewPrefab
       value: 
