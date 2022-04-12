@@ -88,6 +88,7 @@ MonoBehaviour:
   - RPC_Removeollectable
   - RPC_RemoveCollectable
   - RPC_CreateFoodBox
+  - RPC_StartTorch
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class TorchControls : MonoBehaviour
 {
@@ -8,7 +9,13 @@ public class TorchControls : MonoBehaviour
     const int MAXTORCHLIFE = 30;
     const int MAXLIGHTINTENSITY = 7;
     private float LifeRemaining = MAXTORCHLIFE;
-    
+    private PhotonView view;
+
+
+    private void Awake()
+    {
+        view = GetComponent<PhotonView>();
+    }
     void Start()
     {
         TorchOn = false;
@@ -28,10 +35,11 @@ public class TorchControls : MonoBehaviour
     void Update()
     {    
         //To be deleted once torch is linked with voice recognition
-        if (Input.GetKey(KeyCode.T))
+        if (Input.GetKey(KeyCode.L) && view.IsMine)
         {
             TorchOn = !TorchOn;
             LifeRemaining = MAXTORCHLIFE;
+            view.RPC("RPC_StartTorch", RpcTarget.Others);
         }
 
         //Updates torch's "battery"
@@ -51,6 +59,13 @@ public class TorchControls : MonoBehaviour
         {
             this.GetComponent<Light>().intensity = 0;
         }
+    }
+
+    [PunRPC]
+    public void RPC_StartTorch()
+    {
+        TorchOn = !TorchOn;
+        LifeRemaining = MAXTORCHLIFE;
     }
 
     void OnDrawGizmos()
