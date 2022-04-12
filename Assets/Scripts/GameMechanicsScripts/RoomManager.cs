@@ -74,7 +74,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Debug.Log(offerString[i]);
         }*/
-        
+
 #endif
     }
 
@@ -135,7 +135,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
 
     }
-    
+
     public float getMouseSpeed()
     {
         return mouseSpeed;
@@ -152,6 +152,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
+        }
+
+        if (!warmupEnded)
+        {
+            setMouseSpeed(mouseSpeed);
         }
 
         //get the positions of all players relative to our player and send them to their respective js panner
@@ -281,7 +286,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void AttackersWon()
     {
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Attackers won!", "red");
-       
+
         if (Timer.Instance.GetTimeRemaining() < 85)
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
