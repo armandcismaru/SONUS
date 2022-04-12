@@ -68,6 +68,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public bool fastSpeed;
     private float initialSpeed;
     public GameObject decoy;
+
+    [SerializeField] private GameObject playerIcon;
+    [SerializeField] private Camera minimapCamera;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -125,6 +129,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (!view.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
+            Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
 
@@ -423,20 +428,33 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public void SetTeamAndUpdateMaterials(int tm)
     {
         team = tm;
-        view.RPC("RPC_ChangeTexture", RpcTarget.AllBuffered, tm);
+        view.RPC("RPC_ChangeTextureAndMinimap", RpcTarget.AllBuffered, tm);
     }
 
     [PunRPC]
-    void RPC_ChangeTexture(int tm)
+    void RPC_ChangeTextureAndMinimap(int tm)
     {
         team = tm;
         if (team == 0)
         {
             GetComponent<Renderer>().material = BlueMat;
+            playerIcon.GetComponent<SpriteRenderer>().color = Color.blue;
+            playerIcon.layer = 11;
+            if (view.IsMine)
+            {
+                minimapCamera.cullingMask |= (1 << 11); // adds layer 11 to the minimap
+            }
         }
         else
         {
             GetComponent<Renderer>().material = RedMat;
+            playerIcon.GetComponent<SpriteRenderer>().color = Color.red;
+            playerIcon.layer = 10;
+            if (view.IsMine)
+            {
+                minimapCamera.cullingMask |= (1 << 10); // adds layer 11 to the minimap
+            }
+
         }
     }
 
