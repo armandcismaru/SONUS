@@ -33,8 +33,6 @@ public class MouseController : MonoBehaviour
 
     void Update()
     {
-        LockAndUnlockCursor();
-
         if (Cursor.lockState == CursorLockMode.Locked)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR

@@ -16,7 +16,7 @@ public class DoorOpener : MonoBehaviour
 
     void OnMouseOver()
     {
-        if (Input.GetButtonDown("Action") && (TheDistance <= 2))
+        if (Input.GetButtonDown("Action") && (TheDistance <= 5))
         {  
             var colliders = this.gameObject.transform.parent.GetComponentsInChildren<BoxCollider>();
             var length = colliders.Length;
@@ -27,6 +27,5 @@ public class DoorOpener : MonoBehaviour
             TheDoor.GetComponent<Animation>().Play("DoorAnimation1");
             CreakSound.Play();
         }
-
     }
 }

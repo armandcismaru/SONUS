@@ -12,15 +12,17 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
     private float current_health;
     private PlayerManager playerManager;
     private PhotonView view;
+    [SerializeField] PlayerController playerController;
 
     private void Awake()
     {
         view = GetComponent<PhotonView>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Start()
     {
-        var playerController = GetComponent<PlayerController>();
+        //var playerController = GetComponent<PlayerController>();
         playerController.addObserver<IDamageObserver>(this);
         current_health = start_health;
 
@@ -35,28 +37,14 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         base.setSlider(5, "Health", current_health / max_health);
     }
 
-    private void incrementHealth(float value)
+    private async void IncrementHealth(float value)
     {
         if (!view.IsMine)
             return;
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            rpcIncrementHealth(value);
-        }
-        else
-        {
-            view.RPC("rpcIncrementHealth", RpcTarget.MasterClient, value);
-        }
+        replicateIncrementHealth(value);
     }
 
-    [PunRPC]
-    private void rpcIncrementHealth(float value)
-    {
-        view.RPC("replicateIncrementHealth", RpcTarget.AllViaServer, value);
-    }
-
-    [PunRPC]
     private void replicateIncrementHealth(float value)
     {
         current_health = Mathf.Clamp(current_health + value, min_health, max_health);
@@ -81,6 +69,9 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
     public void Notify(int damage)
     {
+        if (view.IsMine)
+            playerController.GotHurt();
+
         GetDamage(5);
     }
 
@@ -103,7 +94,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         {
             if (pickup.pickupType == PickUpScript.PickUpType.Health)
             {
-                incrementHealth(pickup.amount);
+                IncrementHealth(pickup.amount);
                 pickup.destroyThisObject();
             }
         }

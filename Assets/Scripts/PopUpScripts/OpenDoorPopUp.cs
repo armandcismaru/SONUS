@@ -1,19 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OpenDoorPopUp : MonoBehaviour
 {
     //Makes sure pop up only displays once
-    bool AlreadyDisplayed;
+
+    // Commented out to supress warning
+    //bool AlreadyDisplayed;
     CanvasGroup canvasGroup;
     // Start is called before the first frame update
     void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0;
-        AlreadyDisplayed = false;
+        //AlreadyDisplayed = false;
     }
+
     /*
     void DetectNearToDoor()
     {

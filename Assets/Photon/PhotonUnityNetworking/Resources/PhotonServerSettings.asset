@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: ru
+    FixedRegion: eu
     Server: 
     Port: 0
     ProxyServer: 
@@ -28,7 +28,7 @@ MonoBehaviour:
     AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  DevRegion: ru
+  DevRegion: eu
   PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
@@ -75,7 +75,19 @@ MonoBehaviour:
   - RPC_KillAndDisplay
   - RPC_StartVoiceChat
   - RPC_SendOfferStrings
+  - RPC_MuteDeadPlayer
   - RPC_Die
+  - RPC_ChangeTextureAndMinimap
+  - RPC_AttackersWonByTakingSuppliesToShelter
+  - ReplicateSuppliesTakeToShelter
+  - RPC_SuppliesTakenToShelter
+  - RPC_lockComponent
+  - RPC_unlockComponent
+  - replicateAmountOfFoodDelievered
+  - RPC_AddCollectables
+  - RPC_Removeollectable
+  - RPC_RemoveCollectable
+  - RPC_CreateFoodBox
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

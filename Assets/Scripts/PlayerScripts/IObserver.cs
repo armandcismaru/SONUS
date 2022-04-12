@@ -15,3 +15,7 @@ public interface IDamageObserver : IObserver
 public interface IDieObserver : IObserver
 {
 }
+
+public interface IRoundFinished : IObserver
+{
+}
