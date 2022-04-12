@@ -21,22 +21,22 @@ public class BridgeVoiceRecognition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if(Input.GetKeyDown(KeyCode.V))
-        // {
-        //     TriggerSpell("speed");
-        // }
-        // else if (Input.GetKeyDown(KeyCode.B))
-        // {
-        //     TriggerSpell("sound");
-        // }
-        // else if (Input.GetKeyDown(KeyCode.N))
-        // {
-        //     TriggerSpell("hide me");
-        // }
-        // else if (Input.GetKeyDown(KeyCode.M))
-        // {
-        //     TriggerSpell("decoy");
-        // }
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            TriggerSpell("speed");
+        }
+        else if (Input.GetKeyDown(KeyCode.B))
+        {
+            TriggerSpell("sound");
+        }
+        else if (Input.GetKeyDown(KeyCode.N))
+        {
+            TriggerSpell("hide me");
+        }
+        else if (Input.GetKeyDown(KeyCode.M))
+        {
+            TriggerSpell("decoy");
+        }
 
         if (!isSpellAvailable)
         {
