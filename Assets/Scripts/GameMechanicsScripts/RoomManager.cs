@@ -233,6 +233,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
         }
+
+        setMouseSpeed(mouseSpeed);
     }
 
     public void TimerFinished()
