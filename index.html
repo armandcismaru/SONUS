@@ -53,7 +53,7 @@
 				streamingAssetsUrl: "StreamingAssets",
 				companyName: "DefaultCompany",
 				productName: "game",
-				productVersion: "0.0.60",
+				productVersion: "0.0.61",
 			};
 			var scaleToFit;
 			try {
@@ -92,6 +92,7 @@
 				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
 			}
 			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+        window.unityInstance = instance;
 				canvas = instance.Module.canvas;
 				onResize();
 			});
