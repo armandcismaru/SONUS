@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public readonly string DRYFIRE_SOUND = "DryFire";
     public readonly string RELOAD_SOUND = "Reload";
     public readonly string GETSHOT_SOUND = "GetShot";
+    public readonly string EMITTER_SOUND = "Emitter";
 
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
@@ -31,12 +32,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
-    private PhotonView view;
+    public PhotonView view;
 
     public bool grounded;
     private bool isMoving;
     bool hasJumped = false;
-    
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
@@ -60,6 +61,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public int index = -1;
     [SerializeField] private GameObject pauseObject;
+    float time;
+    float remainingTime;
+    public bool invisibility;
+    float timeSpeed;
+    float remainingTimeSpeed;
+    public bool fastSpeed;
+    private float initialSpeed;
+    public GameObject decoy;
 
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
@@ -71,7 +80,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         index = (int)view.InstantiationData[1];
     }
     void Start()
-    {   
+    {
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -98,6 +107,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
                                                             TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
+
+        invisibility = false;
+        time = Time.time;
 
         if (view.IsMine)
         {
@@ -132,9 +144,35 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     void Update()
     {
         if (view.IsMine)
-        {   
+        {
             PauseMenu();
+            // TEST SPELLS
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                StartInvisibilitySpell();
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                DeployDecoy();
+            }
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                EmittingSpell();
+            }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                StartFastSpeed();
+            }
 
+            if (fastSpeed)
+            {
+                UpdateFastSpeed();
+            }
+
+            if (invisibility)
+            {
+                UpdateInvisibilitySpell();
+            }
             if (grounded == false && hasJumped == false)
             {
                 hasJumped = true;
@@ -144,10 +182,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             if (grounded == true && hasJumped == true)
             {
                 GetComponent<AudioManager>().Play(JUMP_SOUND);
-                hasJumped = false; 
+                hasJumped = false;
                 BroadcastSound(JUMP_SOUND);
             }
-            
+
             if (!Pause.paused) {
                 Shoot();
                 UseKnife();
@@ -157,7 +195,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 FadeBloodDamage();
                 SelfHit();
             }
-           
+
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -172,13 +210,101 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }    
+        }
     }
 
+    public void StartInvisibilitySpell()
+    {
+        time = Time.time;
+        invisibility = true;
+        GetComponent<Renderer>().enabled = false;
+        gun.GetComponent<Renderer>().enabled = false;
+        view.RPC("RPC_MakeInvisible", RpcTarget.All, index);
+        Debug.Log("da");
+    }
+
+    public void DeployDecoy()
+    {
+        // Instantiate(decoy, transform.position, transform.rotation);
+        // Vector3 decoy_position = GetComponentInChildren<Camera>().gameObject.transform.position;
+        // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
+        // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
+        // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
+        decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
+        decoy.GetComponent<Decoy>().direction = transform.forward;
+    }
+
+    [PunRPC]
+    void RPC_DeployDecoy(Vector3 position, Quaternion rotation, int team) {
+        Instantiate(decoy, position, rotation);
+    }
+
+    void UpdateInvisibilitySpell()
+    {
+        remainingTime = time + 5f - Time.time;
+
+        if(remainingTime <= 0)
+        {
+            this.gameObject.GetComponent<Renderer>().enabled = true;
+            gun.GetComponent<Renderer>().enabled = true;
+            invisibility = false;
+            view.RPC("RPC_StopInvisible", RpcTarget.All, index);
+        }
+    }
+
+    void UpdateFastSpeed()
+    {
+        remainingTimeSpeed = timeSpeed + 5f - Time.time;
+
+        if(remainingTimeSpeed <= 0)
+        {
+            fastSpeed = false;
+            walkSpeed = initialSpeed;
+        }
+    }
+
+    public void StartFastSpeed()
+    {
+        if (!fastSpeed)
+        {
+            timeSpeed = Time.time;
+            fastSpeed = true;
+            initialSpeed = walkSpeed;
+            walkSpeed *= 1.5f;
+        }
+    }
+
+    public void EmittingSpell()
+    {
+        float minDistance = float.MaxValue;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject closestPlayer = null;
+        for(int i = 0; i < players.Length; i++)
+        {
+            int playerTeam = players[i].GetComponent<PlayerController>().team;
+            if (Mathf.Abs(team - playerTeam) == 1)
+            {
+                float distance = (players[i].transform.position - transform.position).sqrMagnitude;
+                if (distance < minDistance)
+                {
+                    closestPlayer = players[i];
+                    minDistance = distance;
+                }
+            }
+        }
+        int closestIndex = closestPlayer.GetComponent<PlayerController>().index;
+        closestPlayer.GetComponent<PlayerController>().EmitSound();
+    }
+
+    public void EmitSound()
+    {
+        GetComponent<AudioManager>().Play(EMITTER_SOUND);
+        BroadcastSound(EMITTER_SOUND);
+    }
     private void FixedUpdate()
     {
         if (view.IsMine)
-        {    
+        {
             if (grounded && Pause.paused) {
                 return;
             }
@@ -391,6 +517,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                     (subscriber as IDieObserver).Notify();
                 }
             }
+        }
+    }
+
+    [PunRPC]
+    void RPC_MakeInvisible(int ind)
+    {
+        if (index == ind)
+        {
+            GetComponent<Renderer>().enabled = false;
+            // gun.GetComponent<Renderer>().enabled = false;
+        }
+    }
+
+    [PunRPC]
+    void RPC_StopInvisible(int ind)
+    {
+        if (index == ind)
+        {
+            GetComponent<Renderer>().enabled = true;
+            // gun.GetComponent<Renderer>().enabled = true;
         }
     }
 

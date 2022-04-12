@@ -3035,6 +3035,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: decoy
+      value: 
+      objectReference: {fileID: 1134319995136194969, guid: e23b2a0b816504b0e8b00938befd3321, type: 3}
+    - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: knife
       value: 
       objectReference: {fileID: 2216203663358200940}
@@ -3188,6 +3192,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+--- !u!1 &4021335990823298856 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+  m_PrefabInstance: {fileID: 1732983493988335764}
+  m_PrefabAsset: {fileID: 0}
 --- !u!20 &6521057915234584602 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 4788374040597547150, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
@@ -3211,11 +3220,6 @@ GameObject:
 --- !u!4 &3257861007513110959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3835646438195333435, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
-  m_PrefabInstance: {fileID: 1732983493988335764}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4021335990823298856 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
   m_PrefabInstance: {fileID: 1732983493988335764}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2347405197586912743
@@ -3329,14 +3333,24 @@ MonoBehaviour:
     maxDistance: 25
   - name: GetShot
     clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
-    volume: 0.5
+    volume: 0.504
     pitch: 1.21
     source: {fileID: 0}
-    spatialBlend: 0.23
-    dopplerLevel: 0.42
-    spread: 24
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
     minDistance: 1
-    maxDistance: 2
+    maxDistance: 50
+  - name: Emitter
+    clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
+    volume: 0.8
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
 --- !u!114 &104123427400230039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3653,13 +3667,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
---- !u!1 &557519540777133133 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2858095373523295746, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
-  m_PrefabInstance: {fileID: 2311837035345164879}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7762165398387849985 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5453168402793972046, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
+  m_PrefabInstance: {fileID: 2311837035345164879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &557519540777133133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2858095373523295746, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
   m_PrefabInstance: {fileID: 2311837035345164879}
   m_PrefabAsset: {fileID: 0}
