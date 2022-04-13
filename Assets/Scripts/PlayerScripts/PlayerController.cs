@@ -117,7 +117,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (!view.IsMine)
         {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
+            GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
+            GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            //Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
@@ -347,7 +349,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             playerIcon.layer = 10;
             if (view.IsMine)
             {
-                minimapCamera.cullingMask |= (1 << 10); // adds layer 11 to the minimap
+                minimapCamera.cullingMask |= (1 << 10); // adds layer 10 to the minimap
             }
 
         }
@@ -392,6 +394,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 }
             }
         }
+        GameObject bloodSplatter = GameObject.FindWithTag("Blood");
+        var color = bloodSplatter.GetComponent<Image>().color;
+        color.a = 0;
+        bloodSplatter.GetComponent<Image>().color = color;
     }
 
     public void BroadcastSound(string sound)

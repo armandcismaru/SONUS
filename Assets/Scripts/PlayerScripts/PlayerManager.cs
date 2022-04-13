@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public bool isAlive = false;
 
     PlayerController playerController;
+    private bool isDead = false;
+    private List<GameObject> spectateCameras = new List<GameObject>();
+    private int spectateIndex = 0;
 
     private void Awake()
     {
@@ -68,8 +72,31 @@ public class PlayerManager : MonoBehaviour
         }
 
         playerController = myAvatar.gameObject.GetComponent<PlayerController>();
+        spectateCameras = new List<GameObject>();
+        isDead = false;
     }
 
+    private void Update()
+    {
+        //weird
+        if(Input.GetKeyDown(KeyCode.Greater) && isDead)
+        {
+            spectateCameras[spectateIndex].SetActive(false);
+            spectateIndex += 1;
+            spectateIndex %= spectateCameras.Count;
+
+            if (spectateCameras[spectateIndex] == null)
+            {
+                spectateCameras.RemoveAt(spectateIndex);
+                spectateIndex %= spectateCameras.Count;
+            }
+
+            if (spectateCameras[spectateIndex] != null)
+            {
+                spectateCameras[spectateIndex].SetActive(true);
+            }
+        }
+    }
     void FixedUpdate()
     {
         KillYourself();
@@ -123,6 +150,22 @@ public class PlayerManager : MonoBehaviour
         {
             view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
         }
+        if (view.IsMine)
+        {
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            //Debug.Log(players.Length);
+            foreach (GameObject player in players)
+            {
+                int playerInd = player.GetComponent<PlayerController>().index;
+                if(playerInd != playerController.index && playerInd % 2 == playerController.index % 2)
+                {
+                    spectateCameras.Add(player.GetComponentInChildren(typeof(Camera), true).gameObject);
+                }
+            }
+            spectateCameras[0].SetActive(true);
+            //GameObject.FindWithTag("Player").GetComponent<Camera>().gameObject.SetActive(true);
+        }
+        isDead = true;
 
     }
 
