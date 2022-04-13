@@ -88,6 +88,9 @@ MonoBehaviour:
   - RPC_Removeollectable
   - RPC_RemoveCollectable
   - RPC_CreateFoodBox
+  - RPC_DisableCollidersAndPlayAnim
+  - RPC_Mutex
+  - CallDisableCollider
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

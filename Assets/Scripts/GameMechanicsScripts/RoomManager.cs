@@ -42,6 +42,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox4;
     private GameObject healthBox5;
 
+    //private GameObject Door;
+
     const int maxNumOfPlayers = 6;
     private string[] offerString = new string[maxNumOfPlayers];
     [HideInInspector] public int index = 0;
@@ -92,7 +94,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(20f); //TODO 20f
+            Timer.Instance.StartTimer(5f); //TODO 20f
         }
         if (scene.buildIndex == 1)
         {
@@ -215,6 +217,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
             healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
             healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
+
+           // Door = PhotonNetwork.Instantiate("Door", new Vector3(-1, 26, -65), Quaternion.identity);
 
             collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
             
