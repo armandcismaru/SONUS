@@ -1,2 +1,2 @@
-hocus
-pocus
+passive
+active
