@@ -1,2 +1,2 @@
-adapt me
+adapt
 device
