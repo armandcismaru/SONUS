@@ -48,13 +48,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
         if (isSpellAvailable){
             int team = playerController.GetComponent<PlayerController>().team;
             if (team == 0) {
-                if (hypseg == "hocus pocus")
+                if (hypseg == "hocus")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.StartFastSpeed();
                     StartTimer();
                 }
-                else if (hypseg == "abracadabra")
+                else if (hypseg == "pocus")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.EmittingSpell();
@@ -63,13 +63,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
             }
             else
             {
-                if (hypseg == "hocus pocus")
+                if (hypseg == "hocus")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.StartInvisibilitySpell();
                     StartTimer();
                 }
-                else if (hypseg == "abracadabra")
+                else if (hypseg == "pocus")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.DeployDecoy();
