@@ -48,13 +48,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
         if (isSpellAvailable){
             int team = playerController.GetComponent<PlayerController>().team;
             if (team == 0) {
-                if (hypseg == "evolve")
+                if (hypseg == "speed")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.StartFastSpeed();
                     StartTimer();
                 }
-                else if (hypseg == "device")
+                else if (hypseg == "listen")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.EmittingSpell();
@@ -63,13 +63,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
             }
             else
             {
-                if (hypseg == "evolve")
+                if (hypseg == "hide")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.StartInvisibilitySpell();
                     StartTimer();
                 }
-                else if (hypseg == "device")
+                else if (hypseg == "clone")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.DeployDecoy();

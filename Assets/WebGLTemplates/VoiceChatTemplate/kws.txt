@@ -1,2 +1,4 @@
-power
-device
+clone
+hide
+listen
+speed
