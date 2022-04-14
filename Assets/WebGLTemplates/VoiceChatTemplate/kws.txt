@@ -1,4 +1,2 @@
-clone
-hide
-listen
-speed
+hocus pocus
+abracadabra
