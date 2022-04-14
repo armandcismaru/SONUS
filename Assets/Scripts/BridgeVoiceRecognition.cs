@@ -21,23 +21,6 @@ public class BridgeVoiceRecognition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.V))
-        {
-            TriggerSpell("speed");
-        }
-        else if (Input.GetKeyDown(KeyCode.B))
-        {
-            TriggerSpell("sound");
-        }
-        else if (Input.GetKeyDown(KeyCode.N))
-        {
-            TriggerSpell("hide me");
-        }
-        else if (Input.GetKeyDown(KeyCode.M))
-        {
-            TriggerSpell("decoy");
-        }
-
         if (!isSpellAvailable)
         {
             UpdateSpellTimer();
@@ -61,7 +44,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
         timeSpellTimer = Time.time;
     }
     void TriggerSpell(string hypseg) {
-        // Debug.Log("From Unity:" + hypseg);
+        Debug.Log("From Unity:" + hypseg);
         if (isSpellAvailable){
             int team = playerController.GetComponent<PlayerController>().team;
             if (team == 0) {
@@ -71,7 +54,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
                     playerController.StartFastSpeed();
                     StartTimer();
                 }
-                else if (hypseg == "sound")
+                else if (hypseg == "listen")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.EmittingSpell();
@@ -80,13 +63,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
             }
             else
             {
-                if (hypseg == "hide me")
+                if (hypseg == "hide")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.StartInvisibilitySpell();
                     StartTimer();
                 }
-                else if (hypseg == "decoy")
+                else if (hypseg == "clone")
                 {
                     playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
                     playerController.DeployDecoy();

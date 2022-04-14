@@ -134,7 +134,7 @@ var feedWords = function(words) {
 // This initializes the recognizer. When it calls back, we add words
 var initRecognizer = function() {
     // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-40"], ["-kws", "kws.txt"], ["-dict","kws.dict"]]},
+    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-25"], ["-kws", "kws.txt"], ["-dict","kws.dict"]]},
                       function() {console.log("Speech Recognition Initialized");});
 };
 
