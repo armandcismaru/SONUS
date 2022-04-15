@@ -309,10 +309,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DisplayKill(team);
     }
 
-    private void DisplayKill(int team)
-    {
-        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
 
+    private IEnumerator DisplayKillAndFade(int team, DisplayMessage kill)
+    {
         if (team == 0)
         {
             kill.SetText("");
@@ -325,6 +324,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
             kill.SetText("              Attacker died");
             kill.SetColour("red");
         }
+        yield return new WaitForSeconds(3);
+        kill.SetText("");
+    }
+    private void DisplayKill(int team)
+    {
+        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
+
+        StartCoroutine(DisplayKillAndFade(team, kill));
     }
 
     [PunRPC]
