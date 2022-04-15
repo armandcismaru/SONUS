@@ -234,6 +234,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
+        SpellTransformSound();
         decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
         decoy.GetComponent<Decoy>().direction = transform.forward;
     }
@@ -283,6 +284,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void EmittingSpell()
     {
+        SpellTransformSound();
+
         float minDistance = float.MaxValue;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         GameObject closestPlayer = null;
@@ -562,7 +565,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             // gun.GetComponent<Renderer>().enabled = false;
         }
     }
-
+    
     [PunRPC]
     void RPC_StopInvisible(int ind)
     {

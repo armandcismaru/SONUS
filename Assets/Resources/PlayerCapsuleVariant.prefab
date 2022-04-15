@@ -3207,7 +3207,7 @@ MonoBehaviour:
     maxDistance: 100
   - name: SpellTransform
     clip: {fileID: 8300000, guid: 7cd93eb57d3f0451c81f40984b73afd0, type: 3}
-    volume: 0.301
+    volume: 0.65
     pitch: 0.96
     source: {fileID: 0}
     spatialBlend: 1
@@ -3217,7 +3217,7 @@ MonoBehaviour:
     maxDistance: 50
   - name: Knife
     clip: {fileID: 8300000, guid: b5f3b49724b364f7c921860ba02ce8df, type: 3}
-    volume: 0.346
+    volume: 0.5
     pitch: 1.59
     source: {fileID: 0}
     spatialBlend: 1
@@ -3227,7 +3227,7 @@ MonoBehaviour:
     maxDistance: 20
   - name: KnifeKilling
     clip: {fileID: 8300000, guid: 37af8b2407a564ec69fec62d5a9b7a1b, type: 3}
-    volume: 0.346
+    volume: 0.5
     pitch: 1.59
     source: {fileID: 0}
     spatialBlend: 1
@@ -3376,15 +3376,15 @@ MonoBehaviour:
     minDistance: 1
     maxDistance: 50
   - name: Emitter
-    clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
-    volume: 0.8
+    clip: {fileID: 8300000, guid: d9bb377f8463b4776b0170c5f14c2a2f, type: 3}
+    volume: 1
     pitch: 1.21
     source: {fileID: 0}
     spatialBlend: 0.815
     dopplerLevel: 3.99
     spread: 29
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 75
 --- !u!114 &104123427400230039
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
+    [SerializeField] GameObject endGameSound;
     public static RoomManager Instance;
     private int currentTeam = 1;
     private PhotonView view;
@@ -279,6 +280,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void DefendersWon()
     {
+        
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Defenders won!", "blue");
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
     }
@@ -349,6 +351,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PauseAndDisplay(string msg, string team)
     {
+        endGameSound.GetComponent<AudioSource>().Play();
         StartPause(msg, team);
     }
 
