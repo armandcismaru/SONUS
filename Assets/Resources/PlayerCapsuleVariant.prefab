@@ -174,7 +174,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -370,7 +370,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!1 &509350877866317384
+--- !u!1 &720143449971702130
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -378,77 +378,130 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3024494672085472714}
-  - component: {fileID: 3544948098637155579}
-  - component: {fileID: 7394994105496456174}
+  - component: {fileID: 6206120188784334224}
+  - component: {fileID: 8067621351159838125}
   m_Layer: 0
-  m_Name: Text
+  m_Name: resume_sound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &3024494672085472714
+--- !u!224 &6206120188784334224
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 509350877866317384}
+  m_GameObject: {fileID: 720143449971702130}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.31710842, y: 0.40859416, z: 0.45301202}
   m_Children: []
-  m_Father: {fileID: 7894151259859833889}
-  m_RootOrder: 0
+  m_Father: {fileID: 3257861007513110959}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 447, y: 198.58795}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3544948098637155579
-CanvasRenderer:
+--- !u!82 &8067621351159838125
+AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 509350877866317384}
-  m_CullTransparentMesh: 1
---- !u!114 &7394994105496456174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 509350877866317384}
+  m_GameObject: {fileID: 720143449971702130}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 70
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 1
-    m_MaxSize: 100
-    m_Alignment: 4
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: Exit
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5577f97d4d4e548c49dca4ded3b4f7d0, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &789809546638495067
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,7 +602,7 @@ RectTransform:
   - {fileID: 8623925073293264180}
   - {fileID: 3436419832038409072}
   m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -606,19 +659,7 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &3763849156627148420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1300,139 +1341,6 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &3336366979819964805
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7894151259859833889}
-  - component: {fileID: 2913640129880436715}
-  - component: {fileID: 5805180698546763769}
-  - component: {fileID: 4884977078140187808}
-  m_Layer: 0
-  m_Name: Exit
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7894151259859833889
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3336366979819964805}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 3024494672085472714}
-  m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 625, y: -201.5625}
-  m_SizeDelta: {x: 800, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &2913640129880436715
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3336366979819964805}
-  m_CullTransparentMesh: 1
---- !u!114 &5805180698546763769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3336366979819964805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!114 &4884977078140187808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3336366979819964805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 5805180698546763769}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7686819843496457975}
-        m_TargetAssemblyTypeName: Pause, Assembly-CSharp
-        m_MethodName: Quit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &3336696535110502554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1542,7 +1450,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1724,6 +1632,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+      - m_Target: {fileID: 8067621351159838125}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4460029198554395182
 GameObject:
   m_ObjectHideFlags: 0
@@ -1790,7 +1710,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -2320,7 +2240,6 @@ RectTransform:
   m_LocalScale: {x: 0.7, y: 0.90194994, z: 1}
   m_Children:
   - {fileID: 10152516104457986}
-  - {fileID: 7894151259859833889}
   - {fileID: 1363782961553964776}
   - {fileID: 8083452130308092050}
   - {fileID: 8818381752224723346}
@@ -2432,7 +2351,7 @@ RectTransform:
   - {fileID: 4415764909976595103}
   - {fileID: 8085133609754166458}
   m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -2489,19 +2408,7 @@ MonoBehaviour:
   m_Value: 15
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2543605869451486996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2700,7 +2607,7 @@ RectTransform:
   m_Children:
   - {fileID: 3065511176432409855}
   m_Father: {fileID: 3973067897491592238}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -3268,8 +3175,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - name: ConcreteFootsteps
-    clip: {fileID: 8300000, guid: afc7c7d32a5a64bdaa086a24b0140325, type: 3}
+  - name: DirtWalk
+    clip: {fileID: 8300000, guid: 2dab4501d0b474fbf8c698820d3f4339, type: 3}
     volume: 0.57
     pitch: 0.96
     source: {fileID: 0}
@@ -3278,8 +3185,18 @@ MonoBehaviour:
     spread: 173
     minDistance: 1
     maxDistance: 50
+  - name: DirtRun
+    clip: {fileID: 8300000, guid: 1fcbac685c1794d0ca0f18d13a2fc877, type: 3}
+    volume: 0.656
+    pitch: 0.96
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 3.79
+    spread: 173
+    minDistance: 1
+    maxDistance: 75
   - name: Gunshot
-    clip: {fileID: 8300000, guid: 7710184bb1543428fa5c1a5c26f95814, type: 3}
+    clip: {fileID: 8300000, guid: 035b4d1b5f95444188cf216e7e2abf99, type: 3}
     volume: 0.301
     pitch: 0.96
     source: {fileID: 0}
@@ -3288,8 +3205,18 @@ MonoBehaviour:
     spread: 179
     minDistance: 1
     maxDistance: 100
-  - name: stab
-    clip: {fileID: 8300000, guid: 91bc00afb5f014d1c93e0bdf865d8ebb, type: 3}
+  - name: SpellTransform
+    clip: {fileID: 8300000, guid: 7cd93eb57d3f0451c81f40984b73afd0, type: 3}
+    volume: 0.301
+    pitch: 0.96
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 3.31
+    spread: 179
+    minDistance: 1
+    maxDistance: 50
+  - name: Knife
+    clip: {fileID: 8300000, guid: b5f3b49724b364f7c921860ba02ce8df, type: 3}
     volume: 0.346
     pitch: 1.59
     source: {fileID: 0}
@@ -3297,7 +3224,27 @@ MonoBehaviour:
     dopplerLevel: 0.87
     spread: 26
     minDistance: 1
-    maxDistance: 25
+    maxDistance: 20
+  - name: KnifeKilling
+    clip: {fileID: 8300000, guid: 37af8b2407a564ec69fec62d5a9b7a1b, type: 3}
+    volume: 0.346
+    pitch: 1.59
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 0.87
+    spread: 26
+    minDistance: 1
+    maxDistance: 30
+  - name: KnifeKilling
+    clip: {fileID: 8300000, guid: 37af8b2407a564ec69fec62d5a9b7a1b, type: 3}
+    volume: 0.346
+    pitch: 1.59
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 0.87
+    spread: 26
+    minDistance: 1
+    maxDistance: 30
   - name: DryFire
     clip: {fileID: 8300000, guid: 239f351f7fa3f4514bb468f7f0b34a02, type: 3}
     volume: 0.413
@@ -3308,8 +3255,18 @@ MonoBehaviour:
     spread: 37
     minDistance: 1
     maxDistance: 40
-  - name: Jump
-    clip: {fileID: 8300000, guid: cc95c417e33254ae194d4d0f810083d9, type: 3}
+  - name: DirtJump
+    clip: {fileID: 8300000, guid: 76c619c54e29e4f12922386acd71e28e, type: 3}
+    volume: 0.32
+    pitch: 0.52
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 2.08
+    spread: 139
+    minDistance: 1
+    maxDistance: 50
+  - name: PickUpSupply
+    clip: {fileID: 8300000, guid: d488eef62f8014624831503ba2c7dee1, type: 3}
     volume: 0.32
     pitch: 0.52
     source: {fileID: 0}
@@ -3319,7 +3276,7 @@ MonoBehaviour:
     minDistance: 1
     maxDistance: 50
   - name: Reload
-    clip: {fileID: 8300000, guid: 186e64d1594bd45e5a490f00dc27ffda, type: 3}
+    clip: {fileID: 8300000, guid: d403dc99e28c043b89abbf31c99760d0, type: 3}
     volume: 0.516
     pitch: 1
     source: {fileID: 0}
@@ -3338,8 +3295,78 @@ MonoBehaviour:
     spread: 93
     minDistance: 1
     maxDistance: 25
-  - name: GetShot
-    clip: {fileID: 8300000, guid: f65318ec66bc34cf8bf737b95e2a684a, type: 3}
+  - name: InjuredOne
+    clip: {fileID: 8300000, guid: 86d7c8da97a634f01957289735bc1a2b, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: InjuredTwo
+    clip: {fileID: 8300000, guid: 3e783e89d0d5d451aa4a674e37f171ed, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: InjuredThree
+    clip: {fileID: 8300000, guid: a4a37741282464f6090b3fd84a0311ad, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: InjuredFour
+    clip: {fileID: 8300000, guid: 101e2b5010fc44f9e809dcf4e1586c16, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: DeathOne
+    clip: {fileID: 8300000, guid: 7f65f5c135d3f4c4c99a1b6333fa0838, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: DeathTwo
+    clip: {fileID: 8300000, guid: f83794237dcae4e849a85d04ea871b64, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: DeathThree
+    clip: {fileID: 8300000, guid: 073e4a024178943a1bb0a101defff43f, type: 3}
+    volume: 0.504
+    pitch: 1.21
+    source: {fileID: 0}
+    spatialBlend: 0.815
+    dopplerLevel: 3.99
+    spread: 29
+    minDistance: 1
+    maxDistance: 50
+  - name: DeathFour
+    clip: {fileID: 8300000, guid: 79fd663677464416abfe527083f5b724, type: 3}
     volume: 0.504
     pitch: 1.21
     source: {fileID: 0}

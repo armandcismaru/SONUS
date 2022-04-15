@@ -6,14 +6,20 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
-    public readonly string FOOTSTEP_SOUND = "ConcreteFootsteps";
+    public string FOOTSTEP_SOUND = "DirtWalk";
     public readonly string GUN_SOUND = "Gunshot";
-    public readonly string JUMP_SOUND = "Jump";
-    public readonly string STAB_SOUND = "stab";
+    public readonly string JUMP_SOUND = "DirtJump";
+    public readonly string KNIFE_SOUND = "Knife";
     public readonly string DRYFIRE_SOUND = "DryFire";
     public readonly string RELOAD_SOUND = "Reload";
-    public readonly string GETSHOT_SOUND = "GetShot";
+    public readonly string[] INJURED_SOUNDS = {"InjuredOne", "InjuredTwo", "InjuredThree", "InjuredFour"};
+    public readonly string[] DEATH_SOUNDS = {"DeathOne", "DeathTwo", "DeathThree", "DeathFour"};
     public readonly string EMITTER_SOUND = "Emitter";
+    public readonly string PICKUP_SUPPLY_SOUND = "PickUpSupply";
+    public readonly string KNIFE_KILLING_SOUND = "KnifeKilling";
+    public readonly string SPELL_TRANSFORM_SOUND = "SpellTransform";
+
+
 
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
@@ -152,7 +158,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (view.IsMine)
         {
             PauseMenu();
-
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                StartFastSpeed();
+            }
             if (fastSpeed)
             {
                 UpdateFastSpeed();
@@ -209,6 +218,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void StartInvisibilitySpell()
     {
+        SpellTransformSound();
         time = Time.time;
         invisibility = true;
         GetComponent<Renderer>().enabled = false;
@@ -252,6 +262,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if(remainingTimeSpeed <= 0)
         {
+            FOOTSTEP_SOUND = "DirtWalk";
             fastSpeed = false;
             walkSpeed = initialSpeed;
         }
@@ -261,6 +272,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (!fastSpeed)
         {
+            SpellTransformSound();
+            FOOTSTEP_SOUND = "DirtRun";
             timeSpeed = Time.time;
             fastSpeed = true;
             initialSpeed = walkSpeed;
@@ -295,6 +308,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GetComponent<AudioManager>().Play(EMITTER_SOUND);
         BroadcastSound(EMITTER_SOUND);
     }
+
+    public void SpellTransformSound()
+    {
+        GetComponent<AudioManager>().Play(SPELL_TRANSFORM_SOUND);
+        BroadcastSound(SPELL_TRANSFORM_SOUND);
+    }
+
     private void FixedUpdate()
     {
         if (view.IsMine)
@@ -388,7 +408,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void GotHurt()
     {
-        GetComponent<AudioManager>().Play(GETSHOT_SOUND);
+        int index = Random.Range(0, INJURED_SOUNDS.Length);
+        GetComponent<AudioManager>().Play(INJURED_SOUNDS[index]);
         GameObject bloodSplatter = GameObject.FindWithTag("Blood");
         var color = bloodSplatter.GetComponent<Image>().color;
         color.a = 0.8f;
@@ -429,8 +450,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            GetComponent<AudioManager>().Play(STAB_SOUND);
-            BroadcastSound(STAB_SOUND);
             knife.UseKnife();
         }
     }
@@ -479,6 +498,24 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
+    public void PickUpSupplySound()
+    {
+        GetComponent<AudioManager>().Play(PICKUP_SUPPLY_SOUND);
+        BroadcastSound(PICKUP_SUPPLY_SOUND);
+    }
+
+    public void KnifeKillingSound()
+    {
+        GetComponent<AudioManager>().Play(KNIFE_KILLING_SOUND);
+        BroadcastSound(KNIFE_KILLING_SOUND);
+    }
+
+    public void KnifeSound()
+    {
+        GetComponent<AudioManager>().Play(KNIFE_SOUND);
+        BroadcastSound(KNIFE_SOUND);
+    }
+
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
@@ -496,6 +533,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void Die()
     {
+        int index = Random.Range(0, DEATH_SOUNDS.Length);
+        GetComponent<AudioManager>().Play(DEATH_SOUNDS[index]);
         view.RPC("RPC_Die", RpcTarget.All);
     }
 
