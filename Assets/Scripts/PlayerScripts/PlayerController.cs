@@ -136,12 +136,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public void SolveSpectateComponents()
     {
         SpectateCanv.SetActive(true);
-        //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(true);
-
- /*       foreach (var comp in SpectateCanv.GetComponentsInChildren(typeof(Component), true))
-        {
-            comp.gameObject.SetActive(true);
-        }*/
     }
     void Update()
     {

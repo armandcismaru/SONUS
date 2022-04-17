@@ -145,11 +145,11 @@ public class PlayerManager : MonoBehaviour
         DestroyMyAvatar();
         if (PhotonNetwork.IsMasterClient)
         {
-            RoomManager.Instance.PlayerDied(team);
+            RoomManager.Instance.PlayerDied(team, PhotonNetwork.NickName);
         }
         else
         {
-            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
+            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team, PhotonNetwork.NickName);
         }
         if (view.IsMine)
         {
@@ -164,8 +164,11 @@ public class PlayerManager : MonoBehaviour
                     //player.GetComponent<PlayerController>().SpectateCanv.SetActive(true);
                 }
             }
-            spectateCameras[0].SetActive(true);
-            spectateCameras[0].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+            if(spectateCameras.Count > 0)
+            {
+                spectateCameras[0].SetActive(true);
+                spectateCameras[0].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+            }
             //GameObject.FindWithTag("Player").GetComponent<Camera>().gameObject.SetActive(true);
         }
         isDead = true;
@@ -235,9 +238,9 @@ public class PlayerManager : MonoBehaviour
     }
 
     [PunRPC]
-    void RPC_PlayerDied(int tm)
+    void RPC_PlayerDied(int tm, string name)
     {
-        RoomManager.Instance.PlayerDied(tm);
+        RoomManager.Instance.PlayerDied(tm, name);
     }
 
     [PunRPC]
