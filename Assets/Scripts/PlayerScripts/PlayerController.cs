@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public bool grounded;
     private bool isMoving;
     bool hasJumped = false;
-    
+
     private Vector3 smoothMoveVelocity;
     private Vector3 moveAmount;
     private Vector3 velocity;
@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private Camera minimapCamera;
 
     public GameObject SpectateCanv;
+    [SerializeField] private TMP_Text nickname;
 
     void Awake()
     {
@@ -122,6 +123,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             GetComponentInChildren<Camera>().gameObject.SetActive(false);
             GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
+            nickname.text = view.Owner.NickName;
             //Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
