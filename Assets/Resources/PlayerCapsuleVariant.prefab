@@ -3256,7 +3256,7 @@ MonoBehaviour:
     minDistance: 1
     maxDistance: 40
   - name: DirtJump
-    clip: {fileID: 8300000, guid: 76c619c54e29e4f12922386acd71e28e, type: 3}
+    clip: {fileID: 8300000, guid: c4cd7b41e0acd44e1ba6fdfd8b8cd9ab, type: 3}
     volume: 0.32
     pitch: 0.52
     source: {fileID: 0}
@@ -3382,9 +3382,9 @@ MonoBehaviour:
     source: {fileID: 0}
     spatialBlend: 0.815
     dopplerLevel: 3.99
-    spread: 29
+    spread: 110
     minDistance: 1
-    maxDistance: 75
+    maxDistance: 150
 --- !u!114 &104123427400230039
 MonoBehaviour:
   m_ObjectHideFlags: 0

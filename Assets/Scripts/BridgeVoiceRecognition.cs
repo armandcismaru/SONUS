@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BridgeVoiceRecognition : MonoBehaviour
 {
-    public readonly string SPELL_SOUND = "Gunshot";
     [SerializeField] Gun gun;
     PlayerController playerController;
     public float timeSpellTimer;
@@ -43,6 +42,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
         isSpellAvailable = false;
         timeSpellTimer = Time.time;
     }
+
     void TriggerSpell(string hypseg) {
         Debug.Log("From Unity:" + hypseg);
         if (isSpellAvailable){
@@ -50,13 +50,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
             if (team == 0) {
                 if (hypseg == "speed")
                 {
-                    playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
+                    playerController.SpellTransformSound();
                     playerController.StartFastSpeed();
                     StartTimer();
                 }
                 else if (hypseg == "listen")
                 {
-                    playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
+                    playerController.SpellTransformSound();
                     playerController.EmittingSpell();
                     StartTimer();
                 }
@@ -65,13 +65,13 @@ public class BridgeVoiceRecognition : MonoBehaviour
             {
                 if (hypseg == "hide")
                 {
-                    playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
+                    playerController.SpellTransformSound();
                     playerController.StartInvisibilitySpell();
                     StartTimer();
                 }
                 else if (hypseg == "clone")
                 {
-                    playerController.GetComponent<AudioManager>().Play(SPELL_SOUND);
+                    playerController.SpellTransformSound();
                     playerController.DeployDecoy();
                     StartTimer();
                 }
