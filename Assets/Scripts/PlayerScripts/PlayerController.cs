@@ -64,6 +64,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
 
+    public GameObject SpectateCanv;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -117,8 +119,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (!view.IsMine)
         {
-            GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
+            //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             //Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
@@ -130,7 +133,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
+    public void SolveSpectateComponents()
+    {
+        SpectateCanv.SetActive(true);
+        //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(true);
 
+ /*       foreach (var comp in SpectateCanv.GetComponentsInChildren(typeof(Component), true))
+        {
+            comp.gameObject.SetActive(true);
+        }*/
+    }
     void Update()
     {
         if (view.IsMine)

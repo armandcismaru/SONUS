@@ -94,6 +94,7 @@ public class PlayerManager : MonoBehaviour
             if (spectateCameras[spectateIndex] != null)
             {
                 spectateCameras[spectateIndex].SetActive(true);
+                spectateCameras[spectateIndex].GetComponentInParent<PlayerController>().SolveSpectateComponents();
             }
         }
     }
@@ -160,9 +161,11 @@ public class PlayerManager : MonoBehaviour
                 if(playerInd != playerController.index && playerInd % 2 == playerController.index % 2)
                 {
                     spectateCameras.Add(player.GetComponentInChildren(typeof(Camera), true).gameObject);
+                    //player.GetComponent<PlayerController>().SpectateCanv.SetActive(true);
                 }
             }
             spectateCameras[0].SetActive(true);
+            spectateCameras[0].GetComponentInParent<PlayerController>().SolveSpectateComponents();
             //GameObject.FindWithTag("Player").GetComponent<Camera>().gameObject.SetActive(true);
         }
         isDead = true;
