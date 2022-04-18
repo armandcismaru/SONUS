@@ -79,7 +79,7 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         //weird
-        if(Input.GetKeyDown(KeyCode.Greater) && isDead)
+        if(Input.GetKeyDown(KeyCode.Comma) && isDead)
         {
             spectateCameras[spectateIndex].SetActive(false);
             spectateIndex += 1;
