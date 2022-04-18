@@ -6,13 +6,20 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerSubject
 {
-    public readonly string FOOTSTEP_SOUND = "ConcreteFootsteps";
+    public string FOOTSTEP_SOUND = "DirtWalk";
     public readonly string GUN_SOUND = "Gunshot";
-    public readonly string JUMP_SOUND = "Jump";
-    public readonly string STAB_SOUND = "stab";
+    public readonly string JUMP_SOUND = "DirtJump";
+    public readonly string KNIFE_SOUND = "Knife";
     public readonly string DRYFIRE_SOUND = "DryFire";
     public readonly string RELOAD_SOUND = "Reload";
-    public readonly string GETSHOT_SOUND = "GetShot";
+    public readonly string[] INJURED_SOUNDS = {"InjuredOne", "InjuredTwo", "InjuredThree", "InjuredFour"};
+    public readonly string[] DEATH_SOUNDS = {"DeathOne", "DeathTwo", "DeathThree", "DeathFour"};
+    public readonly string EMITTER_SOUND = "Emitter";
+    public readonly string PICKUP_SUPPLY_SOUND = "PickUpSupply";
+    public readonly string KNIFE_KILLING_SOUND = "KnifeKilling";
+    public readonly string SPELL_TRANSFORM_SOUND = "SpellTransform";
+
+
 
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
@@ -22,16 +29,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private TMP_Text redScore;
     private TMP_Text timer;
     private TMP_Text Team;
+    public TMP_Text timerSpell;
 
     [SerializeField] private GameObject blueScorePrefab;
     [SerializeField] private GameObject redScorePrefab;
     [SerializeField] private GameObject timerPrefab;
     [SerializeField] private GameObject scorelinePrefab;
     [SerializeField] private GameObject TeamPrefab;
+    [SerializeField] private GameObject TimerSpellPrefab;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
-    private PhotonView view;
+    public PhotonView view;
 
     public bool grounded;
     private bool isMoving;
@@ -60,6 +69,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public int index = -1;
     [SerializeField] private GameObject pauseObject;
+    public float time;
+    public float remainingTime;
+    public bool invisibility;
+    public float timeSpeed;
+    public float remainingTimeSpeed;
+    public bool fastSpeed;
+    private float initialSpeed;
+    public GameObject decoy;
 
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
@@ -74,7 +91,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         index = (int)view.InstantiationData[1];
     }
     void Start()
-    {   
+    {
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -101,6 +118,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
                                                             TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
+
+        GameObject uiComponentTimerSpell = uiComponent.AttachUI(TimerSpellPrefab, TimerSpellPrefab.transform.localPosition,
+                                                            TimerSpellPrefab.transform.rotation, TimerSpellPrefab.transform.localScale);
+        timerSpell = uiComponentTimerSpell.GetComponent<TMP_Text>();
+
+        invisibility = false;
+        time = Time.time;
 
         if (view.IsMine)
         {
@@ -142,9 +166,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     void Update()
     {
         if (view.IsMine)
-        {   
+        {
             PauseMenu();
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                StartFastSpeed();
+            }
+            if (fastSpeed)
+            {
+                UpdateFastSpeed();
+            }
 
+            if (invisibility)
+            {
+                UpdateInvisibilitySpell();
+            }
             if (grounded == false && hasJumped == false)
             {
                 hasJumped = true;
@@ -154,10 +190,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             if (grounded == true && hasJumped == true)
             {
                 GetComponent<AudioManager>().Play(JUMP_SOUND);
-                hasJumped = false; 
+                hasJumped = false;
                 BroadcastSound(JUMP_SOUND);
             }
-            
+
             if (!Pause.paused) {
                 Shoot();
                 UseKnife();
@@ -167,7 +203,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 FadeBloodDamage();
                 SelfHit();
             }
-           
+
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -182,13 +218,116 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
             redScore.text = RoomManager.Instance.scoreRed.ToString();
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
-        }    
+        }
+    }
+
+    public void UpdateTimerSpell(string newTimerSpell)
+    {
+         timerSpell.text = newTimerSpell;
+    }
+
+    public void StartInvisibilitySpell()
+    {
+        time = Time.time;
+        invisibility = true;
+        GetComponent<Renderer>().enabled = false;
+        gun.GetComponent<Renderer>().enabled = false;
+        view.RPC("RPC_MakeInvisible", RpcTarget.All, index);
+        Debug.Log("da");
+    }
+
+    public void DeployDecoy()
+    {
+        // Instantiate(decoy, transform.position, transform.rotation);
+        // Vector3 decoy_position = GetComponentInChildren<Camera>().gameObject.transform.position;
+        // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
+        // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
+        // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
+        decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
+        decoy.GetComponent<Decoy>().direction = transform.forward;
+    }
+
+    [PunRPC]
+    void RPC_DeployDecoy(Vector3 position, Quaternion rotation, int team) {
+        Instantiate(decoy, position, rotation);
+    }
+
+    void UpdateInvisibilitySpell()
+    {
+        remainingTime = time + 5f - Time.time;
+
+        if(remainingTime <= 0)
+        {
+            this.gameObject.GetComponent<Renderer>().enabled = true;
+            gun.GetComponent<Renderer>().enabled = true;
+            invisibility = false;
+            view.RPC("RPC_StopInvisible", RpcTarget.All, index);
+        }
+    }
+
+    void UpdateFastSpeed()
+    {
+        remainingTimeSpeed = timeSpeed + 5f - Time.time;
+
+        if(remainingTimeSpeed <= 0)
+        {
+            FOOTSTEP_SOUND = "DirtWalk";
+            fastSpeed = false;
+            walkSpeed = initialSpeed;
+        }
+    }
+
+    public void StartFastSpeed()
+    {
+        if (!fastSpeed)
+        {
+            FOOTSTEP_SOUND = "DirtRun";
+            timeSpeed = Time.time;
+            fastSpeed = true;
+            initialSpeed = walkSpeed;
+            walkSpeed *= 1.5f;
+        }
+    }
+
+    public void EmittingSpell()
+    {
+
+        float minDistance = float.MaxValue;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        GameObject closestPlayer = null;
+        for(int i = 0; i < players.Length; i++)
+        {
+            int playerTeam = players[i].GetComponent<PlayerController>().team;
+            if (Mathf.Abs(team - playerTeam) == 1)
+            {
+                float distance = (players[i].transform.position - transform.position).sqrMagnitude;
+                if (distance < minDistance)
+                {
+                    closestPlayer = players[i];
+                    minDistance = distance;
+                }
+            }
+        }
+        int closestIndex = closestPlayer.GetComponent<PlayerController>().index;
+        closestPlayer.GetComponent<PlayerController>().EmitSound();
+    }
+
+    public void EmitSound()
+    {
+        GetComponent<AudioManager>().Play(EMITTER_SOUND);
+        BroadcastSound(EMITTER_SOUND);
+    }
+
+    public void SpellTransformSound()
+    {
+        GetComponent<AudioManager>().Play(SPELL_TRANSFORM_SOUND);
+        BroadcastSound(SPELL_TRANSFORM_SOUND);
     }
 
     private void FixedUpdate()
     {
         if (view.IsMine)
-        {    
+        {
             if (grounded && Pause.paused) {
                 return;
             }
@@ -278,7 +417,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void GotHurt()
     {
-        GetComponent<AudioManager>().Play(GETSHOT_SOUND);
+        int index = Random.Range(0, INJURED_SOUNDS.Length);
+        GetComponent<AudioManager>().Play(INJURED_SOUNDS[index]);
         GameObject bloodSplatter = GameObject.FindWithTag("Blood");
         var color = bloodSplatter.GetComponent<Image>().color;
         color.a = 0.8f;
@@ -319,8 +459,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            GetComponent<AudioManager>().Play(STAB_SOUND);
-            BroadcastSound(STAB_SOUND);
             knife.UseKnife();
         }
     }
@@ -369,6 +507,24 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
 
+    public void PickUpSupplySound()
+    {
+        GetComponent<AudioManager>().Play(PICKUP_SUPPLY_SOUND);
+        BroadcastSound(PICKUP_SUPPLY_SOUND);
+    }
+
+    public void KnifeKillingSound()
+    {
+        GetComponent<AudioManager>().Play(KNIFE_KILLING_SOUND);
+        BroadcastSound(KNIFE_KILLING_SOUND);
+    }
+
+    public void KnifeSound()
+    {
+        GetComponent<AudioManager>().Play(KNIFE_SOUND);
+        BroadcastSound(KNIFE_SOUND);
+    }
+
     [PunRPC]
     void RPC_TakeDamage(int damage)
     {
@@ -386,6 +542,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void Die()
     {
+        int index = Random.Range(0, DEATH_SOUNDS.Length);
+        GetComponent<AudioManager>().Play(DEATH_SOUNDS[index]);
         view.RPC("RPC_Die", RpcTarget.All);
     }
 
@@ -406,6 +564,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         var color = bloodSplatter.GetComponent<Image>().color;
         color.a = 0;
         bloodSplatter.GetComponent<Image>().color = color;
+    }
+
+    [PunRPC]
+    void RPC_MakeInvisible(int ind)
+    {
+        if (index == ind)
+        {
+            GetComponent<Renderer>().enabled = false;
+            // gun.GetComponent<Renderer>().enabled = false;
+        }
+    }
+    
+    [PunRPC]
+    void RPC_StopInvisible(int ind)
+    {
+        if (index == ind)
+        {
+            GetComponent<Renderer>().enabled = true;
+            // gun.GetComponent<Renderer>().enabled = true;
+        }
     }
 
     public void BroadcastSound(string sound)

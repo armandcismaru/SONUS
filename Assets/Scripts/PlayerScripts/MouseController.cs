@@ -11,6 +11,10 @@ public class MouseController : MonoBehaviour
     private float lookXLimit = 45.0f;
     private PhotonView view;
 
+    void Awake() {
+        mouseSpeed = RoomManager.Instance.mouseSpeed;
+    }
+
     private void Start()
     {
         view = GetComponent<PhotonView>();
@@ -53,4 +57,10 @@ public class MouseController : MonoBehaviour
 #endif
         }
     }
+  public void setMouseSpeed(float volume)
+    {
+        RoomManager.Instance.mouseSpeed = volume;
+        mouseSpeed = RoomManager.Instance.mouseSpeed;
+    }
+
 }

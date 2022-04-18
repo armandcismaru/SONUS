@@ -16,6 +16,7 @@ MonoImporter:
   - knife: {instanceID: 0}
   - bulletsView: {instanceID: 0}
   - bulletsViewPrefab: {fileID: 3865361391602357689, guid: fa4f42298d57fb3408081045f9c52629, type: 3}
+  - TorchlightPrefab: {fileID: 500676663483210710, guid: 44fe8074b56139f4dbc7d3ec635d20d6, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
