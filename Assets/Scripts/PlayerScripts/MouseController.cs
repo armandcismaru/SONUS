@@ -9,6 +9,10 @@ public class MouseController : MonoBehaviour
 
     private float lookXLimit = 45.0f;
 
+    void Awake() {
+        mouseSpeed = RoomManager.Instance.mouseSpeed;
+    }
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -50,4 +54,10 @@ public class MouseController : MonoBehaviour
 #endif
         }
     }
+  public void setMouseSpeed(float volume)
+    {
+        RoomManager.Instance.mouseSpeed = volume;
+        mouseSpeed = RoomManager.Instance.mouseSpeed;
+    }
+
 }

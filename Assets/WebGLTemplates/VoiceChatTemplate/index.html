@@ -98,6 +98,7 @@
 				container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
 			}
 			createUnityInstance(canvas, config, progressHandler).then(function (instance) {
+        window.unityInstance = instance;
 				canvas = instance.Module.canvas;
 				onResize();
 			});

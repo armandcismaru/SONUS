@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
+    [SerializeField] GameObject endGameSound;
     public static RoomManager Instance;
     private int currentTeam = 1;
     private PhotonView view;
@@ -42,6 +43,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox4;
     private GameObject healthBox5;
 
+    //private GameObject Door;
+
     const int maxNumOfPlayers = 6;
     private string[] offerString = new string[maxNumOfPlayers];
     [HideInInspector] public int index = 0;
@@ -53,6 +56,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private Shelter shelterClass;
 
     private float voiceChatVolume = 1f;
+
+    public float mouseSpeed = 3f;
 
     private void Awake()
     {
@@ -72,7 +77,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Debug.Log(offerString[i]);
         }*/
-        
+
 #endif
     }
 
@@ -134,12 +139,32 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     }
 
+    public float getMouseSpeed()
+    {
+        return mouseSpeed;
+    }
+
+    public void setMouseSpeed(float volume)
+    {
+        mouseSpeed = volume;
+        if (playerManager.GetComponent<PlayerManager>().getAvatar() != null)
+        {
+            if (playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>() != null)
+                playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>().mouseSpeed = mouseSpeed;
+        }
+    }
 
     private void FixedUpdate()
     {
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
+        }
+
+        //keep mouse sens during warmup
+        if (!warmupEnded && playerManager != null && playerManager.GetComponent<PlayerManager>().getAvatar() != null)
+        {
+            setMouseSpeed(mouseSpeed);
         }
 
         //get the positions of all players relative to our player and send them to their respective js panner
@@ -216,8 +241,10 @@ public class RoomManager : MonoBehaviourPunCallbacks
             healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
             healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
 
+           // Door = PhotonNetwork.Instantiate("Door", new Vector3(-1, 26, -65), Quaternion.identity);
+
             collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
-            
+
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
         }
@@ -260,6 +287,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void DefendersWon()
     {
+        
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Defenders won!", "blue");
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
     }
@@ -267,7 +295,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void AttackersWon()
     {
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Attackers won!", "red");
-       
+
         if (Timer.Instance.GetTimeRemaining() < 85)
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
@@ -330,6 +358,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PauseAndDisplay(string msg, string team)
     {
+        endGameSound.GetComponent<AudioSource>().Play();
         StartPause(msg, team);
     }
 

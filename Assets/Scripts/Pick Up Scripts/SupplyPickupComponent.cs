@@ -105,6 +105,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
                 float value = pickup.amount;
                 incrementFood(value);
                 pickup.destroyThisObject();
+                GetComponent<PlayerController>().PickUpSupplySound();
             }
         }
     } 

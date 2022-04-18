@@ -42,7 +42,7 @@ public class Gun : MonoBehaviour
         ShootingSystem.Play();
         Vector3 direction = GetDirection();
 
-        if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, range))
+        if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             TrailRenderer trail = Instantiate(BulletTrail, GunTip.position, Quaternion.identity);
 
