@@ -83,6 +83,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public GameObject SpectateCanv;
     [SerializeField] private TMP_Text nickname;
+    [SerializeField] private GameObject displayName;
+    [SerializeField] private TMP_Text sceneNickname;
+
 
     void Awake()
     {
@@ -140,6 +143,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 Team.text = "Attackers";
                 Team.color = Color.red;
             }
+            displayName.SetActive(false);
         }
 
         if (!view.IsMine)
@@ -148,6 +152,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponentInChildren<Camera>().gameObject.SetActive(false);
             GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             nickname.text = view.Owner.NickName;
+            sceneNickname.text = view.Owner.NickName;
+
             //Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
