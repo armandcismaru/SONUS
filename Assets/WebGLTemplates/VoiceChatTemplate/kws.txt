@@ -1,2 +1,4 @@
-go left
-straight
+clone
+hide
+listen
+speed

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
+    [SerializeField] GameObject endGameSound;
     public static RoomManager Instance;
     private int currentTeam = 1;
     private PhotonView view;
@@ -56,6 +57,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private float voiceChatVolume = 1f;
 
+    private float mouseSpeed = 15f;
+
     private void Awake()
     {
         if (Instance)
@@ -74,7 +77,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Debug.Log(offerString[i]);
         }*/
-        
+
 #endif
     }
 
@@ -136,12 +139,27 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     }
 
+    public float getMouseSpeed()
+    {
+        return mouseSpeed;
+    }
+
+    public void setMouseSpeed(float volume)
+    {
+        mouseSpeed = volume;
+        playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>().mouseSpeed = mouseSpeed;
+    }
 
     private void FixedUpdate()
     {
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
+        }
+
+        if (!warmupEnded)
+        {
+            setMouseSpeed(mouseSpeed);
         }
 
         //get the positions of all players relative to our player and send them to their respective js panner
@@ -221,10 +239,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
            // Door = PhotonNetwork.Instantiate("Door", new Vector3(-1, 26, -65), Quaternion.identity);
 
             collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
-            
+
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
         }
+
+        setMouseSpeed(mouseSpeed);
     }
 
     public void TimerFinished()
@@ -264,6 +284,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public void DefendersWon()
     {
+        
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Defenders won!", "blue");
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
     }
@@ -271,7 +292,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void AttackersWon()
     {
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Attackers won!", "red");
-       
+
         if (Timer.Instance.GetTimeRemaining() < 85)
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
@@ -334,6 +355,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PauseAndDisplay(string msg, string team)
     {
+        endGameSound.GetComponent<AudioSource>().Play();
         StartPause(msg, team);
     }
 
