@@ -147,7 +147,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void setMouseSpeed(float volume)
     {
         mouseSpeed = volume;
-        playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>().mouseSpeed = mouseSpeed;
+        if (playerManager.GetComponent<PlayerManager>().getAvatar() != null)
+        {
+            if (playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>() != null)
+                playerManager.GetComponent<PlayerManager>().getAvatar().GetComponent<MouseController>().mouseSpeed = mouseSpeed;
+        }
     }
 
     private void FixedUpdate()
