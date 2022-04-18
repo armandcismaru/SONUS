@@ -55,7 +55,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private float voiceChatVolume = 1f;
 
-    private float mouseSpeed = 15f;
+    public float mouseSpeed = 15f;
 
     private void Awake()
     {
@@ -155,7 +155,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             StartRound();
         }
 
-        if (!warmupEnded)
+        //keep mouse sens during warmup
+        if (!warmupEnded && playerManager != null && playerManager.GetComponent<PlayerManager>().getAvatar() != null)
         {
             setMouseSpeed(mouseSpeed);
         }
@@ -239,8 +240,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
         }
-
-        setMouseSpeed(mouseSpeed);
     }
 
     public void TimerFinished()
