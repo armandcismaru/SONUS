@@ -23,8 +23,11 @@ public class TorchControls : MonoBehaviour
 
     public void PowerTorch()
     {
-        TorchOn = true;
-        LifeRemaining = MAXTORCHLIFE;
+        if (TorchOn == false)
+        {
+            TorchOn = true;
+            LifeRemaining = MAXTORCHLIFE;
+        }
     }
 
     public void DisableTorch()
@@ -32,16 +35,23 @@ public class TorchControls : MonoBehaviour
         TorchOn = false;
     }
 
-    void Update()
-    {    
-        //To be deleted once torch is linked with voice recognition
-        if (Input.GetKey(KeyCode.Q) && view.IsMine)
+    public void TriggerTorch()
+    {
+        if (TorchOn == false)
         {
-            TorchOn = !TorchOn;
-            LifeRemaining = MAXTORCHLIFE;
-            view.RPC("RPC_StartTorch", RpcTarget.Others);
+            GetComponentInParent<PlayerController>().OpenTorchSound();
         }
+        else
+        {
+            GetComponentInParent<PlayerController>().CloseTorchSound();
+        }
+        TorchOn = !TorchOn;
+        LifeRemaining = MAXTORCHLIFE;
+        view.RPC("RPC_StartTorch", RpcTarget.Others);
+    }
 
+    void Update()
+    {
         //Updates torch's "battery"
         if (TorchOn)
         {

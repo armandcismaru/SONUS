@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public readonly string PICKUP_SUPPLY_SOUND = "PickUpSupply";
     public readonly string KNIFE_KILLING_SOUND = "KnifeKilling";
     public readonly string SPELL_TRANSFORM_SOUND = "SpellTransform";
-
+    public readonly string OPEN_TORCH_SOUND = "OpenTorch";
+    public readonly string CLOSE_TORCH_SOUND = "CloseTorch";
 
 
     [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
@@ -158,9 +159,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (view.IsMine)
         {
             PauseMenu();
+
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                OpenTorchSound();
+            }
             if (Input.GetKeyDown(KeyCode.M))
             {
-                StartFastSpeed();
+                CloseTorchSound();
             }
             if (fastSpeed)
             {
@@ -513,6 +519,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         GetComponent<AudioManager>().Play(KNIFE_SOUND);
         BroadcastSound(KNIFE_SOUND);
+    }
+
+    public void OpenTorchSound()
+    {
+        GetComponent<AudioManager>().Play(OPEN_TORCH_SOUND);
+        BroadcastSound(OPEN_TORCH_SOUND);
+    }
+
+    public void CloseTorchSound()
+    {
+        GetComponent<AudioManager>().Play(CLOSE_TORCH_SOUND);
+        BroadcastSound(CLOSE_TORCH_SOUND);
     }
 
     [PunRPC]

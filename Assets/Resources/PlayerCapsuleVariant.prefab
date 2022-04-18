@@ -2700,6 +2700,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gun: {fileID: 8084043766083876516}
+  torchControls: {fileID: 5669454113322701494}
   timeSpellTimer: 0
   remainingSpellTimer: 0
   isSpellAvailable: 0
@@ -3106,6 +3107,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+--- !u!1 &4021335990823298856 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+  m_PrefabInstance: {fileID: 1732983493988335764}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &6521057915234584602 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 4788374040597547150, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+  m_PrefabInstance: {fileID: 1732983493988335764}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7091753315451185684 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8819793404622858880, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+  m_PrefabInstance: {fileID: 1732983493988335764}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9066136940152350885 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7340208567751387185, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
@@ -3119,21 +3135,6 @@ Transform:
 --- !u!1 &2779937163149696908 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4510523601521975064, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
-  m_PrefabInstance: {fileID: 1732983493988335764}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &6521057915234584602 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 4788374040597547150, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
-  m_PrefabInstance: {fileID: 1732983493988335764}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7091753315451185684 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8819793404622858880, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
-  m_PrefabInstance: {fileID: 1732983493988335764}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4021335990823298856 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3441432402261338044, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
   m_PrefabInstance: {fileID: 1732983493988335764}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &3257861007513110959 stripped
@@ -3210,6 +3211,26 @@ MonoBehaviour:
     spread: 179
     minDistance: 1
     maxDistance: 100
+  - name: OpenTorch
+    clip: {fileID: 8300000, guid: 2c66872cda8064057b0f866cc739eb66, type: 3}
+    volume: 1
+    pitch: 2
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 3.31
+    spread: 179
+    minDistance: 1
+    maxDistance: 100
+  - name: CloseTorch
+    clip: {fileID: 8300000, guid: 76c9b1cd1bfe647c9b14f6789924d3a4, type: 3}
+    volume: 1
+    pitch: 2
+    source: {fileID: 0}
+    spatialBlend: 1
+    dopplerLevel: 3.31
+    spread: 179
+    minDistance: 1
+    maxDistance: 100
   - name: SpellTransform
     clip: {fileID: 8300000, guid: 7cd93eb57d3f0451c81f40984b73afd0, type: 3}
     volume: 0.65
@@ -3233,16 +3254,6 @@ MonoBehaviour:
   - name: KnifeKilling
     clip: {fileID: 8300000, guid: 37af8b2407a564ec69fec62d5a9b7a1b, type: 3}
     volume: 0.5
-    pitch: 1.59
-    source: {fileID: 0}
-    spatialBlend: 1
-    dopplerLevel: 0.87
-    spread: 26
-    minDistance: 1
-    maxDistance: 30
-  - name: KnifeKilling
-    clip: {fileID: 8300000, guid: 37af8b2407a564ec69fec62d5a9b7a1b, type: 3}
-    volume: 0.346
     pitch: 1.59
     source: {fileID: 0}
     spatialBlend: 1
@@ -3528,6 +3539,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2134156686061638315, guid: 17a4305c45813c14db31ab587640aec9, type: 3}
   m_PrefabInstance: {fileID: 1925629217782699615}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5669454113322701494 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6058687199744296169, guid: 17a4305c45813c14db31ab587640aec9, type: 3}
+  m_PrefabInstance: {fileID: 1925629217782699615}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515444045619102964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbc612cf14db47b4d82ee95c5f45e198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7898679077253946121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3806,13 +3828,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
---- !u!1 &557519540777133133 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2858095373523295746, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
-  m_PrefabInstance: {fileID: 2311837035345164879}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7762165398387849985 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5453168402793972046, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
+  m_PrefabInstance: {fileID: 2311837035345164879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &557519540777133133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2858095373523295746, guid: 46b280a8191a66d44848d9afd8015362, type: 3}
   m_PrefabInstance: {fileID: 2311837035345164879}
   m_PrefabAsset: {fileID: 0}
