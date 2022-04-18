@@ -65,7 +65,6 @@ public class DoorOpener : MonoBehaviour
 
     private void OpenDoorAndDisableCollider()
     {   
-        Debug.Log("Door Opened Client side.");
         view.RPC("CallDisableCollider", RpcTarget.Others);
 
         if (!dm.isOpen)
