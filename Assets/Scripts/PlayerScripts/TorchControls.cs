@@ -35,7 +35,7 @@ public class TorchControls : MonoBehaviour
     void Update()
     {    
         //To be deleted once torch is linked with voice recognition
-        if (Input.GetKey(KeyCode.L) && view.IsMine)
+        if (Input.GetKey(KeyCode.Q) && view.IsMine)
         {
             TorchOn = !TorchOn;
             LifeRemaining = MAXTORCHLIFE;
