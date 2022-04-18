@@ -88,6 +88,10 @@ MonoBehaviour:
   - RPC_Removeollectable
   - RPC_RemoveCollectable
   - RPC_CreateFoodBox
+  - RPC_DisableCollidersAndPlayAnim
+  - RPC_Mutex
+  - CallDisableCollider
+  - AquireAccessPivot
   - RPC_MakeInvisible
   - RPC_StopInvisible
   - RPC_DeployDecoy

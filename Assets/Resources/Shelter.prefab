@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8043536421849999840}
   - component: {fileID: 733452857563592360}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: ShelterIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: -1558052538793919156}
   - component: {fileID: 4774892308684996018}
   - component: {fileID: 6551728409190038033}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Shelter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5352967456216406314}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MinimapIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
