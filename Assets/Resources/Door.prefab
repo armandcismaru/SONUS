@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04778b3903f4fc47ba2b57ef7cdf81e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOpen: 0
+  lock_access_pivot: 1
 --- !u!114 &5040988035753018779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,7 +470,6 @@ MonoBehaviour:
   TheDistance: 0
   TheDoor: {fileID: 5385118446340102586}
   CreakSound: {fileID: 5385118446847415586}
-  isOpen: 0
 --- !u!1 &5385118447107605937
 GameObject:
   m_ObjectHideFlags: 0

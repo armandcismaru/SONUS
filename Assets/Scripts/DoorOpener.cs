@@ -3,21 +3,19 @@ using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DoorOpener : MonoBehaviour
 {
-    public float TheDistance;
+    [SerializeField]  public float TheDistance;
     public GameObject TheDoor;
     public AudioSource CreakSound;
 
     private PhotonView view;
-    private PhotonView view_DoorTrigger;
+   
+    DoorMutex dm;
 
     PlayerManager playerManager;
-
-    bool mutex_door = true;
-
-    DoorMutex dm;
 
     private void Start()
     {
@@ -35,52 +33,38 @@ public class DoorOpener : MonoBehaviour
         clip1 = TheDoor.GetComponent<Animation>().GetClip("DoorAnimation1");
         clip2 = TheDoor.GetComponent<Animation>().GetClip("DoorAnimation1_reverse");
 
-       /* clip1.AddEvent(evt);
-        clip2.AddEvent(evt);*/
+        clip1.AddEvent(evt);
+        clip2.AddEvent(evt);
+
+        view = TheDoor.GetComponent<PhotonView>();
 
         playerManager = RoomManager.Instance.playerManager.GetComponent<PlayerManager>();
-        view = TheDoor.GetComponent<PhotonView>();
-        //view_DoorTrigger = GetComponent<PhotonView>();
     }
 
-   /* public void Mutex()
-    {
-        mutex_door = true;
-       // view_DoorTrigger.RPC("RPC_Mutex", RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void RPC_Mutex()
-    {
-        mutex_door = true;
-    }*/
 
     // Update is called once per frame
     void Update()
     {
-        TheDistance = PlayerCasting.DistanceFromTarget;
+        if (playerManager.getAvatar() != null)
+             TheDistance = Math.Abs(Vector3.Magnitude(playerManager.getAvatar().transform.position - gameObject.transform.position));
     }
 
     void OnMouseOver()
     {
-        Debug.Log("Mouse is over the door.");
         
-        if (Input.GetButtonDown("Action") && (TheDistance <= 7))
+        if (dm.lock_access_pivot && Input.GetButtonDown("Action") && (TheDistance <= 7))
         {
-            //mutex_door = false;
-            
-            
+            dm.AquireAccessPivot(false);
+            view.RPC("AquireAccessPivot", RpcTarget.Others, false); 
+
             view.TransferOwnership(PhotonNetwork.LocalPlayer);
-           // Debug.Log("Player is near the door and Action bashed.");
+           
             OpenDoorAndDisableCollider();
         }
     }
 
     private void OpenDoorAndDisableCollider()
-    {
-        /*Player ownerOfView = view.IsMine ? PhotonNetwork.ViewID : view.owner;
-        Debug.Log(PlayerManager.LocalPlayerInstance);*/
-        
+    {   
         Debug.Log("Door Opened Client side.");
         view.RPC("CallDisableCollider", RpcTarget.Others);
 

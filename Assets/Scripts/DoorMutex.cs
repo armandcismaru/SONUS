@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,19 @@ using UnityEngine;
 public class DoorMutex : MonoBehaviour
 {
     [SerializeField] public bool isOpen = false;
+    [SerializeField] public bool lock_access_pivot = true;
 
-    private void Start()
+  
+    public void Evt_mutex()
     {
-        
+        lock_access_pivot = true;
+        GetComponent<PhotonView>().RPC("AquireAccessPivot", RpcTarget.Others, true);
+    }
+
+    [PunRPC]
+    public void AquireAccessPivot(bool state)
+    {
+        lock_access_pivot = state;
     }
 
     [PunRPC]

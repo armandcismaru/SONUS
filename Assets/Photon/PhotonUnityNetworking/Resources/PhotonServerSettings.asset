@@ -91,6 +91,7 @@ MonoBehaviour:
   - RPC_DisableCollidersAndPlayAnim
   - RPC_Mutex
   - CallDisableCollider
+  - AquireAccessPivot
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
