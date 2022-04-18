@@ -55,7 +55,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private float voiceChatVolume = 1f;
 
-    public float mouseSpeed = 15f;
+    public float mouseSpeed = 3f;
 
     private void Awake()
     {
