@@ -2978,6 +2978,10 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: slowSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: TeamPrefab
       value: 
       objectReference: {fileID: 9086295897165062077, guid: d703a0455cbfb6144927a2fbfc13c220, type: 3}

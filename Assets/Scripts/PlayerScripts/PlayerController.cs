@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public readonly string CLOSE_TORCH_SOUND = "CloseTorch";
 
 
-    [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private float walkSpeed, slowSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
         index = (int)view.InstantiationData[1];
+        initialSpeed = walkSpeed;
     }
     void Start()
     {
@@ -160,14 +161,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             PauseMenu();
 
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                OpenTorchSound();
-            }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                CloseTorchSound();
-            }
             if (fastSpeed)
             {
                 UpdateFastSpeed();
@@ -368,7 +361,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (isMoving && controller.isGrounded && !Pause.paused)
         {
-            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded)
+            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded && !Input.GetKey(KeyCode.LeftShift))
             {
                 GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
                 BroadcastSound(FOOTSTEP_SOUND);
@@ -378,6 +371,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             GetComponent<AudioManager>().Stop(FOOTSTEP_SOUND);
             BroadcastSoundS(FOOTSTEP_SOUND);
+        }
+
+        //shift walking
+        if (Input.GetKeyDown(KeyCode.LeftShift)) {
+            initialSpeed = walkSpeed;
+            walkSpeed = slowSpeed;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift)) {
+            walkSpeed = initialSpeed;
         }
 
         moveAmount = Vector3.SmoothDamp(moveAmount,
