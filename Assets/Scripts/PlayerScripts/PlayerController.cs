@@ -374,12 +374,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
 
         //shift walking
-        if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            initialSpeed = walkSpeed;
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
             walkSpeed = slowSpeed;
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift)) {
+        if (Input.GetKeyUp(KeyCode.LeftShift) && !fastSpeed) {
             walkSpeed = initialSpeed;
         }
 
