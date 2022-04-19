@@ -6,7 +6,7 @@ using Photon.Pun;
 public class TorchControls : MonoBehaviour
 {
     bool TorchOn;
-    const int MAXTORCHLIFE = 30;
+    const int MAXTORCHLIFE = 10;
     const int MAXLIGHTINTENSITY = 7;
     private float LifeRemaining = MAXTORCHLIFE;
     private PhotonView view;
@@ -66,6 +66,10 @@ public class TorchControls : MonoBehaviour
     void Update()
     {
         //Updates torch's "battery"
+        if (LifeRemaining == 0)
+        {
+            TorchOn = false;
+        }
         if (TorchOn)
         {
             if (LifeRemaining > 0)
