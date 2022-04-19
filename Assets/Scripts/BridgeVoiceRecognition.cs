@@ -5,6 +5,7 @@ using UnityEngine;
 public class BridgeVoiceRecognition : MonoBehaviour
 {
     [SerializeField] Gun gun;
+    [SerializeField] TorchControls torchControls;
     PlayerController playerController;
     public float timeSpellTimer;
     public float remainingSpellTimer;
@@ -45,6 +46,10 @@ public class BridgeVoiceRecognition : MonoBehaviour
 
     void TriggerSpell(string hypseg) {
         Debug.Log("From Unity:" + hypseg);
+        if (hypseg == "torch")
+        {
+            torchControls.TriggerTorch();
+        }
         if (isSpellAvailable){
             int team = playerController.GetComponent<PlayerController>().team;
             if (team == 0) {
