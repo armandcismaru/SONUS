@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public bool fastSpeed;
     private float initialSpeed;
     public GameObject decoy;
+    private bool isShiftPressed = false;
 
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
@@ -361,7 +362,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (isMoving && controller.isGrounded && !Pause.paused)
         {
-            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded && !Input.GetKey(KeyCode.LeftShift))
+            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded && !isShiftPressed)
             {
                 GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
                 BroadcastSound(FOOTSTEP_SOUND);
@@ -375,10 +376,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         //shift walking
         if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
+            isShiftPressed = true;
             walkSpeed = slowSpeed;
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift) && !fastSpeed) {
+            isShiftPressed = false;
             walkSpeed = initialSpeed;
         }
 
