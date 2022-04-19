@@ -1,5 +1,6 @@
 // These will be initialized later
 var recognizer, recorder, callbackManager, audioContext, outputContainer;
+var keyPressed = null;
 // Only when both recorder and recognizer do we have a ready application
 var isRecorderReady = isRecognizerReady = false;
 
@@ -35,7 +36,7 @@ function updateHypSeg(hypseg) {
   //if (hypseg.length > 0 && hypseg[hypseg.length - 1].word.localeCompare("<sil>") != 0) window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[hypseg.length - 1].word);
   if (newWords < hypseg.length) {
     newWords++;
-    window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[0].word);
+    window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[0].word.concat(keyPressed));
   }
 }
 
@@ -63,7 +64,7 @@ function displayRecording(display) {
 function startUserMedia(stream) {
   var input = audioContext.createMediaStreamSource(stream);
   // Firefox hack https://support.mozilla.org/en-US/questions/984179
-  window.firefox_audio_hack = input; 
+  window.firefox_audio_hack = input;
   var audioRecorderConfig = {errorCallback: function(x) {updateStatus("Error from recorder: " + x);}};
   recorder = new AudioRecorder(input, audioRecorderConfig);
   // If a recognizer is ready, we pass it to the recorder
@@ -104,7 +105,7 @@ var recognizerReady = function() {
 //       newElt.value=grammarIds[i].id;
 //       newElt.innerHTML = grammarIds[i].title;
 //       selectTag.appendChild(newElt);
-//   }                          
+//   }
 // };
 
 // This adds a grammar from the grammars array
@@ -134,7 +135,7 @@ var feedWords = function(words) {
 // This initializes the recognizer. When it calls back, we add words
 var initRecognizer = function() {
     // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-25"], ["-kws_delay", "20"],["-kws", "kws.txt"], ["-dict","kws.dict"]]},
+    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-35"], ["-kws_delay", "20"],["-kws", "kws.txt"], ["-dict","kws.dict"]]},
                       function() {console.log("Speech Recognition Initialized");});
 };
 
@@ -164,7 +165,7 @@ window.onload = function() {
               updateHypSeg(newHypSeg);
             }
           }
-          
+
           // This is the case when we have an error
           if (e.data.hasOwnProperty('status') && (e.data.status == "error")) {
             updateStatus("Error in " + e.data.command + " with code " + e.data.code);
@@ -198,14 +199,16 @@ window.onload = function() {
 
 var recordingOn = false;
 document.addEventListener("keydown", function(event) {
-  if (event.key == "e" && recordingOn == false) {
+  if ((event.key == "1" || event.key == "2" || event.key == "3") && recordingOn == false) {
+    keyPressed = event.key;
     recordingOn = true;
     newWords = 0;
     startRecording();
   }
 });
 document.addEventListener("keyup", function(event) {
-  if (event.key == "e" && recordingOn == true) {
+  if (keyPressed != null && event.key == keyPressed && recordingOn == true) {
+    keyPressed = null;
     recordingOn = false;
     stopRecording();
   }
