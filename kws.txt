@@ -1,4 +1,5 @@
-decoy
-hide me
-sound
+clone
+hide
+listen
 speed
+torch
