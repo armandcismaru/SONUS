@@ -10,6 +10,7 @@ public class TorchControls : MonoBehaviour
     const int MAXLIGHTINTENSITY = 7;
     private float LifeRemaining = MAXTORCHLIFE;
     private PhotonView view;
+    private float lastClosed;
 
 
     private void Awake()
@@ -19,6 +20,7 @@ public class TorchControls : MonoBehaviour
     void Start()
     {
         TorchOn = false;
+        lastClosed = 0;
     }
 
     public void PowerTorch()
@@ -37,9 +39,20 @@ public class TorchControls : MonoBehaviour
 
     public void TriggerTorch()
     {
+        if (TorchOn == true && LifeRemaining > MAXTORCHLIFE - 0.5)
+        {
+            return;
+        }
+
+        if (TorchOn == false && lastClosed != 0 && Time.time < lastClosed + 0.5)
+        {
+            return;
+        }
+
         if (TorchOn == false)
         {
             GetComponentInParent<PlayerController>().OpenTorchSound();
+            lastClosed = Time.time;
         }
         else
         {
