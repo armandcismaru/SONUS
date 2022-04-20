@@ -2,3 +2,4 @@ clone
 hide
 listen
 speed
+torch
