@@ -37,7 +37,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         base.setSlider(5, "Health", current_health / max_health);
     }
 
-    private async void IncrementHealth(float value)
+    private void IncrementHealth(float value)
     {
         if (!view.IsMine)
             return;

@@ -43,6 +43,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox4;
     private GameObject healthBox5;
 
+    private GameObject bullet;
+
     //private GameObject Door;
 
     const int maxNumOfPlayers = 6;
@@ -243,7 +245,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
            // Door = PhotonNetwork.Instantiate("Door", new Vector3(-1, 26, -65), Quaternion.identity);
 
-            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
+            bullet = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
+
+            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5, bullet};
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
@@ -418,7 +422,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 if (collectable != null)
                 {
-                    Debug.Log(collectable.gameObject.name + "\n");
                     PhotonNetwork.Destroy(collectable);
                 }
             }
