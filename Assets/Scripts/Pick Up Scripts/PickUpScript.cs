@@ -7,9 +7,8 @@ using UnityEngine;
 public class PickUpScript : MonoBehaviour {
     public enum PickUpType {
         Food,
-        //Fuel,
         Health,
-        Armor
+        Bullet
     };
 
     [SerializeField] private Vector3 _rotation;
