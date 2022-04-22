@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -175,7 +175,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc6e803d06c7a04ab000d6c03bb248c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTeam: 0
+  endGameSound: {fileID: 0}
+  playerManager: {fileID: 0}
+  warmupEnded: 0
+  scoreBlue: 0
+  scoreRed: 0
+  index: 0
+  mouseSpeed: 3
 --- !u!4 &404317177
 Transform:
   m_ObjectHideFlags: 0
@@ -539,21 +545,41 @@ MonoBehaviour:
     volume: 0.563
     pitch: 1
     source: {fileID: 0}
+    spatialBlend: 0
+    dopplerLevel: 0
+    spread: 0
+    minDistance: 0
+    maxDistance: 0
   - name: Gunshot
     clip: {fileID: 8300000, guid: 7710184bb1543428fa5c1a5c26f95814, type: 3}
     volume: 0.563
     pitch: 1
     source: {fileID: 0}
+    spatialBlend: 0
+    dopplerLevel: 0
+    spread: 0
+    minDistance: 0
+    maxDistance: 0
   - name: stab
     clip: {fileID: 8300000, guid: 91bc00afb5f014d1c93e0bdf865d8ebb, type: 3}
     volume: 0.563
     pitch: 1
     source: {fileID: 0}
+    spatialBlend: 0
+    dopplerLevel: 0
+    spread: 0
+    minDistance: 0
+    maxDistance: 0
   - name: DryFire
     clip: {fileID: 8300000, guid: 239f351f7fa3f4514bb468f7f0b34a02, type: 3}
     volume: 0.563
     pitch: 1
     source: {fileID: 0}
+    spatialBlend: 0
+    dopplerLevel: 0
+    spread: 0
+    minDistance: 0
+    maxDistance: 0
 --- !u!4 &972004968
 Transform:
   m_ObjectHideFlags: 0
