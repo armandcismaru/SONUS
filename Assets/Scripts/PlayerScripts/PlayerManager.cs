@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -23,6 +24,9 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector] public bool isAlive = false;
 
     PlayerController playerController;
+    private bool isDead = false;
+    private List<GameObject> spectateCameras = new List<GameObject>();
+    private int spectateIndex = 0;
 
     private void Awake()
     {
@@ -68,8 +72,32 @@ public class PlayerManager : MonoBehaviour
         }
 
         playerController = myAvatar.gameObject.GetComponent<PlayerController>();
+        spectateCameras = new List<GameObject>();
+        isDead = false;
     }
 
+    private void Update()
+    {
+        //weird
+        if(Input.GetKeyDown(KeyCode.Comma) && isDead)
+        {
+            spectateCameras[spectateIndex].SetActive(false);
+            spectateIndex += 1;
+            spectateIndex %= spectateCameras.Count;
+
+            if (spectateCameras[spectateIndex] == null)
+            {
+                spectateCameras.RemoveAt(spectateIndex);
+                spectateIndex %= spectateCameras.Count;
+            }
+
+            if (spectateCameras[spectateIndex] != null)
+            {
+                spectateCameras[spectateIndex].SetActive(true);
+                spectateCameras[spectateIndex].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+            }
+        }
+    }
     void FixedUpdate()
     {
         KillYourself();
@@ -117,12 +145,33 @@ public class PlayerManager : MonoBehaviour
         DestroyMyAvatar();
         if (PhotonNetwork.IsMasterClient)
         {
-            RoomManager.Instance.PlayerDied(team);
+            RoomManager.Instance.PlayerDied(team, PhotonNetwork.NickName);
         }
         else
         {
-            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team);
+            view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team, PhotonNetwork.NickName);
         }
+        if (view.IsMine)
+        {
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            //Debug.Log(players.Length);
+            foreach (GameObject player in players)
+            {
+                int playerInd = player.GetComponent<PlayerController>().index;
+                if(playerInd != playerController.index && playerInd % 2 == playerController.index % 2)
+                {
+                    spectateCameras.Add(player.GetComponentInChildren(typeof(Camera), true).gameObject);
+                    //player.GetComponent<PlayerController>().SpectateCanv.SetActive(true);
+                }
+            }
+            if(spectateCameras.Count > 0)
+            {
+                spectateCameras[0].SetActive(true);
+                spectateCameras[0].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+            }
+            //GameObject.FindWithTag("Player").GetComponent<Camera>().gameObject.SetActive(true);
+        }
+        isDead = true;
 
     }
 
@@ -189,9 +238,9 @@ public class PlayerManager : MonoBehaviour
     }
 
     [PunRPC]
-    void RPC_PlayerDied(int tm)
+    void RPC_PlayerDied(int tm, string name)
     {
-        RoomManager.Instance.PlayerDied(tm);
+        RoomManager.Instance.PlayerDied(tm, name);
     }
 
     [PunRPC]

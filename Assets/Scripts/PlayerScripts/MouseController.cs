@@ -1,4 +1,5 @@
 using UnityEngine;
+using Photon.Pun;
  
 public class MouseController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class MouseController : MonoBehaviour
     [SerializeField] GameObject cameraHolder;
 
     private float lookXLimit = 45.0f;
+    private PhotonView view;
 
     void Awake() {
         mouseSpeed = RoomManager.Instance.mouseSpeed;
@@ -15,6 +17,7 @@ public class MouseController : MonoBehaviour
 
     private void Start()
     {
+        view = GetComponent<PhotonView>();
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -37,7 +40,7 @@ public class MouseController : MonoBehaviour
 
     void Update()
     {
-        if (Cursor.lockState == CursorLockMode.Locked)
+        if (Cursor.lockState == CursorLockMode.Locked && view.IsMine)
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             xRotation += -Input.GetAxis("Mouse Y") * mouseSpeed * Time.deltaTime;
