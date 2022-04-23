@@ -26,11 +26,11 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private GameObject HitMarker;
 
-    private Animator Animator;
+    //private Animator Animator;
 
     private void Awake()
     {
-        Animator = GetComponent<Animator>();
+        //Animator = GetComponent<Animator>();
     }
 
     public void Shoot()
@@ -38,7 +38,7 @@ public class Gun : MonoBehaviour
         // Use an object pool instead for these! To keep this tutorial focused, we'll skip implementing one.
         // For more details you can see: https://youtu.be/fsDE_mO4RZM or if using Unity 2021+: https://youtu.be/zyzqA_CPz2E
 
-        Animator.SetBool("IsShooting", true);      
+        //Animator.SetBool("IsShooting", true);      
         ShootingSystem.Play();
         Vector3 direction = GetDirection();
 
@@ -97,7 +97,7 @@ public class Gun : MonoBehaviour
 
             yield return null;
         }
-        Animator.SetBool("IsShooting", false);
+        //Animator.SetBool("IsShooting", false);
         Trail.transform.position = Hit.point;
         Instantiate(ImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
 
