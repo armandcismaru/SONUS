@@ -37,19 +37,7 @@ public class PickUpComponent : MonoBehaviour
 
     public virtual void updateUI()
     {
-        
-    }
 
-    public virtual void updateUIText(int filterLayer, string filterTag, int value)
-    {
-        foreach (GameObject uiElement in instancesUIElements)
-        {
-            if (uiElement.layer == filterLayer && uiElement.tag == filterTag)
-            {
-                Text displayedText = uiElement.GetComponent<Text>();
-                displayedText.text = (value + 1).ToString();
-            }
-        }
     }
 
     public virtual void pickupTrigger(PickUpScript pickup)

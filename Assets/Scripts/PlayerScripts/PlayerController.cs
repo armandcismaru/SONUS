@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private Vector3 moveAmount;
     private Vector3 velocity;
 
-    [SerializeField] public int bullets = 5;
+    [SerializeField] private int bullets = 5;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
 
@@ -448,12 +448,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
-    }
-
-    public void IncrementBullets(int amount)
-    {
-        bullets += amount;
-        bulletsView.text = bullets.ToString();
     }
 
     void Shoot()

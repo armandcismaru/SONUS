@@ -16,8 +16,6 @@ TagManager:
   - Hitmarker
   - Blood
   - Pause
-  - Bullet
-  - BulletUI
   layers:
   - Default
   - TransparentFX
@@ -32,6 +30,11 @@ TagManager:
   - RedMinimap
   - BlueMinimap
   - Shelter
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
