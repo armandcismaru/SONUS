@@ -78,7 +78,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
             base.setSlider(5, "Food", current_food / (max_food * supplyCharge));
     }
 
-    private async void incrementFood(float value)
+    private void incrementFood(float value)
     {
         if (!view.IsMine)
             return;
