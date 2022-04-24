@@ -198,18 +198,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
     }
 
-    public void PlayerDied(int team)
+    public void PlayerDied(int team, string name)
     {
         if (roundRunning)
         {
             if (team == 0)
             {
-                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team);
+                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team, name);
                 aliveBlue--;
             }
             else
             {
-                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team);
+                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team, name);
                 aliveRed--;
             }
             if (aliveBlue == 0)
@@ -336,27 +336,34 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_KillAndDisplay(int team)
+    void RPC_KillAndDisplay(int team, string name)
     {
-        DisplayKill(team);
+        DisplayKill(team, name);
     }
 
-    private void DisplayKill(int team)
-    {
-        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
 
+    private IEnumerator DisplayKillAndFade(int team, DisplayMessage kill, string name)
+    {
         if (team == 0)
         {
             kill.SetText("");
-            kill.SetText("              Defender died");
+            kill.SetText("              " + name + " died");
             kill.SetColour("blue");
         }
         else
         {
             kill.SetText("");
-            kill.SetText("              Attacker died");
+            kill.SetText("              " + name + " died");
             kill.SetColour("red");
         }
+        yield return new WaitForSeconds(2);
+        kill.SetText("");
+    }
+    private void DisplayKill(int team, string name)
+    {
+        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
+
+        StartCoroutine(DisplayKillAndFade(team, kill, name));
     }
 
     [PunRPC]
