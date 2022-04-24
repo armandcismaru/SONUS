@@ -66,12 +66,10 @@ public class Shelter : MonoBehaviour, IRoundFinished
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject != null 
-            && collision.gameObject.tag == "Player" 
-            && collision.gameObject.GetComponent<PhotonView>().IsMine
-            && collision.gameObject.GetComponent<PlayerController>().team == 1) 
+        if (collision.gameObject != null && collision.gameObject.GetComponent<PhotonView>().IsMine) 
         { 
-            
+            if (collision.gameObject.tag == "Player" && collision.gameObject.GetComponent<PlayerController>().team == 1)
+            {
                 SupplyPickupComponent supply = collision.gameObject.GetComponent<SupplyPickupComponent>();
                 RPC_replicateAmountOfFoodDelivered((int)supply.current_food / supply.supplyCharge);
                 supply.current_food = 0;
@@ -80,6 +78,7 @@ public class Shelter : MonoBehaviour, IRoundFinished
                 {
                     RoundFinishedAttackersWinningByTakingSuppliesToShelter();
                 }
+            }
         }
     }
 }

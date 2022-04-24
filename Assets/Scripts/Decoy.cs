@@ -40,7 +40,7 @@ public class Decoy : MonoBehaviourPunCallbacks
         // transform.position = Vector3.MoveTowards(transform.position, target.position, step);
         transform.position = transform.position + direction * step;
     }
-    public void destroyThisObject()
+    public async void destroyThisObject()
     {
         if (PhotonNetwork.IsMasterClient && GetComponent<PhotonView>().IsMine && !isDestroyed)
         {
