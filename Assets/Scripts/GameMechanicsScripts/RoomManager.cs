@@ -44,6 +44,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox5;
 
     private GameObject bullet;
+    private GameObject bullet2;
+    private GameObject bullet3;
+    private GameObject bullet4;
+    private GameObject bullet5;
+    private GameObject bullet6;
+
 
     //private GameObject Door;
 
@@ -234,8 +240,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(suppliesX - 4, 24, suppliesZ - 4), Quaternion.identity);
 
             //Defenders' Spot
-            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
-            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
+            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 30), Quaternion.identity);
+            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 10), Quaternion.identity);
             healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
 
             //Attackers' Spot
@@ -246,8 +252,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
            // Door = PhotonNetwork.Instantiate("Door", new Vector3(-1, 26, -65), Quaternion.identity);
 
             bullet = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
+            bullet2 = PhotonNetwork.Instantiate("Bullet", new Vector3(-45, 23, -80), Quaternion.identity);
+            bullet3 = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
 
-            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5, bullet};
+            bullet4 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, -10), Quaternion.identity);
+            bullet5 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, 20), Quaternion.identity);
+            bullet6 = PhotonNetwork.Instantiate("Bullet", new Vector3(-10, 23, 17), Quaternion.identity);
+
+            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5, bullet, bullet2, bullet3, bullet4, bullet5, bullet6};
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
