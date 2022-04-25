@@ -26,7 +26,7 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private GameObject HitMarker;
 
-    private Animator Animator;
+    //private Animator Animator;
 
     private void Awake()
     {

@@ -7,9 +7,8 @@ using UnityEngine;
 public class PickUpScript : MonoBehaviour {
     public enum PickUpType {
         Food,
-        //Fuel,
         Health,
-        Armor
+        Bullet
     };
 
     [SerializeField] private Vector3 _rotation;
@@ -22,7 +21,7 @@ public class PickUpScript : MonoBehaviour {
 
     [SerializeField] public int amount = 0;
 
-    public async void destroyThisObject()
+    public void destroyThisObject()
     {
         if (PhotonNetwork.IsMasterClient && GetComponent<PhotonView>().IsMine && !isDestroyed)
         {
@@ -32,7 +31,6 @@ public class PickUpScript : MonoBehaviour {
         else
         {
             GetComponent<PhotonView>().RPC("rpcDestroyObject", RpcTarget.All);
-            //Destroy(gameObject);
         }
     }
 

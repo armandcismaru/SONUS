@@ -43,6 +43,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private GameObject healthBox4;
     private GameObject healthBox5;
 
+    private GameObject bullet;
+    private GameObject bullet2;
+    private GameObject bullet3;
+    private GameObject bullet4;
+    private GameObject bullet5;
+    private GameObject bullet6;
+
+
     //private GameObject Door;
 
     const int maxNumOfPlayers = 6;
@@ -91,7 +99,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        Test();
     }
 
     public override void OnEnable()
@@ -209,18 +216,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
     }
 
-    public void PlayerDied(int team)
+    public void PlayerDied(int team, string name)
     {
         if (roundRunning)
         {
             if (team == 0)
             {
-                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team);
+                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team, name);
                 aliveBlue--;
             }
             else
             {
-                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team);
+                view.RPC("RPC_KillAndDisplay", RpcTarget.All, team, name);
                 aliveRed--;
             }
             if (aliveBlue == 0)
@@ -245,8 +252,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
             shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(suppliesX - 4, 24, suppliesZ - 4), Quaternion.identity);
 
             //Defenders' Spot
-            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 8), Quaternion.identity);
-            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 15), Quaternion.identity);
+            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 30), Quaternion.identity);
+            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 10), Quaternion.identity);
             healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
 
             //Attackers' Spot
@@ -256,7 +263,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
            // Door = PhotonNetwork.Instantiate("Door", new Vector3(-1, 26, -65), Quaternion.identity);
 
-            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5};
+            bullet = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
+            bullet2 = PhotonNetwork.Instantiate("Bullet", new Vector3(-45, 23, -80), Quaternion.identity);
+            bullet3 = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
+
+            bullet4 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, -10), Quaternion.identity);
+            bullet5 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, 20), Quaternion.identity);
+            bullet6 = PhotonNetwork.Instantiate("Bullet", new Vector3(-10, 23, 17), Quaternion.identity);
+
+            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, healthBox5, bullet, bullet2, bullet3, bullet4, bullet5, bullet6};
 
             Timer.Instance.StartTimer(90f);
             view.RPC("RPC_StartRound", RpcTarget.All);
@@ -345,25 +360,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    void RPC_KillAndDisplay(int team)
+    void RPC_KillAndDisplay(int team, string name)
     {
-        DisplayKill(team);
+        DisplayKill(team, name);
     }
 
-    public void Test()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            DisplayKill(1);
-        }
-    }
-    private void DisplayKill(int team)
+
+    private IEnumerator DisplayKillAndFade(int team, DisplayMessage kill, string name)
     {
         if (team == 0)
         {
             kill.MakeVisible(true);
             kill.SetText("");
-            kill.SetText("Defender died");
+            kill.SetText(name + " died");
             kill.SetColour("blue");
             //kill.MakeVisible(false);
         }
@@ -371,10 +380,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             kill.MakeVisible(true);
             kill.SetText("");
-            kill.SetText("Attacker died");
+            kill.SetText(name + " died");
             kill.SetColour("red");
             //kill.MakeVisible(false);
         }
+        yield return new WaitForSeconds(2);
+        kill.SetText("");
+    }
+    private void DisplayKill(int team, string name)
+    {
+        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
+
+        StartCoroutine(DisplayKillAndFade(team, kill, name));
     }
 
     [PunRPC]
@@ -433,7 +450,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             {
                 if (collectable != null)
                 {
-                    Debug.Log(collectable.gameObject.name + "\n");
                     PhotonNetwork.Destroy(collectable);
                 }
             }

@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public readonly string CLOSE_TORCH_SOUND = "CloseTorch";
 
 
-    [SerializeField] private float walkSpeed, jumpHeight, smoothTime, gravity;
+    [SerializeField] private float walkSpeed, slowSpeed, jumpHeight, smoothTime, gravity;
     [SerializeField] private CharacterController controller;
     [SerializeField] private Material RedMat;
     [SerializeField] private Material BlueMat;
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private Vector3 moveAmount;
     private Vector3 velocity;
 
-    [SerializeField] private int bullets = 5;
+    [SerializeField] public int bullets = 5;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
 
@@ -78,17 +78,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public bool fastSpeed;
     private float initialSpeed;
     public GameObject decoy;
+    private bool isShiftPressed = false;
 
     public GameObject parent;
 
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
 
+    public GameObject SpectateCanv;
+    [SerializeField] private TMP_Text nickname;
+    [SerializeField] private GameObject displayName;
+    [SerializeField] private TMP_Text sceneNickname;
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
         index = (int)view.InstantiationData[1];
+        initialSpeed = walkSpeed;
     }
     void Start()
     {
@@ -131,11 +139,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 Team.text = "Attackers";
                 Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1); ;
             }
+            displayName.SetActive(false);
         }
 
         if (!view.IsMine)
         {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
+            //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
+            GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
+            nickname.text = view.Owner.NickName;
+            sceneNickname.text = view.Owner.NickName;
+
+            //Destroy(GetComponentInChildren<Camera>().gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
@@ -146,21 +161,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
-
+    public void SolveSpectateComponents()
+    {
+        SpectateCanv.SetActive(true);
+    }
     void Update()
     {
         if (view.IsMine)
         {
             PauseMenu();
 
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                OpenTorchSound();
-            }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                CloseTorchSound();
-            }
             if (fastSpeed)
             {
                 UpdateFastSpeed();
@@ -362,7 +372,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (isMoving && controller.isGrounded && !Pause.paused)
         {
-            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded)
+            if (!GetComponent<AudioManager>().isPlaying(FOOTSTEP_SOUND) && grounded && !isShiftPressed)
             {
                 GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
                 BroadcastSound(FOOTSTEP_SOUND);
@@ -372,6 +382,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             GetComponent<AudioManager>().Stop(FOOTSTEP_SOUND);
             BroadcastSoundS(FOOTSTEP_SOUND);
+        }
+
+        //shift walking
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
+            isShiftPressed = true;
+            walkSpeed = slowSpeed;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) && !fastSpeed) {
+            isShiftPressed = false;
+            walkSpeed = initialSpeed;
         }
 
         moveAmount = Vector3.SmoothDamp(moveAmount,
@@ -421,6 +442,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+    }
+
+    public void IncrementBullets(int amount)
+    {
+        bullets += amount;
+        bulletsView.text = bullets.ToString();
     }
 
     void Shoot()
@@ -485,7 +512,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             playerIcon.layer = 10;
             if (view.IsMine)
             {
-                minimapCamera.cullingMask |= (1 << 10); // adds layer 11 to the minimap
+                minimapCamera.cullingMask |= (1 << 10); // adds layer 10 to the minimap
             }
 
         }
@@ -562,6 +589,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 }
             }
         }
+        GameObject bloodSplatter = GameObject.FindWithTag("Blood");
+        var color = bloodSplatter.GetComponent<Image>().color;
+        color.a = 0;
+        bloodSplatter.GetComponent<Image>().color = color;
     }
 
     [PunRPC]
