@@ -402,7 +402,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
 
         moveAmount = Vector3.SmoothDamp(moveAmount,
-                                        moveDir * walkSpeed * 2,
+                                        moveDir * walkSpeed,
                                         ref smoothMoveVelocity,
                                         smoothTime); //TODO
     }
