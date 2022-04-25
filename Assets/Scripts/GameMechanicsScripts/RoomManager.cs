@@ -371,26 +371,20 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (team == 0)
         {
             kill.MakeVisible(true);
-            kill.SetText("");
             kill.SetText(name + " died");
             kill.SetColour("blue");
-            //kill.MakeVisible(false);
         }
         else
         {
             kill.MakeVisible(true);
-            kill.SetText("");
             kill.SetText(name + " died");
             kill.SetColour("red");
-            //kill.MakeVisible(false);
         }
         yield return new WaitForSeconds(2);
-        kill.SetText("");
+        kill.MakeVisible(false);
     }
     private void DisplayKill(int team, string name)
     {
-        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
-
         StartCoroutine(DisplayKillAndFade(team, kill, name));
     }
 
