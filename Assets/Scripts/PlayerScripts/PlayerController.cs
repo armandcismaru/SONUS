@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private TMP_Text timer;
     private TMP_Text Team;
     public TMP_Text timerSpell;
+    private TMP_Text spellsText;
 
     [SerializeField] private GameObject blueScorePrefab;
     [SerializeField] private GameObject redScorePrefab;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private GameObject TeamPrefab;
     [SerializeField] private GameObject TimerSpellPrefab;
     [SerializeField] private GameObject HorizontalLayout;
+    [SerializeField] private GameObject SpellNamePrefab;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
@@ -122,6 +124,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentTimerSpell = uiComponent.AttachUI(TimerSpellPrefab, parent, true);
         timerSpell = uiComponentTimerSpell.GetComponent<TMP_Text>();
 
+        GameObject uiComponentSpellNames = uiComponent.AttachUI(SpellNamePrefab, parent, true);
+        spellsText = uiComponentSpellNames.GetComponent<TMP_Text>();
+
         invisibility = false;
         time = Time.time;
 
@@ -133,11 +138,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 Team.text = "Defenders";
                 Team.color = new Color(0.0745f, 0.1262f, 0.2941f, 1);
+                //spellsText.SetText("'hide' - invisibility (5s) - Key 1 \n 'clone' - launch decoy \n 'torch' - activate torchlight") ;
+                spellsText.text = "'speed' - move faster (5s) - Key 1 \n'listen' - enemy sound feedback - Key 2 \n'torch' - activate torchlight - Key 3";
             }
             else
             {
                 Team.text = "Attackers";
-                Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1); ;
+                Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
+                spellsText.text = "'hide' - invisibility (5s) - Key 1 \n'clone' - launch decoy - Key 2 \n'torch' - activate torchlight - Key 3";
+                //spellsText.SetText("'listen' - enemy sound feedback \n 'speed' - move faster (5s) \n \n 'torch' - activate torchlight");
             }
             displayName.SetActive(false);
         }
