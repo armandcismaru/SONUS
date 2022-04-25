@@ -35,9 +35,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private GameObject blueScorePrefab;
     [SerializeField] private GameObject redScorePrefab;
     [SerializeField] private GameObject timerPrefab;
-    [SerializeField] private GameObject scorelinePrefab;
     [SerializeField] private GameObject TeamPrefab;
     [SerializeField] private GameObject TimerSpellPrefab;
+    [SerializeField] private GameObject HorizontalLayout;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private float initialSpeed;
     public GameObject decoy;
 
+    public GameObject parent;
+
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
 
@@ -94,31 +96,22 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
 
-        GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, blueScorePrefab.transform.localPosition,
-                                                                blueScorePrefab.transform.rotation, blueScorePrefab.transform.localScale);
-        blueScore = uiComponentBlueScore.GetComponent<TMP_Text>();
+        GameObject uiComponentRedScore = uiComponent.AttachUI(redScorePrefab, HorizontalLayout, false);
+        redScore = uiComponentRedScore.transform.GetChild(0).GetComponentInChildren<TMP_Text>();
 
-        GameObject uiComponentRedScore = uiComponent.AttachUI(redScorePrefab, redScorePrefab.transform.localPosition,
-                                                                redScorePrefab.transform.rotation, redScorePrefab.transform.localScale);
-        redScore = uiComponentRedScore.GetComponent<TMP_Text>();
+        GameObject uiComponentTimer = uiComponent.AttachUI(timerPrefab, HorizontalLayout, false);
+        timer = uiComponentTimer.transform.GetChild(0).GetComponentInChildren<TMP_Text>();
 
-        GameObject uiComponentTimer = uiComponent.AttachUI(timerPrefab, timerPrefab.transform.localPosition,
-                                                            timerPrefab.transform.rotation, timerPrefab.transform.localScale);
-        timer = uiComponentTimer.GetComponent<TMP_Text>();
+        GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, HorizontalLayout, false);
+        blueScore = uiComponentBlueScore.transform.GetChild(0).GetComponentInChildren<TMP_Text>();   
 
-        GameObject uiComponentLine = uiComponent.AttachUI(scorelinePrefab, scorelinePrefab.transform.localPosition,
-                                                            scorelinePrefab.transform.rotation, scorelinePrefab.transform.localScale);
-
-        GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, bulletsViewPrefab.transform.localPosition,
-                                                            bulletsViewPrefab.transform.rotation, bulletsViewPrefab.transform.localScale);
+        GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
         bulletsView = uiComponentBullets.GetComponent<Text>();
 
-        GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, TeamPrefab.transform.localPosition,
-                                                            TeamPrefab.transform.rotation, TeamPrefab.transform.localScale);
+        GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, parent, true);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
 
-        GameObject uiComponentTimerSpell = uiComponent.AttachUI(TimerSpellPrefab, TimerSpellPrefab.transform.localPosition,
-                                                            TimerSpellPrefab.transform.rotation, TimerSpellPrefab.transform.localScale);
+        GameObject uiComponentTimerSpell = uiComponent.AttachUI(TimerSpellPrefab, parent, true);
         timerSpell = uiComponentTimerSpell.GetComponent<TMP_Text>();
 
         invisibility = false;
@@ -131,12 +124,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             if (team == 0)
             {
                 Team.text = "Defenders";
-                Team.color = Color.blue;
+                Team.color = new Color(0.0745f, 0.1262f, 0.2941f, 1);
             }
             else
             {
                 Team.text = "Attackers";
-                Team.color = Color.red;
+                Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1); ;
             }
         }
 
@@ -240,6 +233,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
         decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
+        // decoy sa ma iei
         decoy.GetComponent<Decoy>().direction = transform.forward;
     }
 

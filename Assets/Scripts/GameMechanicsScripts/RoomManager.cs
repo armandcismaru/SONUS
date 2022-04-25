@@ -54,6 +54,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
     private Shelter shelterClass;
+    DisplayMessage kill;
+    DisplayMessage canvasMessage;
 
     private float voiceChatVolume = 1f;
 
@@ -79,6 +81,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }*/
 
 #endif
+    }
+
+    private void Start()
+    {
+       kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
+       canvasMessage = GameObject.FindWithTag("Canvas").GetComponent<DisplayMessage>();
+    }
+
+    private void Update()
+    {
+        Test();
     }
 
     public override void OnEnable()
@@ -270,9 +283,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public IEnumerator PauseGame(float pauseTime, string msg, string team)
     {
-        GameObject canvas = GameObject.FindWithTag("Canvas");
-        canvas.GetComponent<DisplayMessage>().SetText(msg);
-        canvas.GetComponent<DisplayMessage>().SetColour(team);
+        canvasMessage.MakeVisible(true);
+        canvasMessage.SetText(msg);
+        canvasMessage.SetColour(team);
 
         Time.timeScale = 0f;
         float pauseEndTime = Time.realtimeSinceStartup + pauseTime;
@@ -281,7 +294,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             yield return 0;
         }
 
-        canvas.GetComponent<DisplayMessage>().SetText("");
+        canvasMessage.MakeVisible(false);
         Time.timeScale = 1f;
     }
 
@@ -337,21 +350,30 @@ public class RoomManager : MonoBehaviourPunCallbacks
         DisplayKill(team);
     }
 
+    public void Test()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            DisplayKill(1);
+        }
+    }
     private void DisplayKill(int team)
     {
-        DisplayMessage kill = GameObject.FindWithTag("Kill").GetComponent<DisplayMessage>();
-
         if (team == 0)
         {
+            kill.MakeVisible(true);
             kill.SetText("");
-            kill.SetText("              Defender died");
+            kill.SetText("Defender died");
             kill.SetColour("blue");
+            //kill.MakeVisible(false);
         }
         else
         {
+            kill.MakeVisible(true);
             kill.SetText("");
-            kill.SetText("              Attacker died");
+            kill.SetText("Attacker died");
             kill.SetColour("red");
+            //kill.MakeVisible(false);
         }
     }
 

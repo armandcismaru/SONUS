@@ -4,9 +4,10 @@ using TMPro;
 
 public class DisplayMessage : MonoBehaviour
 {
+    public TMP_Text text_box;
     void Start()
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     void Update()
@@ -16,7 +17,8 @@ public class DisplayMessage : MonoBehaviour
 
     public void SetText(string msg)
     {
-        GetComponent<TMP_Text>().text = msg;
+        //GetComponent<TMP_Text>().text = msg;
+        text_box.text = msg;
     }
 
     public void MakeVisible(bool visible)
@@ -27,8 +29,8 @@ public class DisplayMessage : MonoBehaviour
     public void SetColour(string team)
     {
         if (team == "red")
-            GetComponent<TMP_Text>().color = new Color(1, 0, 0, 1);
+            text_box.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
         else if (team == "blue")
-            GetComponent<TMP_Text>().color = new Color(0, 0, 1, 1);
+            text_box.color = new Color(0.0745f, 0.1262f, 0.2941f, 1);
     }
 }
