@@ -44,12 +44,12 @@ public class BridgeVoiceRecognition : MonoBehaviour
         timeSpellTimer = Time.time;
     }
 
-    void TriggerSpell(string hypsegKeyPressed) {
-        string keyPressed = hypsegKeyPressed.Substring(hypsegKeyPressed.Length - 1);
-        string hypseg = hypsegKeyPressed.Remove(hypsegKeyPressed.Length - 1);
-        Debug.Log("From Unity hypseg:" + hypseg);
-        Debug.Log("From Unity keypressed:" + keyPressed);
-        if (hypseg == "torch" && keyPressed == "3")
+    void TriggerSpell(string hypseg) {
+        // string keyPressed = hypsegKeyPressed.Substring(hypsegKeyPressed.Length - 1);
+        // string hypseg = hypsegKeyPressed.Remove(hypsegKeyPressed.Length - 1);
+        // Debug.Log("From Unity hypseg:" + hypseg);
+        // Debug.Log("From Unity keypressed:" + keyPressed);
+        if (hypseg == "torch")
         {
             torchControls.TriggerTorch();
             return;
@@ -57,13 +57,14 @@ public class BridgeVoiceRecognition : MonoBehaviour
         if (isSpellAvailable){
             int team = playerController.GetComponent<PlayerController>().team;
             if (team == 0) {
-                if (hypseg == "speed" && keyPressed == "1")
-                {
-                    playerController.SpellTransformSound();
-                    playerController.StartFastSpeed();
-                    StartTimer();
-                }
-                else if (hypseg == "listen" && keyPressed == "2")
+                // if (hypseg == "speed")
+                // {
+                //     playerController.SpellTransformSound();
+                //     playerController.StartFastSpeed();
+                //     StartTimer();
+                // }
+                // else
+                if (hypseg == "listen")
                 {
                     playerController.SpellTransformSound();
                     playerController.EmittingSpell();
@@ -72,13 +73,14 @@ public class BridgeVoiceRecognition : MonoBehaviour
             }
             else
             {
-                if (hypseg == "hide" && keyPressed == "1")
-                {
-                    playerController.SpellTransformSound();
-                    playerController.StartInvisibilitySpell();
-                    StartTimer();
-                }
-                else if (hypseg == "clone" && keyPressed == "2")
+                // if (hypseg == "hide")
+                // {
+                //     playerController.SpellTransformSound();
+                //     playerController.StartInvisibilitySpell();
+                //     StartTimer();
+                // }
+                // else
+                if (hypseg == "decoy")
                 {
                     playerController.SpellTransformSound();
                     playerController.DeployDecoy();
