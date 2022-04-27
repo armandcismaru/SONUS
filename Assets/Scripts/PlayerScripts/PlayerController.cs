@@ -138,15 +138,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 Team.text = "Defenders";
                 Team.color = new Color(0.0745f, 0.1262f, 0.2941f, 1);
-                //spellsText.SetText("'hide' - invisibility (5s) - Key 1 \n 'clone' - launch decoy \n 'torch' - activate torchlight") ;
-                spellsText.text = "'speed' - move faster (5s) - Key 1 \n'listen' - enemy sound feedback - Key 2 \n'torch' - activate torchlight - Key 3";
+                spellsText.text = "Press E to trigger spells\n'listen' - enemy sound feedback\n'torch' - activate torchlight";
             }
             else
             {
                 Team.text = "Attackers";
                 Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
-                spellsText.text = "'hide' - invisibility (5s) - Key 1 \n'clone' - launch decoy - Key 2 \n'torch' - activate torchlight - Key 3";
-                //spellsText.SetText("'listen' - enemy sound feedback \n 'speed' - move faster (5s) \n \n 'torch' - activate torchlight");
+                spellsText.text = "Press E to trigger spells\n'clone' - launch decoy\n'torch' - activate torchlight";
             }
             displayName.SetActive(false);
         }

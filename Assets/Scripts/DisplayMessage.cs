@@ -17,7 +17,6 @@ public class DisplayMessage : MonoBehaviour
 
     public void SetText(string msg)
     {
-        Debug.Log(msg);
         //GetComponent<TMP_Text>().text = msg;
         text_box.text = msg;
     }
