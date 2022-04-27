@@ -144,7 +144,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 Team.text = "Attackers";
                 Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
-                spellsText.text = "Press E to trigger spells\n'clone' - launch decoy\n'torch' - activate torchlight";
+                spellsText.text = "Press E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
             }
             displayName.SetActive(false);
         }
