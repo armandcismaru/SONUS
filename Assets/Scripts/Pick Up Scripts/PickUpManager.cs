@@ -15,9 +15,10 @@
     
         private UIScriptPlayer uiComponent; // pick up component that can be attached
         private bool uiInitialized;
+        GameObject parent_dummy;
 
-        // Creates the camera and the canvas for the person itself, the character
-        void Start()
+    // Creates the camera and the canvas for the person itself, the character
+    void Start()
         {
             /* If the canvas exists, it asks form the uiComponent 
              * (if the UIScriptPlayer) acctually exists! */
@@ -45,8 +46,7 @@
                             /* Gets called based on how many pick up components it passes. 
                              * Attach components to the screen based on how many 
                              * they are according to each player. */
-                            objects.Add(uiComponent.AttachUI(uiElement, uiElement.transform.position,
-                                                             uiElement.transform.rotation, uiElement.transform.localScale));
+                            objects.Add(uiComponent.AttachUI(uiElement, parent_dummy, true));
                         }
                         catch (System.Exception)
                         { 
