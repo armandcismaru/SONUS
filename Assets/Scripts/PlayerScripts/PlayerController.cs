@@ -134,11 +134,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 Team.text = "Defenders";
                 Team.color = Color.blue;
+                GameObject.Find("Attacker_Model_onPlayer").SetActive(false);
+                GameObject.Find("Defender_Model_onPlayer").SetActive(true);
             }
             else
             {
                 Team.text = "Attackers";
                 Team.color = Color.red;
+                GameObject.Find("Defender_Model_onPlayer").SetActive(false);
+                GameObject.Find("Attacker_Model_onPlayer").SetActive(true);
             }
         }
 
