@@ -63,3 +63,7 @@ Thumbs.db.meta
 *.vscode
 .vsconfig
 Assets/Plugins/GitHub/Editor/x64/sfw_x64.dll
+
+# Helper scripts
+Assets/Scripts/PreBuildProcessing.cs
+Assets/Scripts/PreBuildProcessing.cs.meta

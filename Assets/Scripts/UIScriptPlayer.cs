@@ -34,15 +34,29 @@ public class UIScriptPlayer : MonoBehaviour
     //absolutely the same principle for supplies.
     // AttachUI() passes as parameters are the UI element (a prefab - which has already been initialized-),
     // then the location of where the prefab is placed on the screen 
-    public GameObject AttachUI(GameObject uiObject, Vector3 localPosition, Quaternion localRotation, Vector3 localScale)
+    public GameObject AttachUI(GameObject uiObject, GameObject parent, bool isParentCanvas)
     {
+        Transform parentTransform;
+        if (isParentCanvas)
+        {
+            parentTransform = playerCanvas.transform;
+        }
+        else
+        {
+            parentTransform = parent.transform;
+        }
 
         Vector2 referenceResolution = uiObject.GetComponent<UIElementData>().referenceResolution;
         float screenMultiplier = Screen.currentResolution.width / referenceResolution.x;
-        
+
         //uiObject.transform.SetParent(playerCanvas.transform);
         //uiObject.transform.parent = playerCanvas.transform;
-        uiObject = Instantiate(uiObject, playerCanvas.transform);
+
+        Vector3 localPosition = uiObject.transform.localPosition;
+        Quaternion localRotation = uiObject.transform.rotation;
+        Vector3 localScale = uiObject.transform.localScale;
+
+        uiObject = Instantiate(uiObject, parentTransform);
         uiObject.transform.localPosition = localPosition; //* screenMultiplier;
         uiObject.transform.localRotation = localRotation; //multiply rotation later @TODO
         uiObject.transform.localScale = localScale; //* screenMultiplier;
