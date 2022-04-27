@@ -1,5 +1,3 @@
-clone
-hide
+decoy
 listen
-speed
 torch
