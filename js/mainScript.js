@@ -36,7 +36,7 @@ function updateHypSeg(hypseg) {
   //if (hypseg.length > 0 && hypseg[hypseg.length - 1].word.localeCompare("<sil>") != 0) window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[hypseg.length - 1].word);
   if (newWords < hypseg.length) {
     newWords++;
-    window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[0].word.concat(keyPressed));
+    window.unityInstance.SendMessage("BridgeVoiceRecognition", "TriggerSpell", hypseg[0].word);
   }
 }
 
@@ -135,7 +135,7 @@ var feedWords = function(words) {
 // This initializes the recognizer. When it calls back, we add words
 var initRecognizer = function() {
     // You can pass parameters to the recognizer, such as : {command: 'initialize', data: [["-hmm", "my_model"], ["-fwdflat", "no"]]}
-    postRecognizerJob({command: 'initialize', data: [["-kws_threshold", "1e-35"], ["-kws_delay", "20"],["-kws", "kws.txt"], ["-dict","kws.dict"]]},
+    postRecognizerJob({command: 'initialize', data: [["-kws", "kws.txt"], ["-dict","kws.dict"]]},
                       function() {console.log("Speech Recognition Initialized");});
 };
 
@@ -199,7 +199,7 @@ window.onload = function() {
 
 var recordingOn = false;
 document.addEventListener("keydown", function(event) {
-  if ((event.key == "1" || event.key == "2" || event.key == "3") && recordingOn == false) {
+  if (event.key == "e" && recordingOn == false) {
     keyPressed = event.key;
     recordingOn = true;
     newWords = 0;
