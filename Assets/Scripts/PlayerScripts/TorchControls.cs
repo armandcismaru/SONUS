@@ -65,7 +65,8 @@ public class TorchControls : MonoBehaviour
 
     void Update()
     {
-       /* if (Input.GetKeyDown(KeyCode.Q))
+        //TODO
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             TriggerTorch();
         }*/
