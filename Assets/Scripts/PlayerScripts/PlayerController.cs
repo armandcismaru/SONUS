@@ -122,6 +122,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
         emptyGunIcon = GameObject.FindWithTag("EmptyGun");
+        emptyGunIcon.SetActive(false);
         for (int i = 0; i < max_bullets; i++)
         {
             bulletsArray[i] = uiComponent.AttachUI(BulletIcon, uiComponentBullets.transform.GetChild(0).gameObject, false);
