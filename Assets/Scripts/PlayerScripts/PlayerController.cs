@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private GameObject TimerSpellPrefab;
     [SerializeField] private GameObject HorizontalLayout;
     [SerializeField] private GameObject SpellNamePrefab;
+    [SerializeField] private GameObject BulletIcon;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private Vector3 velocity;
 
     [SerializeField] public int bullets = 5;
+    [SerializeField] public int max_bullets = 8;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
 
@@ -91,7 +93,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private TMP_Text nickname;
     [SerializeField] private GameObject displayName;
     [SerializeField] private TMP_Text sceneNickname;
-
+    private GameObject[] bulletsArray;
 
     void Awake()
     {
@@ -102,6 +104,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     }
     void Start()
     {
+        bulletsArray = new GameObject[max_bullets];
+
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -117,6 +121,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
         bulletsView = uiComponentBullets.GetComponent<Text>();
+
+        for (int i = 0; i < max_bullets; i++)
+        {
+            bulletsArray[i] = uiComponent.AttachUI(BulletIcon, uiComponentBullets.transform.GetChild(0).gameObject, false);
+            if (i < max_bullets - bullets)
+                bulletsArray[i].SetActive(false);
+            else
+                bulletsArray[i].SetActive(true);
+        }
 
         GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, parent, true);
         Team = uiComponentTeam.GetComponent<TMP_Text>();

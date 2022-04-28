@@ -19,7 +19,7 @@ public class PickUpScript : MonoBehaviour {
 
     private bool isDestroyed = false;
 
-    [SerializeField] public int amount = 0;
+    public int amount = 0;
 
     public void destroyThisObject()
     {

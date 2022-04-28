@@ -3204,6 +3204,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
+      propertyPath: BulletIcon
+      value: 
+      objectReference: {fileID: 2411971717941001757, guid: b6e85ea0d91914c26bbfcd01e4b0c245, type: 3}
+    - target: {fileID: 3988787732881253671, guid: e338d02cba3bf2e44a9acdb8b186186f, type: 3}
       propertyPath: TeamPrefab
       value: 
       objectReference: {fileID: 9086295897165062077, guid: d703a0455cbfb6144927a2fbfc13c220, type: 3}
