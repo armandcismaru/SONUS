@@ -18,6 +18,7 @@ TagManager:
   - Pause
   - Bullet
   - BulletUI
+  - EmptyGun
   layers:
   - Default
   - TransparentFX

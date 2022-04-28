@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private GameObject TimerSpellPrefab;
     [SerializeField] private GameObject HorizontalLayout;
     [SerializeField] private GameObject SpellNamePrefab;
+    [SerializeField] private GameObject BulletIcon;
 
     [HideInInspector] public int team;
     private PlayerManager playerManager;
@@ -54,11 +55,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private Vector3 velocity;
 
     [SerializeField] public int bullets = 5;
+    [SerializeField] public int max_bullets = 8;
     [SerializeField] Gun gun;
     [SerializeField] Knife knife;
 
     private Rigidbody rb;
-    public Text bulletsView;
     private float LastShootTime;
 
     [SerializeField]
@@ -91,7 +92,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private TMP_Text nickname;
     [SerializeField] private GameObject displayName;
     [SerializeField] private TMP_Text sceneNickname;
-
+    private GameObject[] bulletsArray;
+    private GameObject uiComponentBullets;
+    private GameObject emptyGunIcon;
 
     void Awake()
     {
@@ -102,6 +105,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     }
     void Start()
     {
+        bulletsArray = new GameObject[max_bullets];
+
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
@@ -115,8 +120,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, HorizontalLayout, false);
         blueScore = uiComponentBlueScore.transform.GetChild(0).GetComponentInChildren<TMP_Text>();   
 
-        GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
-        bulletsView = uiComponentBullets.GetComponent<Text>();
+        uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
+        emptyGunIcon = GameObject.FindWithTag("EmptyGun");
+        for (int i = 0; i < max_bullets; i++)
+        {
+            bulletsArray[i] = uiComponent.AttachUI(BulletIcon, uiComponentBullets.transform.GetChild(0).gameObject, false);
+            if (i < max_bullets - bullets)
+                bulletsArray[i].SetActive(false);
+            else
+                bulletsArray[i].SetActive(true);
+        }
 
         GameObject uiComponentTeam = uiComponent.AttachUI(TeamPrefab, parent, true);
         Team = uiComponentTeam.GetComponent<TMP_Text>();
@@ -249,6 +262,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
+
         decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
         // decoy sa ma iei
         decoy.GetComponent<Decoy>().direction = transform.forward;
@@ -453,8 +467,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void IncrementBullets(int amount)
     {
+        if (bullets == 0) emptyGunIcon.SetActive(false);
+        bulletsArray[max_bullets - bullets - 1].SetActive(true);
         bullets += amount;
-        bulletsView.text = bullets.ToString();
     }
 
     void Shoot()
@@ -466,8 +481,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 GetComponent<AudioManager>().Play(GUN_SOUND);
                 BroadcastSound(GUN_SOUND);
 
+                bulletsArray[max_bullets - bullets].SetActive(false);
                 bullets -= 1;
-                bulletsView.text = bullets.ToString();
+
+                if (bullets == 0)
+                    emptyGunIcon.SetActive(true);
+
                 gun.Shoot();
                 LastShootTime = Time.time;
             }
@@ -658,8 +677,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (bullets < 5)
         {
+            for (int i = 0; i < max_bullets; i++)
+            {
+                if (i < max_bullets - bullets)
+                    bulletsArray[i].SetActive(false);
+                else
+                    bulletsArray[i].SetActive(true);
+            }
             bullets = 5;
-            bulletsView.text = bullets.ToString();
             FindObjectOfType<AudioManager>().Play(RELOAD_SOUND);
         }
     }
