@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Resources/EmptyGun.prefab.meta
 guid: 0b6e2e7dafe95467eae9ae17885a4ea2
+========
+guid: b6e85ea0d91914c26bbfcd01e4b0c245
+>>>>>>>> origin/main:Assets/Resources/HUD_Prefabs/BulletImage.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 
