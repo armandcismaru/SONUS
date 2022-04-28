@@ -53,7 +53,7 @@
 				streamingAssetsUrl: "StreamingAssets",
 				companyName: "DefaultCompany",
 				productName: "game",
-				productVersion: "0.0.82",
+				productVersion: "0.0.85",
 			};
 			var scaleToFit;
 			try {
@@ -140,19 +140,12 @@
         host: 'sonus-server.herokuapp.com',
         config:{"iceServers" :[
                   {
-                    urls: "turn:openrelay.metered.ca:80",
-                    username: "openrelayproject",
-                    credential: "openrelayproject"
+                    urls: "stun:l.google.com:19302"
                   },
                   {
-                    urls: "turn:openrelay.metered.ca:443",
-                    username: "openrelayproject",
-                    credential: "openrelayproject",
-                  },
-                  {
-                    urls: "turn:openrelay.metered.ca:443?transport=tcp",
-                    username: "openrelayproject",
-                    credential: "openrelayproject",
+                    urls: "turn:34.140.207.2:3478",
+                    username: "sonus",
+                    credential: "sonus12345"
                   }]}
       };
 
@@ -300,6 +293,36 @@
         });
         
       }
+
+      peers[0].on('error', function(err) { 
+        console.log("error on peerjs")
+        console.log(err)
+      });
+
+      peers[1].on('error', function(err) { 
+        console.log("error on peerjs")
+        console.log(err)
+      });
+
+      peers[2].on('error', function(err) { 
+        console.log("error on peerjs")
+        console.log(err)
+      });
+
+      peers[3].on('error', function(err) { 
+        console.log("error on peerjs")
+        console.log(err)
+      });
+
+      peers[4].on('error', function(err) { 
+        console.log("error on peerjs")
+        console.log(err)
+      });
+
+      peers[5].on('error', function(err) { 
+        console.log("error on peerjs")
+        console.log(err)
+      });
 
       window.createCall = function(index, id) {
         console.log("index is ");
