@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] Knife knife;
 
     private Rigidbody rb;
-    public Text bulletsView;
     private float LastShootTime;
 
     [SerializeField]
@@ -94,6 +93,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField] private GameObject displayName;
     [SerializeField] private TMP_Text sceneNickname;
     private GameObject[] bulletsArray;
+    private GameObject uiComponentBullets;
+    private GameObject emptyGunIcon;
 
     void Awake()
     {
@@ -119,9 +120,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         GameObject uiComponentBlueScore = uiComponent.AttachUI(blueScorePrefab, HorizontalLayout, false);
         blueScore = uiComponentBlueScore.transform.GetChild(0).GetComponentInChildren<TMP_Text>();   
 
-        GameObject uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
-        bulletsView = uiComponentBullets.GetComponent<Text>();
-
+        uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
+        emptyGunIcon = GameObject.FindWithTag("EmptyGun");
         for (int i = 0; i < max_bullets; i++)
         {
             bulletsArray[i] = uiComponent.AttachUI(BulletIcon, uiComponentBullets.transform.GetChild(0).gameObject, false);
@@ -262,6 +262,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
+
         decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
         // decoy sa ma iei
         decoy.GetComponent<Decoy>().direction = transform.forward;
@@ -466,8 +467,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public void IncrementBullets(int amount)
     {
+        if (bullets == 0) emptyGunIcon.SetActive(false);
+        bulletsArray[max_bullets - bullets - 1].SetActive(true);
         bullets += amount;
-        bulletsView.text = bullets.ToString();
     }
 
     void Shoot()
@@ -479,8 +481,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 GetComponent<AudioManager>().Play(GUN_SOUND);
                 BroadcastSound(GUN_SOUND);
 
+                bulletsArray[max_bullets - bullets].SetActive(false);
                 bullets -= 1;
-                bulletsView.text = bullets.ToString();
+
+                if (bullets == 0)
+                    emptyGunIcon.SetActive(true);
+
                 gun.Shoot();
                 LastShootTime = Time.time;
             }
@@ -671,8 +677,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (bullets < 5)
         {
+            for (int i = 0; i < max_bullets; i++)
+            {
+                if (i < max_bullets - bullets)
+                    bulletsArray[i].SetActive(false);
+                else
+                    bulletsArray[i].SetActive(true);
+            }
             bullets = 5;
-            bulletsView.text = bullets.ToString();
             FindObjectOfType<AudioManager>().Play(RELOAD_SOUND);
         }
     }
