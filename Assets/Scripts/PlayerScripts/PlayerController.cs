@@ -379,7 +379,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (paused == false){
+            if (Pause.paused == false){
                 crosshair.SetActive(false);
                 paused = true;
             }

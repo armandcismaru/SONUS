@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RoomItem : MonoBehaviour
 {
-    [SerializeField] private TMP_Text text;
+    [SerializeField] private Text text;
 
     RoomInfo info;
     public void SetUp(RoomInfo inf)
