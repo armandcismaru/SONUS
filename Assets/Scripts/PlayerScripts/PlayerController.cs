@@ -80,8 +80,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     public GameObject decoy;
     private bool isShiftPressed = false;
 
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
+
+    [SerializeField] private GameObject AttackerModel;
+    [SerializeField] private GameObject DefenderModel;
 
     void Awake()
     {
@@ -134,21 +138,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 Team.text = "Defenders";
                 Team.color = Color.blue;
-                GameObject.Find("Attacker_Model_onPlayer").SetActive(false);
-                GameObject.Find("Defender_Model_onPlayer").SetActive(true);
+                AttackerModel.SetActive(false);
+                DefenderModel.SetActive(true);
             }
             else
             {
                 Team.text = "Attackers";
                 Team.color = Color.red;
-                GameObject.Find("Defender_Model_onPlayer").SetActive(false);
-                GameObject.Find("Attacker_Model_onPlayer").SetActive(true);
+                DefenderModel.SetActive(false);
+                AttackerModel.SetActive(true);
             }
         }
 
         if (!view.IsMine)
         {
-            Destroy(GetComponentInChildren<Camera>().gameObject);
+            Destroy(mainCamera.gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
