@@ -491,6 +491,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             GetComponent<Renderer>().material = BlueMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.blue;
+            AttackerModel.SetActive(false);
+            DefenderModel.SetActive(true);
             playerIcon.layer = 11;
             if (view.IsMine)
             {
@@ -501,6 +503,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             GetComponent<Renderer>().material = RedMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.red;
+            DefenderModel.SetActive(false);
+            AttackerModel.SetActive(true);
             playerIcon.layer = 10;
             if (view.IsMine)
             {
