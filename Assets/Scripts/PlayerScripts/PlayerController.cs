@@ -95,6 +95,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private GameObject[] bulletsArray;
     private GameObject uiComponentBullets;
     private GameObject emptyGunIcon;
+    [SerializeField] private GameObject crosshair;
+    private bool paused = false;
 
     void Awake()
     {
@@ -150,13 +152,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             team = playerManager.team;
             if (team == 0)
             {
-                Team.text = "Defenders";
+                Team.text = "Campers";
                 Team.color = new Color(0.0745f, 0.1262f, 0.2941f, 1);
                 spellsText.text = "Press E to trigger spells\n'listen' - enemy sound feedback\n'torch' - activate torchlight";
             }
             else
             {
-                Team.text = "Attackers";
+                Team.text = "Scavengers";
                 Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
                 spellsText.text = "Press E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
             }
@@ -377,7 +379,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-           pauseObject.GetComponent<Pause>().TogglePause();
+            if (Pause.paused == false){
+                crosshair.SetActive(false);
+                paused = true;
+            }
+            else
+            {
+                crosshair.SetActive(true);
+                paused = false;
+            }   
+            pauseObject.GetComponent<Pause>().TogglePause();
         }
     }
 

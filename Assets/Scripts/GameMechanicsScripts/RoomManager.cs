@@ -316,13 +316,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void DefendersWon()
     {
         
-        view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Defenders won!", "blue");
+        view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Campers won!", "blue");
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
     }
 
     public void AttackersWon()
     {
-        view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Attackers won!", "red");
+        view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Scavengers won!", "red");
 
         if (Timer.Instance.GetTimeRemaining() < 85)
         {
