@@ -101,12 +101,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private GameObject emptyGunIcon;
     [SerializeField] private GameObject crosshair;
     private bool paused = false;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animatorAtt;
+
+    private int runHash;
+    private int walkHash;
+    private int jumpTrigHash;
+    private int landHash;
+
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
         index = (int)view.InstantiationData[1];
+
+        runHash = Animator.StringToHash("isRunning");
+        walkHash = Animator.StringToHash("isWalking");
+        jumpTrigHash = Animator.StringToHash("jump");
+        landHash = Animator.StringToHash("isTouchingGround");
         initialSpeed = walkSpeed;
     }
     void Start()
@@ -219,6 +232,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 GetComponent<AudioManager>().Play(JUMP_SOUND);
                 hasJumped = false;
                 BroadcastSound(JUMP_SOUND);
+                animator.SetTrigger(landHash);
+
             }
 
             if (!Pause.paused) {
@@ -404,9 +419,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                                       Input.GetAxisRaw("Vertical")).normalized;
 
         if (moveDir.x != 0f || moveDir.z != 0f)
+        {
             isMoving = true;
+            animator.SetBool(runHash, true);
+            animator.SetBool(walkHash, false);
+        }
         else
+        {
+            animator.SetBool(runHash, false);
             isMoving = false;
+        }
 
         if (isMoving && controller.isGrounded && !Pause.paused)
         {
@@ -425,11 +447,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         //shift walking
         if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
             isShiftPressed = true;
+            animator.SetBool(runHash, false);
+            animator.SetBool(walkHash, true);
             walkSpeed = slowSpeed;
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift) && !fastSpeed) {
             isShiftPressed = false;
+            animator.SetBool(walkHash, false);
             walkSpeed = initialSpeed;
         }
 
@@ -479,6 +504,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+            animator.SetTrigger(jumpTrigHash);
         }
     }
 
@@ -557,6 +583,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             playerIcon.layer = 10;
             DefenderModel.SetActive(false);
             AttackerModel.SetActive(true);
+            animator = animatorAtt;
             if (view.IsMine)
             {
                 minimapCamera.cullingMask |= (1 << 10); // adds layer 10 to the minimap

@@ -214,6 +214,8 @@ MonoBehaviour:
   displayName: {fileID: 0}
   sceneNickname: {fileID: 0}
   crosshair: {fileID: 0}
+  animator: {fileID: 0}
+  animatorAtt: {fileID: 0}
 --- !u!114 &5477576895150788752
 MonoBehaviour:
   m_ObjectHideFlags: 0
