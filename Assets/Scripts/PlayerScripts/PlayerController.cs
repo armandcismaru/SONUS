@@ -165,6 +165,18 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (view.IsMine)
         {
+            var children = AttackerModel.GetComponentsInChildren<Transform>(includeInactive: true);
+            foreach (var child in children)
+            {
+                //            Debug.Log(child.name);
+                child.gameObject.layer = 13;
+            }
+            children = DefenderModel.GetComponentsInChildren<Transform>(includeInactive: true);
+            foreach (var child in children)
+            {
+                //            Debug.Log(child.name);
+                child.gameObject.layer = 13;
+            }
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
             if (team == 0)
@@ -185,13 +197,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (!view.IsMine)
         {
             //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
-            GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            mainCamera.gameObject.SetActive(false);
             GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             nickname.text = view.Owner.NickName;
             sceneNickname.text = view.Owner.NickName;
 
             //Destroy(GetComponentInChildren<Camera>().gameObject);
-            Destroy(mainCamera.gameObject);
+            //Destroy(mainCamera.gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
