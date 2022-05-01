@@ -13,6 +13,7 @@ public class Pause : MonoBehaviourPunCallbacks
         if (disconnecting) return;
 
         paused = !paused;
+        //GameObject.FindGameObjectsWithTag("PauseMenu")[0].SetActive(paused);
 
         transform.GetChild(3).gameObject.SetActive(paused);
         Cursor.lockState = (paused) ? CursorLockMode.None : CursorLockMode.Locked;

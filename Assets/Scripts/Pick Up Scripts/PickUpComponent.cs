@@ -23,15 +23,21 @@ public class PickUpComponent : MonoBehaviour
         }
     }
 
-    internal void setSlider(int filterLayer, string filterTag, float value)
+    internal void SetSlider(int filterLayer, string filterTag, float value)
     {
-            foreach (GameObject uiElement in instancesUIElements)
+        foreach (GameObject uiElement in instancesUIElements)
+            if (uiElement.layer == filterLayer && uiElement.tag == filterTag)
             {
-                if (uiElement.layer == filterLayer && uiElement.tag == filterTag)
+                if (filterTag == "Food")
+                {
+                    //Image image = uiElement.GetComponentInChildren<Image>();
+                    //image.color = new Color32(255, 255, 255, 100);
+                }
+                else
                 {
                     Slider slider = uiElement.GetComponent<Slider>();
                     slider.value = value;
-                }
+                }                      
             }
     }
 

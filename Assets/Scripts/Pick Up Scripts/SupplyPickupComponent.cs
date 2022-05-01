@@ -1,9 +1,8 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SupplyPickupComponent : PickUpComponent, IDieObserver
 {
@@ -37,6 +36,11 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
     {
         if (view.IsMine)
              DropSupplies();
+    }
+
+    public void Update()
+    {
+        Manualsupplies();
     }
 
     public void DropSupplies()
@@ -75,15 +79,37 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
     public override void updateUI()
     {
         if (view.IsMine)
-            base.setSlider(5, "Food", current_food / (max_food * supplyCharge));
+            base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
     }
 
-    private void incrementFood(float value)
+    // ------------------------------------
+    private void Manualsupplies()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            IncrementFood(1);
+        }
+    }
+
+    private void IncrementFood(float value)
     {
         if (!view.IsMine)
             return;
 
-        replicateIncrementFood(value);
+        current_food = Mathf.Clamp(current_food + value, min_food, max_food * supplyCharge);
+        if (view.IsMine)
+        {
+            foreach (GameObject uiElement in instancesUIElements)
+                if (uiElement.tag == "Food")
+                {
+                    Image image = uiElement.GetComponentInChildren<Image>();
+                    TMP_Text text = uiElement.GetComponentInChildren<TMP_Text>();
+                    text.text = "Supplies collected";
+                    image.color = new Color32(255, 255, 255, 255);
+                }
+            //base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
+        }
+        //replicateIncrementFood(value);
     }
     
     private void replicateIncrementFood(float value)
@@ -103,7 +129,9 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
             if (pickup.pickupType == PickUpScript.PickUpType.Food && current_food < max_food * supplyCharge)
             {
                 float value = pickup.amount;
-                incrementFood(value);
+
+
+                IncrementFood(value);
                 pickup.destroyThisObject();
                 GetComponent<PlayerController>().PickUpSupplySound();
             }
