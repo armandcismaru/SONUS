@@ -1,13 +1,13 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TMPro;
 
 public class DoorOpener : MonoBehaviour
 {
-    [SerializeField]  public float TheDistance;
+    [SerializeField] public float TheDistance;
+    [SerializeField] public DisplayMessage Instructions;
     public GameObject TheDoor;
     public AudioSource CreakSound;
 
@@ -49,11 +49,20 @@ public class DoorOpener : MonoBehaviour
              TheDistance = Math.Abs(Vector3.Magnitude(playerManager.getAvatar().transform.position - gameObject.transform.position));
     }
 
+    private IEnumerator DisplayInstructions()
+    {
+        Instructions.MakeVisible(true);
+        Instructions.SetText("Press 'R' to open door");
+        yield return new WaitForSeconds(2);
+        Instructions.MakeVisible(false);
+    }
+
     void OnMouseOver()
     {
-        
+        StartCoroutine(DisplayInstructions());
         if (dm.lock_access_pivot && Input.GetButtonDown("Action") && (TheDistance <= 7))
         {
+           
             dm.AquireAccessPivot(false);
             view.RPC("AquireAccessPivot", RpcTarget.Others, false); 
 
