@@ -232,12 +232,29 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
             if (aliveBlue == 0)
             {
-                AttackersWon();
+                if (scoreBlue + scoreRed + 1 == 1)
+                {
+                    view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed + 1, scoreBlue);
+                    PhotonNetwork.LoadLevel(2);
+                }
+                else
+                {
+                    AttackersWon();
+                }
             }
             else if (aliveRed == 0)
             {
-                DefendersWon();
+                if (scoreBlue + scoreRed + 1 == 1)
+                {
+                    view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
+                    PhotonNetwork.LoadLevel(2);
+                }
+                else
+                {
+                    DefendersWon();
+                }
             }
+
         }
     }
 
@@ -282,7 +299,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (roundRunning)
         {
-            DefendersWon();
+            if (scoreBlue + scoreRed + 1 == 1)
+            {
+                view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
+                PhotonNetwork.LoadLevel(2);
+            }
+            else
+            {
+                DefendersWon();
+            }
         }
         else
         {
@@ -340,6 +365,28 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
 }
 
+    [PunRPC]
+    void RPC_CreateStateOutro(int scoreRed, int scoreBlue)
+    {
+        var managers = GameObject.FindObjectsOfType<PlayerManager>();
+        List<string> attackers = new List<string>();
+        List<string> defenders = new List<string>();
+        foreach (var manager in managers)
+        {
+            if (manager.team == 0)
+            {
+                defenders.Add(manager.getView().Owner.NickName);
+            }
+            else
+            {
+                attackers.Add(manager.getView().Owner.NickName);
+            }
+        }
+        StateOutro.attackerPlayers = attackers;
+        StateOutro.defenderPlayers = defenders;
+        StateOutro.attackers = scoreRed;
+        StateOutro.defenders = scoreBlue;
+    }
     [PunRPC]
     void RPC_StartVoiceChat()
     {

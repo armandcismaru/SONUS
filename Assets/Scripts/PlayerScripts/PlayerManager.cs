@@ -209,6 +209,10 @@ public class PlayerManager : MonoBehaviour
         return myAvatar;
     }
 
+    public PhotonView getView()
+    {
+        return view;
+    }
 
     [PunRPC]
     void RPC_GetTeam()
