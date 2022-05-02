@@ -72,14 +72,15 @@ public class Shelter : MonoBehaviour, IRoundFinished
             && collision.gameObject.GetComponent<PlayerController>().team == 1) 
         { 
             
-                SupplyPickupComponent supply = collision.gameObject.GetComponent<SupplyPickupComponent>();
-                RPC_replicateAmountOfFoodDelivered((int)supply.current_food / supply.supplyCharge);
-                supply.current_food = 0;
-                supply.updateUI();
-                if (neededAmountofBoxes == currentAmountofBoxes)
-                {
-                    RoundFinishedAttackersWinningByTakingSuppliesToShelter();
-                }
+            SupplyPickupComponent supply = collision.gameObject.GetComponent<SupplyPickupComponent>();
+            RPC_replicateAmountOfFoodDelivered((int)supply.current_food / supply.supplyCharge);
+            supply.current_food = 0;
+            supply.dropped = true;
+            supply.updateUI();
+            if (neededAmountofBoxes == currentAmountofBoxes)
+            {
+                RoundFinishedAttackersWinningByTakingSuppliesToShelter();
+            }
         }
     }
 }
