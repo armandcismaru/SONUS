@@ -146,19 +146,12 @@
         host: 'sonus-server.herokuapp.com',
         config:{"iceServers" :[
                   {
-                    urls: "turn:openrelay.metered.ca:80",
-                    username: "openrelayproject",
-                    credential: "openrelayproject"
+                    urls: "stun:l.google.com:19302"
                   },
                   {
-                    urls: "turn:openrelay.metered.ca:443",
-                    username: "openrelayproject",
-                    credential: "openrelayproject",
-                  },
-                  {
-                    urls: "turn:openrelay.metered.ca:443?transport=tcp",
-                    username: "openrelayproject",
-                    credential: "openrelayproject",
+                    urls: "turn:34.140.207.2:3478",
+                    username: "sonus",
+                    credential: "sonus12345"
                   }]}
       };
 
@@ -217,6 +210,37 @@
 
       window.initialize = async function() {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true});
+
+        peers[0].on('error', function(err) { 
+          console.log("error on peerjs")
+          console.log(err)
+        });
+  
+        peers[1].on('error', function(err) { 
+          console.log("error on peerjs")
+          console.log(err)
+        });
+  
+        peers[2].on('error', function(err) { 
+          console.log("error on peerjs")
+          console.log(err)
+        });
+  
+        peers[3].on('error', function(err) { 
+          console.log("error on peerjs")
+          console.log(err)
+        });
+  
+        peers[4].on('error', function(err) { 
+          console.log("error on peerjs")
+          console.log(err)
+        });
+  
+        peers[5].on('error', function(err) { 
+          console.log("error on peerjs")
+          console.log(err)
+        });
+
         peers[0].on('call', function(mediaConnection) {
           mediaConnection.answer(localStream);
           mediaConnection.on('stream', function(stream) {
