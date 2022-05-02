@@ -28,40 +28,44 @@
                 "UI Script missing from parent");
         }
 
-        // Update is called once per frame
-        void Update()
+    // Update is called once per frame
+    void Update()
+    {
+        if(!uiInitialized)
         {
-            if(!uiInitialized)
+            bool setUiInitialized = true;
+
+            foreach (PickUpComponent pickupComponent in instancePickupComponents)
             {
-                bool setUiInitialized = true;
+                bool toBreak = false;
+                List<GameObject> objects = new List<GameObject>();
 
-                foreach (PickUpComponent pickupComponent in instancePickupComponents)
-                {
-                    bool toBreak = false;
-                    List<GameObject> objects = new List<GameObject>();
+                foreach (GameObject uiElement in pickupComponent.getUIElements())
+                { 
+                    try {
+                    /* Gets called based on how many pick up components it passes. 
+                        * Attach components to the screen based on how many 
+                        * they are according to each player. */
+                        GameObject uiObject = uiComponent.AttachUI(uiElement, parent_dummy, true);
+                        objects.Add(uiObject);
 
-                    foreach (GameObject uiElement in pickupComponent.getUIElements())
-                    { 
-                        try {
-                        /* Gets called based on how many pick up components it passes. 
-                         * Attach components to the screen based on how many 
-                         * they are according to each player. */
-                            objects.Add(uiComponent.AttachUI(uiElement, parent_dummy, true));
-                        }
-                        catch (System.Exception)
-                        { 
-                            setUiInitialized = false;
-                            toBreak = true; 
-                        }
-                        if (toBreak) break;
+                        if (gameObject.GetComponent<PlayerController>().team == 0 && uiObject.tag == "Food")
+                            uiObject.SetActive(false);  
                     }
-
-                    pickupComponent.setInstancesUI(this, objects);
-                    pickupComponent.updateUI();
+                    catch (System.Exception)
+                    { 
+                        setUiInitialized = false;
+                        toBreak = true; 
+                    }
+                    if (toBreak) break;
                 }
-                uiInitialized = setUiInitialized;
+
+                pickupComponent.setInstancesUI(this, objects);
+                pickupComponent.updateUI();
             }
+            uiInitialized = setUiInitialized;
         }
+    }
 
         /* Every time you collision with sth that is a pick up, 
          * checks if it has a pick up script, if it does, passes the pick up 
