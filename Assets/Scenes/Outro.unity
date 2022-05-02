@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 77898170}
   - component: {fileID: 77898169}
   m_Layer: 5
-  m_Name: LoadingText
+  m_Name: Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1225,8 +1225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: {fileID: 77898169}
-  textUp: {fileID: 711623858}
-  textDown: {fileID: 750820299}
+  label: {fileID: 783850095}
 --- !u!4 &2037910113
 Transform:
   m_ObjectHideFlags: 0
