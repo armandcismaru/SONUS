@@ -20,7 +20,7 @@ public class VideoController : MonoBehaviour
     void Update()
     { 
         currentTime = gameObject.GetComponent<VideoPlayer> ().time;
-        if (currentTime >= 10) {
+        if (currentTime >= time) {
             PhotonNetwork.LoadLevel(1);
         }
     }
