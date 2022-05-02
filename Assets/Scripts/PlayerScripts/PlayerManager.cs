@@ -232,6 +232,7 @@ public class PlayerManager : MonoBehaviour
     [PunRPC]
     void RPC_SentTeam(int tm)
     {
+        team = tm % 2;
         if (view.IsMine)
         {
             RoomManager.Instance.index = tm;

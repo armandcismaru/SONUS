@@ -165,6 +165,8 @@
       let panner = [null, null, null, null, null, null];
       let gain = [null, null, null, null, null, null];
 
+      let localStream = null;
+
       const pannerSettings = {
             panningModel:      'HRTF',
             distanceModel:     'linear',
@@ -334,18 +336,20 @@
       window.createCall = function(index, id) {
         console.log("index is ");
         console.log(index);
-        connections[index] = peers[index].call(id, localStream);
-        connections[index].on('stream', function(stream) {
-          if (aContext.state === 'suspended') {
-            aContext.resume();
-          }
-          panner[index] = aContext.createPanner(pannerSettings);
-          gain[index] = aContext.createGain();
-          const source = aContext.createMediaStreamSource(stream);
-          source.connect(gain[index]).connect(panner[index]).connect(aContext.destination);
-          aContext.listener.setPosition(0, 0, 0);
-          audios[index].srcObject = stream;
-        });
+        if(localStream != null){
+          connections[index] = peers[index].call(id, localStream);
+          connections[index].on('stream', function(stream) {
+            if (aContext.state === 'suspended') {
+              aContext.resume();
+            }
+            panner[index] = aContext.createPanner(pannerSettings);
+            gain[index] = aContext.createGain();
+            const source = aContext.createMediaStreamSource(stream);
+            source.connect(gain[index]).connect(panner[index]).connect(aContext.destination);
+            aContext.listener.setPosition(0, 0, 0);
+            audios[index].srcObject = stream;
+          });  
+        }
       }
 
     
