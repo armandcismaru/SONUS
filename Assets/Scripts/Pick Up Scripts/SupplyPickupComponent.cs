@@ -7,6 +7,7 @@ using TMPro;
 public class SupplyPickupComponent : PickUpComponent, IDieObserver
 {
     public float current_food = 0;
+    public bool dropped = false;
 
     [Tooltip("Only one supply can be picked by an attacker. Leave value as 1 by default.")]
     [ReadOnly]
@@ -76,20 +77,26 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         }
     }
 
+    public void EditSupplyGUI (string msg, byte alpha)
+    {
+        foreach (GameObject uiElement in instancesUIElements)
+            if (uiElement.CompareTag("Food"))
+            {
+                Image image = uiElement.GetComponentInChildren<Image>();
+                TMP_Text text = uiElement.GetComponentInChildren<TMP_Text>();
+                text.text = msg;
+                image.color = new Color32(255, 255, 255, alpha);
+                break;
+            }
+    }
+
     public override void updateUI()
     {
         if (view.IsMine)
         {
-            base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
-
-            foreach (GameObject uiElement in instancesUIElements)
-                if (uiElement.tag == "Food" && current_food == 0)
-                {
-                    Image image = uiElement.GetComponentInChildren<Image>();
-                    TMP_Text text = uiElement.GetComponentInChildren<TMP_Text>();
-                    text.text = "Supplies dropped";
-                    image.color = new Color32(255, 255, 255, 20);
-                }
+            //base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
+            if (dropped == true)
+                EditSupplyGUI("Supplies dropped", 20);       
         }
     }
 
@@ -110,14 +117,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         current_food = Mathf.Clamp(current_food + value, min_food, max_food * supplyCharge);
         if (view.IsMine)
         {
-            foreach (GameObject uiElement in instancesUIElements)
-                if (uiElement.tag == "Food")
-                {
-                    Image image = uiElement.GetComponentInChildren<Image>();
-                    TMP_Text text = uiElement.GetComponentInChildren<TMP_Text>();
-                    text.text = "Supplies collected";
-                    image.color = new Color32(255, 255, 255, 255);
-                }
+            EditSupplyGUI("Supplies collected", 255);
             //base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
         }
         //replicateIncrementFood(value);
