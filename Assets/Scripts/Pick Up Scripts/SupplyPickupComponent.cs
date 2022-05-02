@@ -79,7 +79,18 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
     public override void updateUI()
     {
         if (view.IsMine)
+        {
             base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
+
+            foreach (GameObject uiElement in instancesUIElements)
+                if (uiElement.tag == "Food" && current_food == 0)
+                {
+                    Image image = uiElement.GetComponentInChildren<Image>();
+                    TMP_Text text = uiElement.GetComponentInChildren<TMP_Text>();
+                    text.text = "Supplies dropped";
+                    image.color = new Color32(255, 255, 255, 20);
+                }
+        }
     }
 
     // ------------------------------------
@@ -129,7 +140,6 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
             if (pickup.pickupType == PickUpScript.PickUpType.Food && current_food < max_food * supplyCharge)
             {
                 float value = pickup.amount;
-
 
                 IncrementFood(value);
                 pickup.destroyThisObject();
