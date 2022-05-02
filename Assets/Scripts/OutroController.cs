@@ -7,20 +7,40 @@ public class OutroController : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] TMP_Text score;
-    [SerializeField] TMP_Text textUp;
-    [SerializeField] TMP_Text textDown;
+    [SerializeField] TMP_Text label;
+
     void Start()
     {
-        score.text = StateOutro.attackers + "\n" + StateOutro.defenders;
-        textUp.text = "";
-        textDown.text = "";
-        foreach(string user in StateOutro.attackerPlayers)
+        int attackers = StateOutro.attackers;
+        int defenders = StateOutro.defenders;
+        int team = StateOutro.team;
+        score.text = attackers + "\n" + defenders;
+        label.text = "";
+        if (attackers < defenders)
         {
-            textUp.text += user + " ";
+            if (team == 0)
+            {
+                label.text = "VICTORY";
+            })
+            else
+            {
+                label.text = "DEFEAT";
+            }
         }
-        foreach(string user in StateOutro.defenderPlayers)
+        else if (attackers > defenders)
         {
-            textDown.text += user + " ";
+            if (team == 0)
+            {
+                label.text = "DEFEAT";
+            }
+            else
+            {
+                label.text = "VICTORY";
+            }
+        }
+        else
+        {
+            label.text = "DRAW";
         }
     }
 }

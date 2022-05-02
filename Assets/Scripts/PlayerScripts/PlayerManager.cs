@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
     public float minBlueX;
     public float maxBlueX;
     public float minBlueZ;
-    public float maxBlueZ; 
+    public float maxBlueZ;
 
     public float minRedX;
     public float maxRedX;

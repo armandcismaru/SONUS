@@ -232,7 +232,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
             if (aliveBlue == 0)
             {
-                if (scoreBlue + scoreRed + 1 == 1)
+                if (scoreBlue + scoreRed + 1 == 4)
                 {
                     view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed + 1, scoreBlue);
                     PhotonNetwork.LoadLevel(2);
@@ -244,7 +244,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
             else if (aliveRed == 0)
             {
-                if (scoreBlue + scoreRed + 1 == 1)
+                if (scoreBlue + scoreRed + 1 == 4)
                 {
                     view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
                     PhotonNetwork.LoadLevel(2);
@@ -299,7 +299,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (roundRunning)
         {
-            if (scoreBlue + scoreRed + 1 == 1)
+            if (scoreBlue + scoreRed + 1 == 4)
             {
                 view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
                 PhotonNetwork.LoadLevel(2);
@@ -368,22 +368,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_CreateStateOutro(int scoreRed, int scoreBlue)
     {
-        var managers = GameObject.FindObjectsOfType<PlayerManager>();
-        List<string> attackers = new List<string>();
-        List<string> defenders = new List<string>();
-        foreach (var manager in managers)
-        {
-            if (manager.team == 0)
-            {
-                defenders.Add(manager.getView().Owner.NickName);
-            }
-            else
-            {
-                attackers.Add(manager.getView().Owner.NickName);
-            }
-        }
-        StateOutro.attackerPlayers = attackers;
-        StateOutro.defenderPlayers = defenders;
+        StateOutro.team = playerManager.GetComponent<PlayerManager>().team;
         StateOutro.attackers = scoreRed;
         StateOutro.defenders = scoreBlue;
     }
@@ -478,7 +463,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (team == 0)
         {
             scoreBlue++;
-        } 
+        }
         else
         {
             scoreRed++;
