@@ -9570,9 +9570,14 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 1
     Name: isTouchingGround
+  - Type: 9
+    SynchronizeType: 1
+    Name: melee
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
+  - SynchronizeType: 1
+    LayerIndex: 1
 --- !u!1001 &5865932334825822217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10872,12 +10877,12 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: isTouchingGround
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: melee
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 1
     LayerIndex: 1
 --- !u!1001 &8735625731630491267
 PrefabInstance:

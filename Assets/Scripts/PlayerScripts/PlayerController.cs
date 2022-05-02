@@ -173,13 +173,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             var children = AttackerModel.GetComponentsInChildren<Transform>(includeInactive: true);
             foreach (var child in children)
             {
-                //            Debug.Log(child.name);
                 child.gameObject.layer = 13;
             }
             children = DefenderModel.GetComponentsInChildren<Transform>(includeInactive: true);
             foreach (var child in children)
             {
-                //            Debug.Log(child.name);
                 child.gameObject.layer = 13;
             }
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
@@ -197,6 +195,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 spellsText.text = "Press E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
             }
             displayName.SetActive(false);
+
+            gameObject.layer = 2;
+
         }
 
         if (!view.IsMine)
@@ -572,7 +573,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             knife.UseKnife();
             animator.SetTrigger(meleeHash);
-            animator.SetLayerWeight(1, 1);
             meleeCd = 1.5f;
         }
     }

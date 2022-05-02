@@ -7,6 +7,7 @@ public class AnimationController : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        animator.SetLayerWeight(1, 1);
         animator.gameObject.GetComponentInParent<PlayerController>().setKnife(true);
     }
 
