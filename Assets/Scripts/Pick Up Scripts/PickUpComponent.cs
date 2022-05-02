@@ -27,17 +27,9 @@ public class PickUpComponent : MonoBehaviour
     {
         foreach (GameObject uiElement in instancesUIElements)
             if (uiElement.layer == filterLayer && uiElement.tag == filterTag)
-            {
-                if (filterTag == "Food")
-                {
-                    //Image image = uiElement.GetComponentInChildren<Image>();
-                    //image.color = new Color32(255, 255, 255, 100);
-                }
-                else
-                {
-                    Slider slider = uiElement.GetComponent<Slider>();
-                    slider.value = value;
-                }                      
+            {        
+                Slider slider = uiElement.GetComponent<Slider>();
+                slider.value = value;                     
             }
     }
 

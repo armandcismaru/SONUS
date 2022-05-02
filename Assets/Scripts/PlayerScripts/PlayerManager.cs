@@ -78,23 +78,38 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        //weird
-        if(Input.GetKeyDown(KeyCode.Comma) && isDead)
+        //allows changing the spectate camera between the alive teammates
+        if (isDead)
         {
-            spectateCameras[spectateIndex].SetActive(false);
-            spectateIndex += 1;
-            spectateIndex %= spectateCameras.Count;
-
-            if (spectateCameras[spectateIndex] == null)
+            if(spectateCameras[spectateIndex] == null)
             {
                 spectateCameras.RemoveAt(spectateIndex);
-                spectateIndex %= spectateCameras.Count;
+                if(spectateCameras.Count != 0)
+                {
+                    spectateIndex %= spectateCameras.Count;
+                }
             }
 
-            if (spectateCameras[spectateIndex] != null)
+            if (Input.GetKeyDown(KeyCode.Comma))
             {
-                spectateCameras[spectateIndex].SetActive(true);
-                spectateCameras[spectateIndex].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+                spectateCameras[spectateIndex].SetActive(false);
+                spectateIndex += 1;
+                spectateIndex %= spectateCameras.Count;
+
+                if (spectateCameras[spectateIndex] == null)
+                {
+                    spectateCameras.RemoveAt(spectateIndex);
+                    if (spectateCameras.Count != 0)
+                    {
+                        spectateIndex %= spectateCameras.Count;
+                    }
+                }
+
+                if (spectateCameras[spectateIndex] != null)
+                {
+                    spectateCameras[spectateIndex].SetActive(true);
+                    spectateCameras[spectateIndex].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+                }
             }
         }
     }
@@ -154,14 +169,12 @@ public class PlayerManager : MonoBehaviour
         if (view.IsMine)
         {
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-            //Debug.Log(players.Length);
             foreach (GameObject player in players)
             {
                 int playerInd = player.GetComponent<PlayerController>().index;
                 if(playerInd != playerController.index && playerInd % 2 == playerController.index % 2)
                 {
-                    spectateCameras.Add(player.GetComponentInChildren(typeof(Camera), true).gameObject);
-                    //player.GetComponent<PlayerController>().SpectateCanv.SetActive(true);
+                    spectateCameras.Add(player.GetComponent<PlayerController>().mainCamera.gameObject);
                 }
             }
             if(spectateCameras.Count > 0)
@@ -169,7 +182,6 @@ public class PlayerManager : MonoBehaviour
                 spectateCameras[0].SetActive(true);
                 spectateCameras[0].GetComponentInParent<PlayerController>().SolveSpectateComponents();
             }
-            //GameObject.FindWithTag("Player").GetComponent<Camera>().gameObject.SetActive(true);
         }
         isDead = true;
 
