@@ -103,11 +103,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private bool paused = false;
     [SerializeField] private Animator animator;
     [SerializeField] private Animator animatorAtt;
+    [SerializeField] private GameObject knifeModel;
+    [SerializeField] private GameObject knifeAtt;
 
     private int runHash;
     private int walkHash;
     private int jumpTrigHash;
     private int landHash;
+    private int meleeHash;
+    private float meleeCd = 0;
 
 
     void Awake()
@@ -120,6 +124,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         walkHash = Animator.StringToHash("isWalking");
         jumpTrigHash = Animator.StringToHash("jump");
         landHash = Animator.StringToHash("isTouchingGround");
+        meleeHash = Animator.StringToHash("melee");
         initialSpeed = walkSpeed;
     }
     void Start()
@@ -395,6 +400,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             velocity.y += gravity * Time.fixedDeltaTime;
             controller.Move(transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
             controller.Move(velocity * Time.fixedDeltaTime);
+
+            if(meleeCd >= 0)
+            {
+                meleeCd -= Time.deltaTime;
+            }
         }
     }
 
@@ -553,11 +563,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    public void setKnife(bool state)
+    {
+        knifeModel.SetActive(state);
+    }
+
     void UseKnife()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && meleeCd <= 0)
         {
             knife.UseKnife();
+            animator.SetTrigger(meleeHash);
+            animator.SetLayerWeight(1, 1);
+            meleeCd = 1.5f;
         }
     }
 
@@ -596,6 +614,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             DefenderModel.SetActive(false);
             AttackerModel.SetActive(true);
             animator = animatorAtt;
+            knifeModel = knifeAtt;
             if (view.IsMine)
             {
                 minimapCamera.cullingMask |= (1 << 10); // adds layer 10 to the minimap
