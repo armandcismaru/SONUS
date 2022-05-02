@@ -85,8 +85,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public GameObject parent;
 
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
+
+    [SerializeField] private GameObject AttackerModel;
+    [SerializeField] private GameObject DefenderModel;
 
     public GameObject SpectateCanv;
     [SerializeField] private TMP_Text nickname;
@@ -173,6 +177,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             sceneNickname.text = view.Owner.NickName;
 
             //Destroy(GetComponentInChildren<Camera>().gameObject);
+            Destroy(mainCamera.gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
@@ -535,6 +540,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponent<Renderer>().material = BlueMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.blue;
             playerIcon.layer = 11;
+            AttackerModel.SetActive(false);
+            DefenderModel.SetActive(true);
             if (view.IsMine)
             {
                 minimapCamera.cullingMask |= (1 << 11); // adds layer 11 to the minimap
@@ -545,6 +552,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             GetComponent<Renderer>().material = RedMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.red;
             playerIcon.layer = 10;
+            DefenderModel.SetActive(false);
+            AttackerModel.SetActive(true);
             if (view.IsMine)
             {
                 minimapCamera.cullingMask |= (1 << 10); // adds layer 10 to the minimap

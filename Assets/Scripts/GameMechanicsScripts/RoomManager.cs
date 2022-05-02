@@ -245,9 +245,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            supplies = PhotonNetwork.Instantiate("Supplies_Pig", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
+            supplies = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
             supplies2 = PhotonNetwork.Instantiate("Supplies_Chicken", new Vector3(suppliesX - 4, 24, suppliesZ + 4), Quaternion.identity);
-            supplies3 = PhotonNetwork.Instantiate("Supplies_Pig", new Vector3(suppliesX + 4, 24, suppliesZ + 4), Quaternion.identity);
+            supplies3 = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(suppliesX + 4, 24, suppliesZ + 4), Quaternion.identity);
 
             shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(suppliesX - 4, 23, suppliesZ - 4), Quaternion.identity);
 
