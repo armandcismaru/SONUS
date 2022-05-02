@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public GameObject parent;
 
-    [SerializeField] private Camera mainCamera;
+    public Camera mainCamera;
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
 
@@ -100,12 +100,31 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private GameObject uiComponentBullets;
     private GameObject emptyGunIcon;
     [SerializeField] private GameObject crosshair;
+    private bool paused = false;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animatorAtt;
+    [SerializeField] private GameObject knifeModel;
+    [SerializeField] private GameObject knifeAtt;
+
+    private int runHash;
+    private int walkHash;
+    private int jumpTrigHash;
+    private int landHash;
+    private int meleeHash;
+    private float meleeCd = 0;
+
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         view = GetComponent<PhotonView>();
         index = (int)view.InstantiationData[1];
+
+        runHash = Animator.StringToHash("isRunning");
+        walkHash = Animator.StringToHash("isWalking");
+        jumpTrigHash = Animator.StringToHash("jump");
+        landHash = Animator.StringToHash("isTouchingGround");
+        meleeHash = Animator.StringToHash("melee");
         initialSpeed = walkSpeed;
     }
     void Start()
@@ -151,6 +170,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (view.IsMine)
         {
+            var children = AttackerModel.GetComponentsInChildren<Transform>(includeInactive: true);
+            foreach (var child in children)
+            {
+                child.gameObject.layer = 13;
+            }
+            children = DefenderModel.GetComponentsInChildren<Transform>(includeInactive: true);
+            foreach (var child in children)
+            {
+                child.gameObject.layer = 13;
+            }
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
             if (team == 0)
@@ -166,18 +195,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 spellsText.text = "Press E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
             }
             displayName.SetActive(false);
+
+            gameObject.layer = 2;
+
         }
 
         if (!view.IsMine)
         {
             //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
-            GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            mainCamera.gameObject.SetActive(false);
             GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             nickname.text = view.Owner.NickName;
             sceneNickname.text = view.Owner.NickName;
 
             //Destroy(GetComponentInChildren<Camera>().gameObject);
-            Destroy(mainCamera.gameObject);
+            //Destroy(mainCamera.gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
@@ -218,6 +250,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 GetComponent<AudioManager>().Play(JUMP_SOUND);
                 hasJumped = false;
                 BroadcastSound(JUMP_SOUND);
+                animator.SetTrigger(landHash);
+
             }
 
             if (!Pause.paused) {
@@ -367,6 +401,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             velocity.y += gravity * Time.fixedDeltaTime;
             controller.Move(transform.TransformDirection(moveAmount) * Time.fixedDeltaTime);
             controller.Move(velocity * Time.fixedDeltaTime);
+
+            if(meleeCd >= 0)
+            {
+                meleeCd -= Time.deltaTime;
+            }
         }
     }
 
@@ -401,9 +440,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                                       Input.GetAxisRaw("Vertical")).normalized;
 
         if (moveDir.x != 0f || moveDir.z != 0f)
+        {
             isMoving = true;
+            animator.SetBool(runHash, true);
+            animator.SetBool(walkHash, false);
+        }
         else
+        {
+            animator.SetBool(runHash, false);
             isMoving = false;
+        }
 
         if (isMoving && controller.isGrounded && !Pause.paused)
         {
@@ -422,11 +468,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         //shift walking
         if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
             isShiftPressed = true;
+            animator.SetBool(runHash, false);
+            animator.SetBool(walkHash, true);
             walkSpeed = slowSpeed;
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift) && !fastSpeed) {
             isShiftPressed = false;
+            animator.SetBool(walkHash, false);
             walkSpeed = initialSpeed;
         }
 
@@ -476,6 +525,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
             velocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity);
+            animator.SetTrigger(jumpTrigHash);
         }
     }
 
@@ -512,12 +562,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    public void setKnife(bool state)
+    {
+        knifeModel.SetActive(state);
+    }
+
     void UseKnife()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F) && meleeCd <= 0)
         {
             knife.UseKnife();
+            animator.SetTrigger(meleeHash);
+            meleeCd = 1.5f;
+            view.RPC("RPC_playKnifeAnimation", RpcTarget.Others);
         }
+    }
+
+    [PunRPC]
+    void RPC_playKnifeAnimation()
+    {
+        animator.SetTrigger(meleeHash);
     }
 
     public void SetGroundedState(bool _grounded)
@@ -554,6 +618,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             playerIcon.layer = 10;
             DefenderModel.SetActive(false);
             AttackerModel.SetActive(true);
+            animator = animatorAtt;
+            knifeModel = knifeAtt;
             if (view.IsMine)
             {
                 minimapCamera.cullingMask |= (1 << 10); // adds layer 10 to the minimap

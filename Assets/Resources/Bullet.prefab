@@ -175,6 +175,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7558501679641551494}
     m_Modifications:
+    - target: {fileID: -8700617353114198275, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -219,9 +223,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6722085885383957590, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -2845779275431937956, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
       propertyPath: m_Name
       value: Bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 2550463727306718371, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4088511875904941254, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24bd098f85ed25f4b85f409e74a1948f, type: 3}

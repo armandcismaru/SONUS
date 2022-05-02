@@ -9,13 +9,22 @@ public class Billboard : MonoBehaviour
     {
         if(cam == null)
         {
-            cam = GameObject.FindGameObjectsWithTag("Player")[0];
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            foreach(var player in players)
+            {
+                if (player.GetComponent<PlayerController>().mainCamera.gameObject.activeSelf)
+                {
+                    cam = player;
+                    break;
+                }
+            }
         }
 
         if(cam == null)
         {
             return;
         }
+
         transform.LookAt(cam.transform);
         transform.Rotate(Vector3.up * 180);
     }
