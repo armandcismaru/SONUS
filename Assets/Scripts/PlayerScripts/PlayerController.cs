@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     public GameObject parent;
 
-    [SerializeField] private Camera mainCamera;
+    public Camera mainCamera;
     [SerializeField] private GameObject playerIcon;
     [SerializeField] private Camera minimapCamera;
 
