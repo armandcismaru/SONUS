@@ -21,7 +21,7 @@ public class OutroController : MonoBehaviour
             if (team == 0)
             {
                 label.text = "VICTORY";
-            })
+            }
             else
             {
                 label.text = "DEFEAT";
