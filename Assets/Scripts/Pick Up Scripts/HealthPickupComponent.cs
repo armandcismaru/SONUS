@@ -34,7 +34,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
     public override void updateUI()
     {
-        base.setSlider(5, "Health", current_health / max_health);
+        base.SetSlider(5, "Health", current_health / max_health);
     }
 
     private void IncrementHealth(float value)

@@ -43,9 +43,9 @@
                     foreach (GameObject uiElement in pickupComponent.getUIElements())
                     { 
                         try {
-                            /* Gets called based on how many pick up components it passes. 
-                             * Attach components to the screen based on how many 
-                             * they are according to each player. */
+                        /* Gets called based on how many pick up components it passes. 
+                         * Attach components to the screen based on how many 
+                         * they are according to each player. */
                             objects.Add(uiComponent.AttachUI(uiElement, parent_dummy, true));
                         }
                         catch (System.Exception)

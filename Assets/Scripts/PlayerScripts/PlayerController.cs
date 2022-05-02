@@ -423,12 +423,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         {
             if (Pause.paused == false){
                 crosshair.SetActive(false);
-                paused = true;
             }
             else
             {
                 crosshair.SetActive(true);
-                paused = false;
             }   
             pauseObject.GetComponent<Pause>().TogglePause();
         }
