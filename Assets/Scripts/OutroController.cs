@@ -11,7 +11,7 @@ public class OutroController : MonoBehaviour
     [SerializeField] TMP_Text textDown;
     void Start()
     {
-        score.text = StateOutro.attackers + " - " + StateOutro.defenders;
+        score.text = StateOutro.attackers + "\n" + StateOutro.defenders;
         textUp.text = "";
         textDown.text = "";
         foreach(string user in StateOutro.attackerPlayers)
