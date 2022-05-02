@@ -574,7 +574,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             knife.UseKnife();
             animator.SetTrigger(meleeHash);
             meleeCd = 1.5f;
+            view.RPC("RPC_playKnifeAnimation", RpcTarget.Others);
         }
+    }
+
+    [PunRPC]
+    void RPC_playKnifeAnimation()
+    {
+        animator.SetTrigger(meleeHash);
     }
 
     public void SetGroundedState(bool _grounded)
