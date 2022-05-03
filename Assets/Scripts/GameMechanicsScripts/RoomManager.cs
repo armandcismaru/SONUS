@@ -119,7 +119,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Timer.Instance.StartTimer(30f);
         }
-        if (scene.buildIndex == 1)
+        if (scene.buildIndex == 2)
         {
             playerManager = PhotonNetwork.Instantiate("PlayerManager", Vector3.zero, Quaternion.identity);
         }

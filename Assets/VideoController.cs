@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Video;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
 public class VideoController : MonoBehaviour
 {   
@@ -13,15 +14,17 @@ public class VideoController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        time = gameObject.GetComponent<VideoPlayer> ().clip.length;
+        //time = gameObject.GetComponent<VideoPlayer> ().clip.length;
+        time = 47;
     }
 
     // Update is called once per frame
     void Update()
     { 
         currentTime = gameObject.GetComponent<VideoPlayer> ().time;
-        if (currentTime >= time) {
-            PhotonNetwork.LoadLevel(1);
+        Debug.Log(currentTime);
+        if (currentTime >= time || Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene(1);
         }
     }
 }
