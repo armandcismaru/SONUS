@@ -49,26 +49,30 @@ public class DoorOpener : MonoBehaviour
              TheDistance = Math.Abs(Vector3.Magnitude(playerManager.getAvatar().transform.position - gameObject.transform.position));
     }
 
-    private IEnumerator DisplayInstructions()
-    {
-        Instructions.MakeVisible(true);
-        Instructions.SetText("Press 'R' to open door");
-        yield return new WaitForSeconds(2);
-        Instructions.MakeVisible(false);
-    }
+     private IEnumerator DisplayInstructions()
+     {
+         Instructions.MakeVisible(true);
+         Instructions.SetText("Press 'r' to interact with the door");
+         yield return new WaitForSeconds(2);
+         Instructions.MakeVisible(false);
+     }
+
 
     void OnMouseOver()
     {
-        StartCoroutine(DisplayInstructions());
-        if (dm.lock_access_pivot && Input.GetButtonDown("Action") && (TheDistance <= 7))
+        if (TheDistance <= 7)
         {
-           
-            dm.AquireAccessPivot(false);
-            view.RPC("AquireAccessPivot", RpcTarget.Others, false); 
+            StartCoroutine(DisplayInstructions());
+            if (dm.lock_access_pivot && Input.GetButtonDown("Action"))
+            {
 
-            view.TransferOwnership(PhotonNetwork.LocalPlayer);
-           
-            OpenDoorAndDisableCollider();
+                dm.AquireAccessPivot(false);
+                view.RPC("AquireAccessPivot", RpcTarget.Others, false);
+
+                view.TransferOwnership(PhotonNetwork.LocalPlayer);
+
+                OpenDoorAndDisableCollider();
+            }
         }
     }
 
