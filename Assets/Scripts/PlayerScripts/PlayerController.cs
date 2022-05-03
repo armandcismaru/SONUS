@@ -100,7 +100,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     private GameObject uiComponentBullets;
     private GameObject emptyGunIcon;
     [SerializeField] private GameObject crosshair;
-    private bool paused = false;
     [SerializeField] private Animator animator;
     [SerializeField] private Animator animatorAtt;
     [SerializeField] private GameObject knifeModel;
@@ -186,13 +185,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             {
                 Team.text = "Campers";
                 Team.color = new Color(0.0745f, 0.1262f, 0.2941f, 1);
-                spellsText.text = "Press E to trigger spells\n'listen' - enemy sound feedback\n'torch' - activate torchlight";
+                spellsText.text = "Hold E to trigger spells\n'listen' - enemy sound feedback\n'torch' - activate torchlight";
             }
             else
             {
                 Team.text = "Scavengers";
                 Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
-                spellsText.text = "Press E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
+                spellsText.text = "Hold E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
             }
             displayName.SetActive(false);
 
