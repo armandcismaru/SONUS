@@ -468,6 +468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TheDistance: 0
+  Instructions: {fileID: 0}
   TheDoor: {fileID: 5385118446340102586}
   CreakSound: {fileID: 5385118446847415586}
 --- !u!1 &5385118447107605937

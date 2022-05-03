@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
     public float minBlueX;
     public float maxBlueX;
     public float minBlueZ;
-    public float maxBlueZ; 
+    public float maxBlueZ;
 
     public float minRedX;
     public float maxRedX;
@@ -221,6 +221,10 @@ public class PlayerManager : MonoBehaviour
         return myAvatar;
     }
 
+    public PhotonView getView()
+    {
+        return view;
+    }
 
     [PunRPC]
     void RPC_GetTeam()
@@ -238,7 +242,6 @@ public class PlayerManager : MonoBehaviour
             RoomManager.Instance.index = tm;
             Debug.Log("team ->");
             Debug.Log(tm);
-            team = tm % 2;
             id[1] = tm;
             if (myAvatar != null)
             {
