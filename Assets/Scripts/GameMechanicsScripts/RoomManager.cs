@@ -121,7 +121,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             Timer.Instance.StartTimer(30f); ///TODO 30f
         }
-        if (scene.buildIndex == 1)
+        if (scene.buildIndex == 2)
         {
             playerManager = PhotonNetwork.Instantiate("PlayerManager", Vector3.zero, Quaternion.identity);
         }
@@ -237,7 +237,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 if (scoreBlue + scoreRed + 1 == 4)
                 {
                     view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed + 1, scoreBlue);
-                    PhotonNetwork.LoadLevel(2);
+                    PhotonNetwork.LoadLevel(3);
                 }
                 else
                 {
@@ -249,7 +249,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 if (scoreBlue + scoreRed + 1 == 4)
                 {
                     view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
-                    PhotonNetwork.LoadLevel(2);
+                    PhotonNetwork.LoadLevel(3);
                 }
                 else
                 {
@@ -307,7 +307,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             if (scoreBlue + scoreRed + 1 == 4)
             {
                 view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
-                PhotonNetwork.LoadLevel(2);
+                PhotonNetwork.LoadLevel(3);
             }
             else
             {
