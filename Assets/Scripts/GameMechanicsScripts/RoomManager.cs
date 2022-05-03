@@ -232,12 +232,29 @@ public class RoomManager : MonoBehaviourPunCallbacks
             }
             if (aliveBlue == 0)
             {
-                AttackersWon();
+                if (scoreBlue + scoreRed + 1 == 4)
+                {
+                    view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed + 1, scoreBlue);
+                    PhotonNetwork.LoadLevel(2);
+                }
+                else
+                {
+                    AttackersWon();
+                }
             }
             else if (aliveRed == 0)
             {
-                DefendersWon();
+                if (scoreBlue + scoreRed + 1 == 4)
+                {
+                    view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
+                    PhotonNetwork.LoadLevel(2);
+                }
+                else
+                {
+                    DefendersWon();
+                }
             }
+
         }
     }
 
@@ -282,7 +299,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (roundRunning)
         {
-            DefendersWon();
+            if (scoreBlue + scoreRed + 1 == 4)
+            {
+                view.RPC("RPC_CreateStateOutro", RpcTarget.All, scoreRed, scoreBlue + 1);
+                PhotonNetwork.LoadLevel(2);
+            }
+            else
+            {
+                DefendersWon();
+            }
         }
         else
         {
@@ -340,6 +365,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
 }
 
+    [PunRPC]
+    void RPC_CreateStateOutro(int scoreRed, int scoreBlue)
+    {
+        StateOutro.team = playerManager.GetComponent<PlayerManager>().team;
+        StateOutro.attackers = scoreRed;
+        StateOutro.defenders = scoreBlue;
+    }
     [PunRPC]
     void RPC_StartVoiceChat()
     {
@@ -431,7 +463,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (team == 0)
         {
             scoreBlue++;
-        } 
+        }
         else
         {
             scoreRed++;
