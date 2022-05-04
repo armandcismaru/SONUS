@@ -183,7 +183,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             view.RPC("RPC_StopIntenseMusic", RpcTarget.All);
         }
-        if (Timer.Instance.GetTimeRemaining() <= 31 && !intenseMusicPlayed)
+        if (Timer.Instance.GetTimeRemaining() <= 16 && !intenseMusicPlayed)
         {
             intenseMusicPlayed = true;
             view.RPC("RPC_PlayIntenseMusic", RpcTarget.All);
