@@ -83,10 +83,12 @@ public class PlayerManager : MonoBehaviour
         {
             if(spectateCameras[spectateIndex] == null)
             {
-                spectateCameras.RemoveAt(spectateIndex);
-                if(spectateCameras.Count != 0)
+                spectateIndex += 1;
+                spectateIndex %= spectateCameras.Count;
+                if (spectateCameras[spectateIndex] != null)
                 {
-                    spectateIndex %= spectateCameras.Count;
+                    spectateCameras[spectateIndex].SetActive(true);
+                    spectateCameras[spectateIndex].GetComponentInParent<PlayerController>().SolveSpectateComponents();
                 }
             }
 
@@ -95,16 +97,6 @@ public class PlayerManager : MonoBehaviour
                 spectateCameras[spectateIndex].SetActive(false);
                 spectateIndex += 1;
                 spectateIndex %= spectateCameras.Count;
-
-                if (spectateCameras[spectateIndex] == null)
-                {
-                    spectateCameras.RemoveAt(spectateIndex);
-                    if (spectateCameras.Count != 0)
-                    {
-                        spectateIndex %= spectateCameras.Count;
-                    }
-                }
-
                 if (spectateCameras[spectateIndex] != null)
                 {
                     spectateCameras[spectateIndex].SetActive(true);

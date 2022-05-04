@@ -66,11 +66,11 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: a544edac570b62e46bc73502f896e588, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 6315b14855dd4ca4b80a2c4234cd8461, type: 2}
+      objectReference: {fileID: 2100000, guid: f4c331fa4f2915c49946869fba9ddfba, type: 2}
     - target: {fileID: -5648767689465423854, guid: a544edac570b62e46bc73502f896e588, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 6315b14855dd4ca4b80a2c4234cd8461, type: 2}
+      objectReference: {fileID: 2100000, guid: 3d40ba221a0dc83468723f83ea051126, type: 2}
     - target: {fileID: 919132149155446097, guid: a544edac570b62e46bc73502f896e588, type: 3}
       propertyPath: m_Name
       value: torch Variant

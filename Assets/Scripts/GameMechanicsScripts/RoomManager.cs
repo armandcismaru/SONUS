@@ -264,24 +264,21 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            supplies = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(suppliesX, 24, suppliesZ), Quaternion.identity);
+            supplies = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(-29.59f, 21f, 45.9f), Quaternion.identity);
             //supplies2 = PhotonNetwork.Instantiate("Supplies_Chicken", new Vector3(suppliesX - 4, 24, suppliesZ + 4), Quaternion.identity);
-            supplies3 = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(suppliesX + 6, 24, suppliesZ + 6), Quaternion.identity);
+            supplies3 = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(5.2f, 24f, -14.9f), Quaternion.identity);
 
             //shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(suppliesX - 4, 23, suppliesZ - 4), Quaternion.identity);
-            shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(-50, 23, -40), Quaternion.identity);
-           
+            shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(-60.0999985f, 23f, -34.2000008f), Quaternion.identity);
             //door = PhotonNetwork.Instantiate("Door", new Vector3(-36, 23, -70), Quaternion.identity);
 
-            //Defenders' Spot
-            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 8, 24, 30), Quaternion.identity);
-            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(- 10, 24, 10), Quaternion.identity);
-            healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-15, 26, -20), Quaternion.identity);
+            healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(-45.79f, 24.38f, -27.20f), Quaternion.identity);
+            healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(12.8999996f, 24.3877335f, 0.400000006f), Quaternion.identity);
+            healthBox2 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-49.2999992f, 24.8999996f, -19.2000008f), Quaternion.identity);
 
-            //Attackers' Spot
-            //healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-40, 24, -53), Quaternion.identity);
-            healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-44, 25, -48), Quaternion.identity);
-            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-42, 26, -55), Quaternion.identity);
+            healthBox3 = PhotonNetwork.Instantiate("HealthBox", new Vector3(-20.3700008f, 23.7f, -5.80000019f), Quaternion.identity);
+            healthBox4 = PhotonNetwork.Instantiate("HealthBox", new Vector3(23.8999996f, 24.8999996f, -22.1900005f), Quaternion.identity);
+            healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-44f, 21.2999992f, 46.2999992f), Quaternion.identity);
 
 
             bullet = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
@@ -295,7 +292,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, 
                                                    healthBox5, bullet, bullet2, bullet3, bullet4, bullet5, bullet6};
 
-            Timer.Instance.StartTimer(90f);
+            Timer.Instance.StartTimer(135f);
             view.RPC("RPC_StartRound", RpcTarget.All);
         }
     }

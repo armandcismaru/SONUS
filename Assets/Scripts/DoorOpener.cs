@@ -52,7 +52,7 @@ public class DoorOpener : MonoBehaviour
      private IEnumerator DisplayInstructions()
      {
          Instructions.MakeVisible(true);
-         Instructions.SetText("Press 'r' to interact with the door");
+         Instructions.SetText("Press 'R' to interact with the door");
          yield return new WaitForSeconds(2);
          Instructions.MakeVisible(false);
      }
