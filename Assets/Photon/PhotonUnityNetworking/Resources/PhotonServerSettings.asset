@@ -100,6 +100,8 @@ MonoBehaviour:
   - RPC_EmitSound
   - RPC_CreateStateOutro
   - RPC_playKnifeAnimation
+  - RPC_PlayIntenseMusic
+  - RPC_StopIntenseMusic
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -81,12 +81,17 @@ public class PlayerManager : MonoBehaviour
         //allows changing the spectate camera between the alive teammates
         if (isDead)
         {
-            if(spectateCameras[spectateIndex] == null)
+            if (spectateCameras.Count > spectateIndex)
             {
-                spectateCameras.RemoveAt(spectateIndex);
-                if(spectateCameras.Count != 0)
+                if (spectateCameras[spectateIndex] == null)
                 {
+                    spectateIndex += 1;
                     spectateIndex %= spectateCameras.Count;
+                    if (spectateCameras[spectateIndex] != null)
+                    {
+                        spectateCameras[spectateIndex].SetActive(true);
+                        spectateCameras[spectateIndex].GetComponentInParent<PlayerController>().SolveSpectateComponents();
+                    }
                 }
             }
 
@@ -95,16 +100,6 @@ public class PlayerManager : MonoBehaviour
                 spectateCameras[spectateIndex].SetActive(false);
                 spectateIndex += 1;
                 spectateIndex %= spectateCameras.Count;
-
-                if (spectateCameras[spectateIndex] == null)
-                {
-                    spectateCameras.RemoveAt(spectateIndex);
-                    if (spectateCameras.Count != 0)
-                    {
-                        spectateIndex %= spectateCameras.Count;
-                    }
-                }
-
                 if (spectateCameras[spectateIndex] != null)
                 {
                     spectateCameras[spectateIndex].SetActive(true);
