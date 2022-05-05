@@ -289,7 +289,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             bullet5 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, 20), Quaternion.identity);
             bullet6 = PhotonNetwork.Instantiate("Bullet", new Vector3(-10, 23, 17), Quaternion.identity);
 
-            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox4, 
+            collectables = new List<GameObject>() {supplies, supplies2, supplies3, shelter, healthBox, healthBox1, healthBox2, healthBox3, healthBox4, 
                                                    healthBox5, bullet, bullet2, bullet3, bullet4, bullet5, bullet6};
 
             Timer.Instance.StartTimer(135f);
@@ -351,7 +351,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Scavengers won!", "red");
 
-        if (Timer.Instance.GetTimeRemaining() < 85)
+        if (Timer.Instance.GetTimeRemaining() < 134)
         {
             view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 1);
         }
