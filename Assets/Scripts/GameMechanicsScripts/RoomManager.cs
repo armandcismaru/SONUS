@@ -8,6 +8,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
     [SerializeField] GameObject endGameSound;
+    [SerializeField] GameObject inteseMusicGameObject;
     public static RoomManager Instance;
     private int currentTeam = 1;
     private PhotonView view;
@@ -70,7 +71,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private float voiceChatVolume = 1f;
 
     public float mouseSpeed = 3f;
-
+    public bool intenseMusicPlayed = false;
     private void Awake()
     {
         if (Instance)
@@ -178,6 +179,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
+        if (!intenseMusicPlayed)
+        {
+            view.RPC("RPC_StopIntenseMusic", RpcTarget.All);
+        }
+        if (Timer.Instance.GetTimeRemaining() <= 16 && !intenseMusicPlayed)
+        {
+            intenseMusicPlayed = true;
+            view.RPC("RPC_PlayIntenseMusic", RpcTarget.All);
+        }
+
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
@@ -338,6 +349,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         canvasMessage.MakeVisible(false);
         Time.timeScale = 1f;
+        
     }
 
     public void DefendersWon()
@@ -426,12 +438,30 @@ public class RoomManager : MonoBehaviourPunCallbacks
     void RPC_PauseAndDisplay(string msg, string team)
     {
         endGameSound.GetComponent<AudioSource>().Play();
+        if (intenseMusicPlayed)
+        {
+            inteseMusicGameObject.GetComponent<AudioSource>().Stop();
+            intenseMusicPlayed = false;
+        }
         StartPause(msg, team);
+    }
+
+    [PunRPC]
+    void RPC_PlayIntenseMusic()
+    {
+        inteseMusicGameObject.GetComponent<AudioSource>().Play();
+    }
+
+    [PunRPC]
+    void RPC_StopIntenseMusic()
+    {
+        inteseMusicGameObject.GetComponent<AudioSource>().Stop();
     }
 
     [PunRPC]
     void RPC_StartRound()
     {
+        intenseMusicPlayed = false;
         int aux = bluePlayers;
         bluePlayers = redPlayers;
         redPlayers = aux;
