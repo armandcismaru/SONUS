@@ -263,6 +263,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 SelfHit();
             }
 
+            ManualDecoy();
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -311,6 +312,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [PunRPC]
     void RPC_DeployDecoy(Vector3 position, Quaternion rotation, int team) {
         Instantiate(decoy, position, rotation);
+    }
+
+    void ManualDecoy()
+    {
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            DeployDecoy();
+            
+        }
     }
 
     void UpdateInvisibilitySpell()
