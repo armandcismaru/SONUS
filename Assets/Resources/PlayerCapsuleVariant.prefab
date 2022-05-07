@@ -7602,14 +7602,14 @@ MonoBehaviour:
   sounds:
   - name: DirtWalk
     clip: {fileID: 8300000, guid: 2dab4501d0b474fbf8c698820d3f4339, type: 3}
-    volume: 0.57
+    volume: 0.76
     pitch: 0.96
     source: {fileID: 0}
     spatialBlend: 1
     dopplerLevel: 3.79
-    spread: 173
+    spread: 331
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 200
   - name: DirtRun
     clip: {fileID: 8300000, guid: 1fcbac685c1794d0ca0f18d13a2fc877, type: 3}
     volume: 0.656
@@ -7617,22 +7617,22 @@ MonoBehaviour:
     source: {fileID: 0}
     spatialBlend: 1
     dopplerLevel: 3.79
-    spread: 173
+    spread: 297
     minDistance: 1
-    maxDistance: 75
+    maxDistance: 200
   - name: Gunshot
     clip: {fileID: 8300000, guid: 035b4d1b5f95444188cf216e7e2abf99, type: 3}
-    volume: 0.301
+    volume: 0.45
     pitch: 0.96
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 3.31
-    spread: 179
+    dopplerLevel: 4.32
+    spread: 274
     minDistance: 1
-    maxDistance: 100
+    maxDistance: 200
   - name: OpenTorch
     clip: {fileID: 8300000, guid: 2c66872cda8064057b0f866cc739eb66, type: 3}
-    volume: 1
+    volume: 0.85
     pitch: 2
     source: {fileID: 0}
     spatialBlend: 1
@@ -7645,7 +7645,7 @@ MonoBehaviour:
     volume: 1
     pitch: 2
     source: {fileID: 0}
-    spatialBlend: 1
+    spatialBlend: 0.86
     dopplerLevel: 3.31
     spread: 179
     minDistance: 1
@@ -7685,9 +7685,9 @@ MonoBehaviour:
     volume: 0.413
     pitch: 1
     source: {fileID: 0}
-    spatialBlend: 1
-    dopplerLevel: 1.41
-    spread: 37
+    spatialBlend: 0.77
+    dopplerLevel: 2.26
+    spread: 94
     minDistance: 1
     maxDistance: 40
   - name: DirtJump
@@ -7696,8 +7696,8 @@ MonoBehaviour:
     pitch: 0.52
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 2.08
-    spread: 139
+    dopplerLevel: 2.38
+    spread: 332
     minDistance: 1
     maxDistance: 50
   - name: PickUpSupply
@@ -7725,11 +7725,11 @@ MonoBehaviour:
     volume: 0.67
     pitch: 1.24
     source: {fileID: 0}
-    spatialBlend: 0.83
-    dopplerLevel: 2.92
-    spread: 93
+    spatialBlend: 1
+    dopplerLevel: 2.38
+    spread: 180
     minDistance: 1
-    maxDistance: 25
+    maxDistance: 150
   - name: InjuredOne
     clip: {fileID: 8300000, guid: 86d7c8da97a634f01957289735bc1a2b, type: 3}
     volume: 0.504
@@ -7739,7 +7739,7 @@ MonoBehaviour:
     dopplerLevel: 3.99
     spread: 29
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 20
   - name: InjuredTwo
     clip: {fileID: 8300000, guid: 3e783e89d0d5d451aa4a674e37f171ed, type: 3}
     volume: 0.504
@@ -7749,7 +7749,7 @@ MonoBehaviour:
     dopplerLevel: 3.99
     spread: 29
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 20
   - name: InjuredThree
     clip: {fileID: 8300000, guid: a4a37741282464f6090b3fd84a0311ad, type: 3}
     volume: 0.504
@@ -7759,7 +7759,7 @@ MonoBehaviour:
     dopplerLevel: 3.99
     spread: 29
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 20
   - name: InjuredFour
     clip: {fileID: 8300000, guid: 101e2b5010fc44f9e809dcf4e1586c16, type: 3}
     volume: 0.504
@@ -7769,7 +7769,7 @@ MonoBehaviour:
     dopplerLevel: 3.99
     spread: 29
     minDistance: 1
-    maxDistance: 50
+    maxDistance: 20
   - name: DeathOne
     clip: {fileID: 8300000, guid: 7f65f5c135d3f4c4c99a1b6333fa0838, type: 3}
     volume: 0.504
@@ -7812,7 +7812,7 @@ MonoBehaviour:
     maxDistance: 50
   - name: Emitter
     clip: {fileID: 8300000, guid: d9bb377f8463b4776b0170c5f14c2a2f, type: 3}
-    volume: 1
+    volume: 0.76
     pitch: 1.21
     source: {fileID: 0}
     spatialBlend: 0.815
@@ -7827,7 +7827,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9066136940152350885}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
   m_Name: 
