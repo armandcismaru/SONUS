@@ -120,7 +120,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(3f); ///TODO 30f
+            Timer.Instance.StartTimer(30f); ///TODO 30f
         }
         if (scene.buildIndex == 2)
         {
