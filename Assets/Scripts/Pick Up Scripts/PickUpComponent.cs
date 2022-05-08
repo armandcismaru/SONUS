@@ -50,6 +50,10 @@ public class PickUpComponent : MonoBehaviour
         }
     }
 
+    /*Method used by all "picking up collectables" classes 
+     * in which mechanic for collecting the respective item is being described
+     * (incrementing the resource, destroying the item in the scene, notifing the user via the HUD)
+     */ 
     public virtual void pickupTrigger(PickUpScript pickup)
     {
 

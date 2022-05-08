@@ -4,6 +4,9 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 
+/*Base class for colleting bullets
+ * Attached to the player
+ */
 public class BulletPickupComponent : PickUpComponent
 {
     PlayerController playerController;

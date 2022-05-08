@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
+/* Script attached to the player
+ * Governs the logic for collecting health packs 
+ * Communicates with player controller for knowing when the player gets hurt
+ * Calls 'die' from player manager when life is zero
+ */
 public class HealthPickupComponent : PickUpComponent, IDamageObserver
 {
     [SerializeField] private float max_health;
@@ -22,12 +27,17 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
 
     private void Start()
     {
-        //var playerController = GetComponent<PlayerController>();
+        /* Adding this class as an IDamageObserver to player controller
+         * The health component is asynchroniously updated when the player is shot or cut
+         * This is needed as the health resource is manipulated from two perspectives
+         * The one taking damage from guns and the one collecting health packs (here, in this class) 
+         */ 
         playerController.addObserver<IDamageObserver>(this);
         current_health = start_health;
 
         if (view.IsMine)
         {
+            // Player Manager is needed if the player runs out of life and dies
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
         }
     }
@@ -88,6 +98,9 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         }
     }
 
+    /*Governs the mechanic for picking up health 
+     * and destroying the health pack after it has been collected
+     */
     public override void pickupTrigger(PickUpScript pickup)
     {
         if (pickup != null)

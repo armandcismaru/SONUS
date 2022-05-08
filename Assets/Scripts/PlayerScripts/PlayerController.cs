@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     [SerializeField]
     private GameObject bulletsViewPrefab;
 
+    //Dictionary of observers
     private Dictionary<string, List<IObserver>> observers = new Dictionary<string, List<IObserver>>();
 
     private UIScriptPlayer uiComponent;
@@ -128,6 +129,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     }
     void Start()
     {
+        /* Attaching UI elements (Prefabs) at run time */
         bulletsArray = new GameObject[max_bullets];
 
         //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
