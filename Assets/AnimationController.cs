@@ -10,7 +10,7 @@ public class AnimationController : StateMachineBehaviour
         //Debug.Log("am ajuns aici");
         animator.SetLayerWeight(1, 1);  
         animator.gameObject.GetComponentInParent<PlayerController>().setKnife(true);
-        Debug.Log(animator.gameObject.GetComponentInParent<PlayerController>().team);
+        //Debug.Log(animator.gameObject.GetComponentInParent<PlayerController>().team);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
