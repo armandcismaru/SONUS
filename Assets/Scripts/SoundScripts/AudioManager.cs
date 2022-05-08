@@ -25,6 +25,8 @@ public class AudioManager : MonoBehaviour
             s.source.maxDistance = s.maxDistance;
             s.source.dopplerLevel = s.dopplerLevel;
             s.source.spread = s.spread;
+
+            s.source.rolloffMode = s.rollofMode;
         }
     }
 

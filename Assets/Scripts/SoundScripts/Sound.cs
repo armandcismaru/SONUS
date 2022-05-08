@@ -30,4 +30,5 @@ public class Sound
     public float minDistance;
     public float maxDistance;
 
+    public AudioRolloffMode rollofMode = AudioRolloffMode.Logarithmic;
 }
