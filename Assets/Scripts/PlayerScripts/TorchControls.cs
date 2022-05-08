@@ -66,10 +66,10 @@ public class TorchControls : MonoBehaviour
     void Update()
     {
         //TODO
-        if (Input.GetKeyDown(KeyCode.Q))
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             TriggerTorch();
-        }
+        }*/
 
         //Updates torch's "battery"
         if (LifeRemaining == 0)
