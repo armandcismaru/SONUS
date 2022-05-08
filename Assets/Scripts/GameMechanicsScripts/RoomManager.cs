@@ -276,12 +276,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             supplies = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(-29.59f, 21f, 45.9f), Quaternion.identity);
-            //supplies2 = PhotonNetwork.Instantiate("Supplies_Chicken", new Vector3(suppliesX - 4, 24, suppliesZ + 4), Quaternion.identity);
             supplies3 = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(5.2f, 24f, -14.9f), Quaternion.identity);
 
-            //shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(suppliesX - 4, 23, suppliesZ - 4), Quaternion.identity);
             shelter = PhotonNetwork.Instantiate("Shelter", new Vector3(-60.0999985f, 23f, -34.2000008f), Quaternion.identity);
-            //door = PhotonNetwork.Instantiate("Door", new Vector3(-36, 23, -70), Quaternion.identity);
 
             healthBox = PhotonNetwork.Instantiate("HealthBox", new Vector3(-45.79f, 24.38f, -27.20f), Quaternion.identity);
             healthBox1 = PhotonNetwork.Instantiate("HealthBox", new Vector3(12.8999996f, 24.3877335f, 0.400000006f), Quaternion.identity);
@@ -292,9 +289,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
             healthBox5 =  PhotonNetwork.Instantiate("HealthBox", new Vector3(-44f, 21.2999992f, 46.2999992f), Quaternion.identity);
 
 
-            bullet = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
+            bullet = PhotonNetwork.Instantiate("Bullet", new Vector3(-50, 23, -70), Quaternion.identity);
             bullet2 = PhotonNetwork.Instantiate("Bullet", new Vector3(-45, 23, -80), Quaternion.identity);
-            bullet3 = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 23, -70), Quaternion.identity);
+            bullet3 = PhotonNetwork.Instantiate("Bullet", new Vector3(-40, 24, -70), Quaternion.identity);
 
             bullet4 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, -10), Quaternion.identity);
             bullet5 = PhotonNetwork.Instantiate("Bullet", new Vector3(-8, 23, 20), Quaternion.identity);

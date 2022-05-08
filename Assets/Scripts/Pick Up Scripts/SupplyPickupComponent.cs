@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/*Created for collecting supplies and instantiating a food supply when the player is killed
+ * Only attackers can collect supplies 
+ * Only one supply can be picked at a time
+ * After taking it to shelter, an attacker can take supplies again
+ * This script is attached to the player
+ */
 public class SupplyPickupComponent : PickUpComponent, IDieObserver
 {
     public float current_food = 0;
@@ -27,12 +33,21 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
 
     private void Start()
     {
+        /* Take player controller's reference 
+         * and add this class as an IDieObserver observer to it 
+         * This is because we need to know when the player runs out of 
+         * life resources to instantiate a food item in the scene if the supply
+         * hasn't been delievered to the shelter
+         */
         var playerController = GetComponent<PlayerController>();
         playerController.addObserver<IDieObserver>(this);
 
         supplyCharge = prefabType.GetComponent<PickUpScript>().amount;
     }
 
+    /* Sending back the event that a food supply
+     * has been instantiated in the scene
+     */
     public void Notify()
     {
         if (view.IsMine)
@@ -56,6 +71,10 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         }
     }
 
+    /* Creating a food supply in the scene and transmitting it accross the browser
+     * The Room Manager is being used
+     * In the Room Manager all "interactable" items are added to a list and destroyed at the end of each round
+     */
     public void CreateFoodBox(int amount)
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -77,6 +96,9 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         }
     }
 
+    /* Used for attaching the required UI element on the HUD
+     * to notify the user when a supply is picked
+     */
     public void EditSupplyGUI (string msg, byte alpha)
     {
         foreach (GameObject uiElement in instancesUIElements)
@@ -130,6 +152,9 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
             updateUI(); 
     }
     
+    /*Governs the mechanic for picking up food 
+     * and destroying the pig after it has been collected
+     */
     public override void pickupTrigger(PickUpScript pickup)
     {
         if (!view.IsMine)

@@ -4,6 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* The door mutex is attached to the door pivot
+ * On the door pivot are the animations too
+ * Once a player has interacted with the door the mutex is aquired
+ * and is not released until the end of the animation
+ */
 public class DoorMutex : MonoBehaviour
 {
     [SerializeField] public bool isOpen = false;
