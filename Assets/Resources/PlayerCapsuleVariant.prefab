@@ -7602,25 +7602,25 @@ MonoBehaviour:
   sounds:
   - name: DirtWalk
     clip: {fileID: 8300000, guid: 2dab4501d0b474fbf8c698820d3f4339, type: 3}
-    volume: 0.86
-    pitch: 1.3
+    volume: 0.7
+    pitch: 1.2
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 3.2
+    dopplerLevel: 2.4
     spread: 360
     minDistance: 1
-    maxDistance: 100
+    maxDistance: 60
     rollofMode: 2
   - name: DirtRun
     clip: {fileID: 8300000, guid: 1fcbac685c1794d0ca0f18d13a2fc877, type: 3}
-    volume: 0.81
-    pitch: 1.3
+    volume: 0.7
+    pitch: 1
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 3.2
+    dopplerLevel: 2.4
     spread: 360
     minDistance: 1
-    maxDistance: 100
+    maxDistance: 50
     rollofMode: 2
   - name: Gunshot
     clip: {fileID: 8300000, guid: 035b4d1b5f95444188cf216e7e2abf99, type: 3}
@@ -7628,10 +7628,10 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
     spatialBlend: 1
-    dopplerLevel: 3.22
-    spread: 274
+    dopplerLevel: 2.4
+    spread: 280
     minDistance: 1
-    maxDistance: 300
+    maxDistance: 100
     rollofMode: 2
   - name: OpenTorch
     clip: {fileID: 8300000, guid: 2c66872cda8064057b0f866cc739eb66, type: 3}
