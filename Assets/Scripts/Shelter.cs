@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
+/* Class for making the round finish if food supplies are taken 
+ * successully to the shelter
+ */
 public class Shelter : MonoBehaviour, IRoundFinished
 {
     [SerializeField] private int neededAmountofBoxes;
@@ -20,6 +23,10 @@ public class Shelter : MonoBehaviour, IRoundFinished
     // Start is called before the first frame update
     void Start()
     {
+        /* Add This class as an IRoundFinished observer 
+         * to RoomManager to bridge the logic between taking the supplies to shelter and finishing the round
+         * with attackers winning it
+         */
         RoomManager.Instance.addObserver<IRoundFinished>(this);
     }
 
@@ -34,6 +41,9 @@ public class Shelter : MonoBehaviour, IRoundFinished
             currentAmountofBoxes = 0;
     }
 
+    /* Replicate logic for delievering the supplies and making the round finish
+     * using RPC calls
+     */
     public void RoundFinishedAttackersWinningByTakingSuppliesToShelter()
     {
 
@@ -64,6 +74,11 @@ public class Shelter : MonoBehaviour, IRoundFinished
         currentAmountofBoxes += value;
     }
 
+    /* Delievering the food items by colliding with the shelter
+     * Call "AttackersWinning" if the items delievered coincide with the 
+     * needed amount of boxes
+     * All logic - replicated accross the browser
+     */
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject != null 

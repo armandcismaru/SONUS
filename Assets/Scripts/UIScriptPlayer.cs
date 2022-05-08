@@ -25,15 +25,15 @@ public class UIScriptPlayer : MonoBehaviour
     void Update()
     {
         
-    } 
+    }
 
-    //Choice 2: Each gameplay component creates its own UI elements and has its own logic
-    // ex. Health Component - creates UI object, knows where it needs to be on the screen
-    //  (after creation -> the object is passed to a UI manager/ this script, gets attached)
-    // => rest of the logic is controlled in the Health Component - pickup health, take damage, know how much health you have etc.
-    //absolutely the same principle for supplies.
-    // AttachUI() passes as parameters are the UI element (a prefab - which has already been initialized-),
-    // then the location of where the prefab is placed on the screen 
+    /*Each gameplay component creates its own UI elements and has its own logic
+      ex. Health Component - creates UI object, knows where it needs to be on the screen
+      (after creation -> the object is passed to a UI manager/ this script, gets attached)
+      => rest of the logic is controlled in the Health Component - pickup health, take damage, know how much health you have etc.
+      absolutely the same principle for supplies.
+      AttachUI() passes as parameters are the UI element (a prefab - which has already been initialized-),
+      then the location of where the prefab is placed on the screen */
     public GameObject AttachUI(GameObject uiObject, GameObject parent, bool isParentCanvas)
     {
         Transform parentTransform;
