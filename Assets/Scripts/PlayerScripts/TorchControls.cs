@@ -19,26 +19,32 @@ public class TorchControls : MonoBehaviour
     }
     void Start()
     {
+        //Make sure game starts with torch off and torch intensity countdown at 0
         TorchOn = false;
         lastClosed = 0;
     }
 
+    //what to do when torch is powered on
     public void PowerTorch()
     {
         if (TorchOn == false)
         {
+            //When torch is powered on, torch turns on and the life remaining is set to maximum
             TorchOn = true;
             LifeRemaining = MAXTORCHLIFE;
         }
     }
 
+    //turn torch off
     public void DisableTorch()
     {
         TorchOn = false;
     }
 
+    //main on/off trigger for torch
     public void TriggerTorch()
     {
+        //rejuvinates torchlight without an 'on' sound if torch already on
         if (TorchOn == true && LifeRemaining > MAXTORCHLIFE - 0.5)
         {
             return;
@@ -48,16 +54,18 @@ public class TorchControls : MonoBehaviour
         {
             return;
         }
-
+        //turns torch on with an 'on' sound if not already on
         if (TorchOn == false)
         {
             GetComponentInParent<PlayerController>().OpenTorchSound();
             lastClosed = Time.time;
         }
+        //turns torch off with an 'off' sound
         else
         {
             GetComponentInParent<PlayerController>().CloseTorchSound();
         }
+        //reverse state of torch and maximise torch life when turned on/off
         TorchOn = !TorchOn;
         LifeRemaining = MAXTORCHLIFE;
         view.RPC("RPC_StartTorch", RpcTarget.Others);
@@ -65,19 +73,21 @@ public class TorchControls : MonoBehaviour
 
     void Update()
     {
-        //TODO
+        //Extra method for triggering torch for testing purposes
         if (Input.GetKeyDown(KeyCode.Q))
         {
             TriggerTorch();
         }
 
-        //Updates torch's "battery"
+        //Updates torch's "battery" every second, so torchlight slowly fades
+        //turns torch off if there's no 'life' left
         if (LifeRemaining == 0)
         {
             TorchOn = false;
         }
         if (TorchOn)
         {
+            //decreases life remaining if possible by a set amount
             if (LifeRemaining > 0)
             {
                 LifeRemaining -= Time.deltaTime;
@@ -86,14 +96,17 @@ public class TorchControls : MonoBehaviour
             {
                 LifeRemaining = 0;
             }
+            //calculates overall torchlight intensity based on percentage of torchlife left
             this.GetComponent<Light>().intensity = MAXLIGHTINTENSITY * (LifeRemaining / MAXTORCHLIFE);
         }
         else
         {
+            //turns torch off
             this.GetComponent<Light>().intensity = 0;
         }
     }
 
+    //sends torch information over web so other players can see it
     [PunRPC]
     public void RPC_StartTorch()
     {
@@ -101,6 +114,7 @@ public class TorchControls : MonoBehaviour
         LifeRemaining = MAXTORCHLIFE;
     }
 
+    //draw gizmos for testing purposes
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;

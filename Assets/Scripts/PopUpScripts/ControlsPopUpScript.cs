@@ -12,6 +12,7 @@ public class ControlsPopUpScript : MonoBehaviour
 
     void DetectMovement()
     {
+        //If WASD hasn't been pressed (so player hasn't moved), pop up shown. As soon as player moves, it disappears
         if (Input.GetKey(KeyCode.W) | Input.GetKey(KeyCode.A) | Input.GetKey(KeyCode.S) | Input.GetKey(KeyCode.D))
         {
             gameObject.SetActive(false);
