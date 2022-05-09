@@ -602,9 +602,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         team = tm;
         if (team == 0)
         {
+            //Make sure correct HUD and text colour is used for team
             GetComponent<Renderer>().material = BlueMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.blue;
             playerIcon.layer = 11;
+            //Get correct player model to show depending on team
             AttackerModel.SetActive(false);
             DefenderModel.SetActive(true);
             if (view.IsMine)
@@ -614,9 +616,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         else
         {
+            //Make sure correct HUD and text colour is used for team
             GetComponent<Renderer>().material = RedMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.red;
             playerIcon.layer = 10;
+            //Get correct player model to show depending on team
             DefenderModel.SetActive(false);
             AttackerModel.SetActive(true);
             animator = animatorAtt;
