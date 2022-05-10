@@ -281,12 +281,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             blueScore.text = RoomManager.Instance.scoreBlue.ToString();
         }
     }
-
+    // Logic for updating the HUD of the spell countdown
     public void UpdateTimerSpell(string newTimerSpell)
     {
          timerSpell.text = newTimerSpell;
     }
 
+    // Logic for "Invisibility" Spell
+    // Not curently in the game
     public void StartInvisibilitySpell()
     {
         time = Time.time;
@@ -297,24 +299,21 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Debug.Log("da");
     }
 
+    // Logic for "Decoy" spell
+    // It instatiate a decoy instance for all the players
     public void DeployDecoy()
     {
-        // Instantiate(decoy, transform.position, transform.rotation);
-        // Vector3 decoy_position = GetComponentInChildren<Camera>().gameObject.transform.position;
-        // Quaternion decoy_rotation = GetComponentInChildren<Camera>().gameObject.transform.rotation;
-        // view.RPC("RPC_DeployDecoy", RpcTarget.All, camera_position + transform.forward, camera_rotation, playerManager.team);
-        // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
-
-        decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
-        // decoy sa ma iei
-        decoy.GetComponent<Decoy>().direction = transform.forward;
+    decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
+    decoy.GetComponent<Decoy>().direction = transform.forward;
     }
-
+    // Netcode logic for "Decoy" spell
     [PunRPC]
     void RPC_DeployDecoy(Vector3 position, Quaternion rotation, int team) {
         Instantiate(decoy, position, rotation);
     }
 
+    // Logic for updating the "Invisibility" spell
+    // Not curently in the game
     void UpdateInvisibilitySpell()
     {
         remainingTime = time + 5f - Time.time;
@@ -327,7 +326,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             view.RPC("RPC_StopInvisible", RpcTarget.All, index);
         }
     }
-
+    // Logic for updating the "Fast Speed" spell
+    // Not curently in the game
     void UpdateFastSpeed()
     {
         remainingTimeSpeed = timeSpeed + 5f - Time.time;
@@ -340,6 +340,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    // Logic for "Fast Speed" spell
+    // Not curently in the game
     public void StartFastSpeed()
     {
         if (!fastSpeed)
@@ -351,7 +353,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             walkSpeed *= 1.5f;
         }
     }
-
+    // Logic for "Listen" Spell
+    // It looks for the closest player and it makes him trigger a sound
     public void EmittingSpell()
     {
 
@@ -374,13 +377,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         int closestIndex = closestPlayer.GetComponent<PlayerController>().index;
         closestPlayer.GetComponent<PlayerController>().EmitSound();
     }
-
+    // Sound effect triggered when a player uses "listen" spell
     public void EmitSound()
     {
         GetComponent<AudioManager>().Play(EMITTER_SOUND);
         BroadcastSound(EMITTER_SOUND);
     }
 
+    // Sound effect for triggering a spell
     public void SpellTransformSound()
     {
         GetComponent<AudioManager>().Play(SPELL_TRANSFORM_SOUND);
@@ -419,6 +423,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         return value;
     }
 
+    // Logic for the Pause Modal
     void PauseMenu()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -429,11 +434,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             else
             {
                 crosshair.SetActive(true);
-            }   
+            }
             pauseObject.GetComponent<Pause>().TogglePause();
         }
     }
-
+    // Logic for Moving
     void Move()
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
@@ -521,6 +526,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         bloodSplatter.GetComponent<Image>().color = color;
     }
 
+    // logic for Jumping
     void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
@@ -537,6 +543,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         bullets += amount;
     }
 
+    // logic for shooting other players
     void Shoot()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && LastShootTime + ShootDelay < Time.time)
@@ -568,6 +575,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         knifeModel.SetActive(state);
     }
 
+    // logic for using Melee/Knife
     void UseKnife()
     {
         if (Input.GetKeyDown(KeyCode.F) && meleeCd <= 0)
@@ -632,37 +640,40 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         }
     }
-
+    // Sonund effect when taking damage
     public void TakeDamage(int damage)
     {
         //GotHurt();
         view.RPC("RPC_TakeDamage", RpcTarget.All, damage);
     }
-
+    // Sonund effect when picking up supplies
     public void PickUpSupplySound()
     {
         GetComponent<AudioManager>().Play(PICKUP_SUPPLY_SOUND);
         BroadcastSound(PICKUP_SUPPLY_SOUND);
     }
 
+    // Sound effect when using the knife and hurting a player
     public void KnifeKillingSound()
     {
         GetComponent<AudioManager>().Play(KNIFE_KILLING_SOUND);
         BroadcastSound(KNIFE_KILLING_SOUND);
     }
 
+    // Sound effect when using the knife
     public void KnifeSound()
     {
         GetComponent<AudioManager>().Play(KNIFE_SOUND);
         BroadcastSound(KNIFE_SOUND);
     }
-
+    // Sound effect when opening the torch
     public void OpenTorchSound()
     {
         GetComponent<AudioManager>().Play(OPEN_TORCH_SOUND);
         BroadcastSound(OPEN_TORCH_SOUND);
     }
 
+    // Sonund effect when closing the torch
     public void CloseTorchSound()
     {
         GetComponent<AudioManager>().Play(CLOSE_TORCH_SOUND);
@@ -709,7 +720,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         color.a = 0;
         bloodSplatter.GetComponent<Image>().color = color;
     }
-
+    // Netcode logic for "Invisibility" spell - start the spell
+    // Not currently in the game
     [PunRPC]
     void RPC_MakeInvisible(int ind)
     {
@@ -719,7 +731,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             // gun.GetComponent<Renderer>().enabled = false;
         }
     }
-    
+
+    // Netcode logic for "Invisibility" spell - stop the spell
+    // Not currently in the game
     [PunRPC]
     void RPC_StopInvisible(int ind)
     {
@@ -761,7 +775,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     {
         StopRemote(sound);
     }
-
+    // Logic for "Reload" spell
+    // Not currently in the game
     public void Reload()
     {
         if (bullets < 5)

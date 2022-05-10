@@ -5,6 +5,7 @@ public class Knife : MonoBehaviour
     private int damage = 100;
     private float range = 1.5f;
     [SerializeField] Camera fpsCam;
+    // Logic for using the knife
     public void UseKnife()
     {
         RaycastHit hit;

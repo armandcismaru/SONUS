@@ -20,7 +20,6 @@ public class Decoy : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void FixedUpdate()
     {
-        // transform.position = new Vector3(0,0,1) * Time.deltaTime;
         remainingTime = time + 5f - Time.time;
 
         if(remainingTime <= 0)
@@ -30,16 +29,17 @@ public class Decoy : MonoBehaviourPunCallbacks
         else
         {
             MoveDecoy();
-            // GetComponent<AudioManager>().Play(FOOTSTEP_SOUND);
         }
     }
 
+    // The decoy moves itself
     void MoveDecoy()
     {
         float step = Time.deltaTime;
-        // transform.position = Vector3.MoveTowards(transform.position, target.position, step);
         transform.position = transform.position + direction * step;
     }
+
+    // After 5 seconds the decoy auto-destroy itself
     public void destroyThisObject()
     {
         if (PhotonNetwork.IsMasterClient && GetComponent<PhotonView>().IsMine && !isDestroyed)
@@ -50,10 +50,10 @@ public class Decoy : MonoBehaviourPunCallbacks
         else
         {
             GetComponent<PhotonView>().RPC("RPC_DestroyObject", RpcTarget.All);
-            //Destroy(gameObject);
         }
     }
 
+    // Netcode logic for destroying the decoy 
     [PunRPC]
     void RPC_DestroyObject()
     {
