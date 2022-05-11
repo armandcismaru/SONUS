@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using System.Collections.Generic;
 
+//the player manager class is responsible for spawning and destroying the playable model for each player and ensure player to player communication
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
@@ -33,6 +34,7 @@ public class PlayerManager : MonoBehaviour
         view = GetComponent<PhotonView>();
     }
 
+    //at the start of the game each player gets a unique id from 0 to 5 and a team
     void Start()
     {
         id = new object[] { view.ViewID, -1 };
@@ -57,6 +59,7 @@ public class PlayerManager : MonoBehaviour
         return new Vector3(Random.Range(minRedX, maxRedX), 30, Random.Range(minRedZ, maxRedZ));
     }
 
+    //function to spawn the player at a random position within the specified limits
     private void SpawnPlayer()
     {
         Vector3 randomPosition = getRandomPosition();
@@ -152,6 +155,8 @@ public class PlayerManager : MonoBehaviour
         {
             view.RPC("RPC_PlayerDied", RpcTarget.MasterClient, team, PhotonNetwork.NickName);
         }
+
+        //adds the camera of the remaining alive teammates to a list so that it can be used for spectating
         if (view.IsMine)
         {
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
@@ -173,10 +178,10 @@ public class PlayerManager : MonoBehaviour
 
     }
 
+    //mutes the dead players
     [PunRPC]
     public void RPC_MuteDeadPlayer(int index)
     {
-        Debug.Log("index index index index");
 #if UNITY_WEBGL && !UNITY_EDITOR
         if(index != -1)
         {
@@ -212,6 +217,7 @@ public class PlayerManager : MonoBehaviour
         return view;
     }
 
+    //get and sent team are RPCs that are used to get the team and index to each individual playermanager
     [PunRPC]
     void RPC_GetTeam()
     {

@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace UnityEngine
 {
+//bridge bethween the javascript voice-chat code and the C# code for the game
     public class VoiceChat
     {
         [DllImport("__Internal")]
