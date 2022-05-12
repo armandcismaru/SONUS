@@ -25,10 +25,6 @@ function spawnWorker(workerURL, onReady) {
     recognizer.postMessage({});
 };
 
-// To display the hypothesis sent by the recognizer
-// function updateHyp(hyp) {
-//   if (outputContainer) outputContainer.innerHTML = hyp;
-// };
 
 var newWords = 0;
 function updateHypSeg(hypseg) {
@@ -40,11 +36,6 @@ function updateHypSeg(hypseg) {
   }
 }
 
-// This updates the UI when the app might get ready
-// Only when both recorder and recognizer are ready do we enable the buttons
-// function updateUI() {
-//   if (isRecorderReady && isRecognizerReady) startBtn.disabled = stopBtn.disabled = false;
-// };
 
 // This is just a logging window where we display the status
 function updateStatus(newStatus) {
@@ -77,7 +68,6 @@ function startUserMedia(stream) {
 // This starts recording. We first need to get the id of the grammar to use
 //var startRecording = function() {
 function startRecording() {
-  // var id = document.getElementById('grammars').value;
   if (recorder && recorder.start(0)) displayRecording(true);
 };
 
@@ -91,9 +81,7 @@ function stopRecording() {
 // Called once the recognizer is ready
 // We then add the grammars to the input select tag and update the UI
 var recognizerReady = function() {
-    //  updateGrammars();
      isRecognizerReady = true;
-    //  updateUI();
      updateStatus("Recognizer ready");
 };
 
@@ -142,7 +130,6 @@ var initRecognizer = function() {
 // When the page is loaded, we spawn a new recognizer worker and call getUserMedia to
 // request access to the microphone
 window.onload = function() {
-  // outputContainer = document.getElementById("output");
   updateStatus("Initializing web audio and speech recognizer, waiting for approval to access the microphone");
   callbackManager = new CallbackManager();
   spawnWorker("js/recognizer.js", function(worker) {
@@ -157,9 +144,6 @@ window.onload = function() {
           }
           // This is a case when the recognizer has a new hypothesis
           if (e.data.hasOwnProperty('hyp')) {
-            // var newHyp = e.data.hyp;
-            // if (e.data.hasOwnProperty('final') &&  e.data.final) newHyp = "Final: " + newHyp;
-            // updateHyp(newHyp, newHypSeg);
             if (e.data.hasOwnProperty('hypseg')) {
               var newHypSeg = e.data.hypseg;
               updateHypSeg(newHypSeg);
@@ -193,9 +177,6 @@ window.onload = function() {
                               });
   else updateStatus("No web audio support in this browser");
 
-// Wiring JavaScript to the UI
-// var startBtn = document.getElementById('startBtn');
-// var stopBtn = document.getElementById('stopBtn');
 
 var recordingOn = false;
 document.addEventListener("keydown", function(event) {
@@ -214,10 +195,6 @@ document.addEventListener("keyup", function(event) {
   }
 });
 
-// startBtn.disabled = true;
-// stopBtn.disabled = true;
-//startBtn.onclick = startRecording;
-//stopBtn.onclick = stopRecording;
 };
 
  // This is the list of words that need to be added to the recognizer

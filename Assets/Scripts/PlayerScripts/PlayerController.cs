@@ -217,8 +217,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         bullets = 5;
-
-        // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
     public void SolveSpectateComponents()
     {
@@ -424,7 +422,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
     // Logic for the Pause Modal
     void PauseMenu()
-    {
+    {   //if TAB is pressed: hide crosshair and TogglePause
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (Pause.paused == false){
@@ -470,12 +468,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             BroadcastSoundS(FOOTSTEP_SOUND);
         }
 
-        //shift walking
+        //shift walking - stealth walking
         if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
             isShiftPressed = true;
             animator.SetBool(runHash, false);
             animator.SetBool(walkHash, true);
-            walkSpeed = slowSpeed;
+            walkSpeed = slowSpeed; 
         }
 
         if (Input.GetKeyUp(KeyCode.LeftShift) && !fastSpeed) {
@@ -640,7 +638,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         }
     }
-    // Sonund effect when taking damage
+    // Sound effect when taking damage
     public void TakeDamage(int damage)
     {
         //GotHurt();
@@ -776,7 +774,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         StopRemote(sound);
     }
     // Logic for "Reload" spell
-    // Not currently in the game
     public void Reload()
     {
         if (bullets < 5)
