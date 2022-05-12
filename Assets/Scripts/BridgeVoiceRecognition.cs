@@ -9,8 +9,7 @@ public class BridgeVoiceRecognition : MonoBehaviour
     PlayerController playerController;
     public float timeSpellTimer;
     public float remainingSpellTimer;
-    public bool isSpellAvailable;
-    // [SerializeField] GameObject playerController;
+    public bool isSpellAvailable; // countdown for spell
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +25,8 @@ public class BridgeVoiceRecognition : MonoBehaviour
             UpdateSpellTimer();
         }
     }
+
+    // Update mechanism + HUD of spell countdown 
     void UpdateSpellTimer()
     {
         remainingSpellTimer = timeSpellTimer + 5f - Time.time;
@@ -38,17 +39,16 @@ public class BridgeVoiceRecognition : MonoBehaviour
         }
     }
 
+    // Countdown for spell activation
     void StartTimer()
     {
         isSpellAvailable = false;
         timeSpellTimer = Time.time;
     }
 
+    // Function called from javascript when a word is recognised
+    // hypseg represent the recognised word
     void TriggerSpell(string hypseg) {
-        // string keyPressed = hypsegKeyPressed.Substring(hypsegKeyPressed.Length - 1);
-        // string hypseg = hypsegKeyPressed.Remove(hypsegKeyPressed.Length - 1);
-        // Debug.Log("From Unity hypseg:" + hypseg);
-        // Debug.Log("From Unity keypressed:" + keyPressed);
         if (hypseg == "torch")
         {
             torchControls.TriggerTorch();
@@ -57,13 +57,6 @@ public class BridgeVoiceRecognition : MonoBehaviour
         if (isSpellAvailable){
             int team = playerController.GetComponent<PlayerController>().team;
             if (team == 0) {
-                // if (hypseg == "speed")
-                // {
-                //     playerController.SpellTransformSound();
-                //     playerController.StartFastSpeed();
-                //     StartTimer();
-                // }
-                // else
                 if (hypseg == "listen")
                 {
                     playerController.SpellTransformSound();
@@ -73,13 +66,6 @@ public class BridgeVoiceRecognition : MonoBehaviour
             }
             else
             {
-                // if (hypseg == "hide")
-                // {
-                //     playerController.SpellTransformSound();
-                //     playerController.StartInvisibilitySpell();
-                //     StartTimer();
-                // }
-                // else
                 if (hypseg == "decoy")
                 {
                     playerController.SpellTransformSound();

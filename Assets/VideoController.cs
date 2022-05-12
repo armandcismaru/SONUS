@@ -13,7 +13,7 @@ public class VideoController : MonoBehaviour
     void Update()
     { 
         currentTime = gameObject.GetComponent<VideoPlayer> ().time;
-        if (currentTime >= time || Input.GetKeyDown(KeyCode.Escape)) {
+        if (currentTime >= time || Input.GetKeyDown(KeyCode.Escape)) { 
             SceneManager.LoadScene(1);
         }
     }

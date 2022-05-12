@@ -174,7 +174,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         return mouseSpeed;
     }
-
+    
+    //save mouse speed value for each player
     public void setMouseSpeed(float volume)
     {
         mouseSpeed = volume;
