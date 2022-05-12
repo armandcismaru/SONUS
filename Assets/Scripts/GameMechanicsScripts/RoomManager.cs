@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
+//the room manager implements the singleton pattern, it is responsible for handling game logic and syncing the local scenes of each player
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     //bool ok = true;
@@ -74,6 +75,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public bool intenseMusicPlayed = false;
     private void Awake()
     {
+        //the RoomManager implements the singleton pattern
         if (Instance)
         {
             Destroy(gameObject);
@@ -82,6 +84,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         // DontDestroyOnLoad(gameObject);
         Instance = this;
         view = GetComponent<PhotonView>();
+
+        //getting the ids from the voicechat in the JavaScript
 #if UNITY_WEBGL && !UNITY_EDITOR
 
         string temp = VoiceChat.getIds();
@@ -118,16 +122,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        //when the scene starts a 30 seconds warmup time starts
         if (!Timer.Instance.IsRunning() && PhotonNetwork.IsMasterClient)
         {
-            Timer.Instance.StartTimer(30f); ///TODO 30f
+            Timer.Instance.StartTimer(30f); 
         }
+        //we also spawn a PlayerManager object for the local player
         if (scene.buildIndex == 2)
         {
             playerManager = PhotonNetwork.Instantiate("PlayerManager", Vector3.zero, Quaternion.identity);
         }
     }
 
+    //function to be called when splitting players in teams, it increments the count for the team and gives a new index
     public void UpdateTeam()
     {
         if(currentTeam % 2 == 0)
@@ -151,6 +158,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         return voiceChatVolume;
     }
 
+    //function called for changing the volume of the voicechat for the local player
     public void setVoiceChatVolume(float volume)
     {
         voiceChatVolume = volume;
@@ -179,6 +187,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
+        //intense music will be played during the last 16 seconds of the round, here it starts and stops
         if (!intenseMusicPlayed)
         {
             view.RPC("RPC_StopIntenseMusic", RpcTarget.All);
@@ -189,6 +198,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             view.RPC("RPC_PlayIntenseMusic", RpcTarget.All);
         }
 
+        //start the first round after the warmup ends, only the master client should execute this and send rpc calls to everyone else to notify
         if (!roundRunning && warmupEnded && PhotonNetwork.IsMasterClient)
         {
             StartRound();
@@ -200,7 +210,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             setMouseSpeed(mouseSpeed);
         }
 
-        //get the positions of all players relative to our player and send them to their respective js panner
+        //get the positions of all players relative to our player and send them to their respective js panner for the directional and proximity chat
 #if UNITY_WEBGL && !UNITY_EDITOR
         if(playerManager != null)
         {
@@ -229,6 +239,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
     }
 
+    //function to be called when a player from a team dies, it notifies all other players and handles round ends and game ends
     public void PlayerDied(int team, string name)
     {
         if (roundRunning)
@@ -271,8 +282,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    //function to be called at the start of the round
     private void StartRound()
     {
+        //at the start of the round the master client creates the healthboxes, bullets, supplies and starts the timer for the round
         if (PhotonNetwork.IsMasterClient)
         {
             supplies = PhotonNetwork.Instantiate("Supplies_Roasted_Pig", new Vector3(-29.59f, 21f, 45.9f), Quaternion.identity);
@@ -305,6 +319,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+    //function that is called when the timer finishes, it handles round ends and game ends plus the start of the game
     public void TimerFinished()
     {
         if (roundRunning)
@@ -326,6 +341,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+    //function that starts the pause at each start of the round
     public void StartPause(string msg, string team)
     {
         StartCoroutine(PauseGame(5f, msg, team));
@@ -349,6 +365,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         
     }
 
+    //function to be called when defenders have won, calls the required RPCs to handle the round end
     public void DefendersWon()
     {
         
@@ -356,6 +373,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         view.RPC("RPC_EndRoundAndUpdateScores", RpcTarget.All, 0);
     }
 
+    //function to be called when attackers have won, calls the required RPCs to handle the round end
     public void AttackersWon()
     {
         view.RPC("RPC_PauseAndDisplay", RpcTarget.All, "Scavengers won!", "red");
@@ -366,6 +384,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    //function that starts the voice-chat, if it is called on the master client it will start the id exchange between the players
     public void StartVoiceChat()
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -383,6 +403,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         StateOutro.attackers = scoreRed;
         StateOutro.defenders = scoreBlue;
     }
+
+    //RPC that exchanges the ids between the players
     [PunRPC]
     void RPC_StartVoiceChat()
     {
@@ -391,6 +413,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
     }
 
+    //RPC that sends the ids, players will call the id when they receive the id from a player with a lower index, that ensures players don't call each other twice
     [PunRPC]
     void RPC_SendOfferStrings(int fromIndex, string[] offer)
     {
@@ -455,6 +478,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         inteseMusicGameObject.GetComponent<AudioSource>().Stop();
     }
 
+    //RPC that starts the round. At the start of each round the players swap teams so the counds need to be swaped, and every player needs to be destroyed and respawned
+    //aditionally, the voicechat needs to be unmuted in case it was muted because of the player dying
     [PunRPC]
     void RPC_StartRound()
     {
@@ -485,6 +510,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 #endif
     }
 
+    //RPC that ends rounds, updates scores and starts new ones
     [PunRPC]
     void RPC_EndRoundAndUpdateScores(int team)
     {

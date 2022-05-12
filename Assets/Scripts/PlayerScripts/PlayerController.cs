@@ -171,6 +171,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (view.IsMine)
         {
+            //set all the layers for the attacker to 13 so it is ignored by the player camera
             var children = AttackerModel.GetComponentsInChildren<Transform>(includeInactive: true);
             foreach (var child in children)
             {
@@ -203,14 +204,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (!view.IsMine)
         {
-            //GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
+            //destroy or set inactive all the components on the capsules that are not owned by the local player so that they do not interfere or cause unwanted behahviour
             mainCamera.gameObject.SetActive(false);
             GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             nickname.text = view.Owner.NickName;
             sceneNickname.text = view.Owner.NickName;
 
-            //Destroy(GetComponentInChildren<Camera>().gameObject);
-            //Destroy(mainCamera.gameObject);
             Destroy(minimapCamera.gameObject);
             Destroy(rb);
         }
@@ -264,7 +263,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 FadeBloodDamage();
                 SelfHit();
             }
-
+            //update the timer values on the canvas
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -587,6 +586,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    //RPC to play the knife animation, this needs to be triggered separately due to the layering in the animatior
     [PunRPC]
     void RPC_playKnifeAnimation()
     {
