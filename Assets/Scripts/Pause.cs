@@ -1,8 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Collections.Generic;
 
 public class Pause : MonoBehaviourPunCallbacks
 {   
@@ -13,18 +11,11 @@ public class Pause : MonoBehaviourPunCallbacks
         if (disconnecting) return;
 
         paused = !paused;
-        //GameObject.FindGameObjectsWithTag("PauseMenu")[0].SetActive(paused);
 
         transform.GetChild(3).gameObject.SetActive(paused);
         Cursor.lockState = (paused) ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = paused;
     }
-
-    // public override void OnLeftRoom()
-    // {
-    //     Debug.Log("AICI");
-    //     SceneManager.LoadScene(0);
-    // }
 
     public void Quit()
     {

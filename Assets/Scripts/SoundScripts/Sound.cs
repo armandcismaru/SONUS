@@ -1,7 +1,6 @@
-using UnityEngine.Audio;
 using UnityEngine;
 
-
+// Custom sound class that enables the Audio Manager to index and customize clips
 [System.Serializable]
 public class Sound
 {

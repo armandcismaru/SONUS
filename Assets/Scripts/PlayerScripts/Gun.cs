@@ -26,8 +26,6 @@ public class Gun : MonoBehaviour
     [SerializeField]
     private GameObject HitMarker;
 
-    //private Animator Animator;
-
     private void Awake()
     {
         //Animator = GetComponent<Animator>();
@@ -38,10 +36,12 @@ public class Gun : MonoBehaviour
         // Use an object pool instead for these! To keep this tutorial focused, we'll skip implementing one.
         // For more details you can see: https://youtu.be/fsDE_mO4RZM or if using Unity 2021+: https://youtu.be/zyzqA_CPz2E
 
-        //Animator.SetBool("IsShooting", true);      
         ShootingSystem.Play();
         Vector3 direction = GetDirection();
 
+        /* If the shooting ray hits a collider of any kind an animated trail
+         * will be spawned as well as shooting fire effect and bullet hitmark.
+         * If the bullets hits an enemy the crosshair will become red */
         if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             TrailRenderer trail = Instantiate(BulletTrail, GunTip.position, Quaternion.identity);
@@ -58,6 +58,8 @@ public class Gun : MonoBehaviour
         }
     }
 
+    /* Returns direction forward of the camera, if used for shooting it will 
+     * add random bullet spread in a predefined range of gun variance */
     private Vector3 GetDirection()
     {
         Vector3 direction = fpsCam.transform.forward;
@@ -76,15 +78,16 @@ public class Gun : MonoBehaviour
         return direction;
     }
 
+    // Activates hitmarker and keeps it on for a set amount of time
     private IEnumerator ActivateHitmarker()
     {
         HitMarker.GetComponent<Image>().color = Color.red;
-
         yield return new WaitForSeconds(0.35f);
 
         HitMarker.GetComponent<Image>().color = Color.white;
     }
 
+    // Spawns gun trail and impact effect and particle effect
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {
         float time = 0;
@@ -97,7 +100,7 @@ public class Gun : MonoBehaviour
 
             yield return null;
         }
-        //Animator.SetBool("IsShooting", false);
+ 
         Trail.transform.position = Hit.point;
         Instantiate(ImpactParticleSystem, Hit.point, Quaternion.LookRotation(Hit.normal));
 

@@ -1,7 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
+/* Class used to display certain messages on the canvas;
+ * sits on the game map */
 public class DisplayMessage : MonoBehaviour
 {
     public TMP_Text text_box;
@@ -17,7 +18,6 @@ public class DisplayMessage : MonoBehaviour
 
     public void SetText(string msg)
     {
-        //GetComponent<TMP_Text>().text = msg;
         text_box.text = msg;
     }
 

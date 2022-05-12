@@ -129,10 +129,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
     }
     void Start()
     {
-        /* Attaching UI elements (Prefabs) at run time */
+        // Attaching UI elements (Prefabs) at runtime
         bulletsArray = new GameObject[max_bullets];
 
-        //If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
+        // If the canvas exists, it asks form the uiComponent (if the UIScriptPlayer) acctually exists!
         uiComponent = this.gameObject.GetComponentInParent<UIScriptPlayer>();
         if (uiComponent == null) throw new MissingComponentException("UI Script missing from parent");
 
@@ -148,6 +148,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         uiComponentBullets = uiComponent.AttachUI(bulletsViewPrefab, parent, true);
         emptyGunIcon = GameObject.FindWithTag("EmptyGun");
         emptyGunIcon.SetActive(false);
+
         for (int i = 0; i < max_bullets; i++)
         {
             bulletsArray[i] = uiComponent.AttachUI(BulletIcon, uiComponentBullets.transform.GetChild(0).gameObject, false);
@@ -171,19 +172,22 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
 
         if (view.IsMine)
         {
-            //set all the layers for the attacker to 13 so it is ignored by the player camera
+            // Set all the layers for the attacker to 13 so it is ignored by the player camera
             var children = AttackerModel.GetComponentsInChildren<Transform>(includeInactive: true);
             foreach (var child in children)
             {
                 child.gameObject.layer = 13;
             }
+
             children = DefenderModel.GetComponentsInChildren<Transform>(includeInactive: true);
             foreach (var child in children)
             {
                 child.gameObject.layer = 13;
             }
+
             playerManager = PhotonView.Find((int)view.InstantiationData[0]).GetComponent<PlayerManager>();
             team = playerManager.team;
+
             if (team == 0)
             {
                 Team.text = "Campers";
@@ -196,15 +200,17 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 Team.color = new Color(0.6431373f, 0.2039216f, 0.227451f, 1);
                 spellsText.text = "Hold E to trigger spells\n'decoy' - launch decoy\n'torch' - activate torchlight";
             }
+
             displayName.SetActive(false);
-
             gameObject.layer = 2;
-
         }
 
         if (!view.IsMine)
         {
-            //destroy or set inactive all the components on the capsules that are not owned by the local player so that they do not interfere or cause unwanted behahviour
+            /* Destroy or set inactive all the components on the capsules that 
+             * are not owned by the local player so that they do not interfere
+             * or cause unwanted behahviour */
+
             mainCamera.gameObject.SetActive(false);
             GetComponentInChildren(typeof(Canvas), true).gameObject.SetActive(false);
             nickname.text = view.Owner.NickName;
@@ -217,13 +223,13 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         Cursor.lockState = CursorLockMode.Locked;
         isMoving = false;
         bullets = 5;
-
-        // pauseObject = GameObject.FindGameObjectsWithTag("Pause");
     }
+
     public void SolveSpectateComponents()
     {
         SpectateCanv.SetActive(true);
     }
+
     void Update()
     {
         if (view.IsMine)
@@ -263,7 +269,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
                 FadeBloodDamage();
                 SelfHit();
             }
-            //update the timer values on the canvas
+            // Update the timer values on the canvas
             float mins = Timer.Instance.GetTimerMinutes();
             float secs = Timer.Instance.GetTimerSeconds();
 
@@ -305,7 +311,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         // view.RPC("RPC_DeployDecoy", RpcTarget.All, transform.position + transform.forward, Quaternion.identity, playerManager.team);
 
         decoy = PhotonNetwork.Instantiate("Decoy", transform.position + transform.forward, transform.rotation);
-        // decoy sa ma iei
         decoy.GetComponent<Decoy>().direction = transform.forward;
     }
 
@@ -433,6 +438,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    // Player movement interactions controller
     void Move()
     {
         Vector3 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"),
@@ -465,7 +471,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
             BroadcastSoundS(FOOTSTEP_SOUND);
         }
 
-        //shift walking
+        // Shift silent walking
         if (Input.GetKeyDown(KeyCode.LeftShift) && !fastSpeed) {
             isShiftPressed = true;
             animator.SetBool(runHash, false);
@@ -482,9 +488,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         moveAmount = Vector3.SmoothDamp(moveAmount,
                                         moveDir * walkSpeed,
                                         ref smoothMoveVelocity,
-                                        smoothTime); //TODO
+                                        smoothTime);
     }
 
+    // Fade blood overlay and return to normal state in a few seconds, linked to the framerate
     private void FadeBloodDamage()
     {
         GameObject bloodSplatter = GameObject.FindWithTag("Blood");
@@ -510,6 +517,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    /* Randomly choose and play one of the 4 injury sound effects 
+     * and display the blood overlay */
     public void GotHurt()
     {
         int index = Random.Range(0, INJURED_SOUNDS.Length);
@@ -529,6 +538,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
+    // Increments number of bullets after pickup and displays the corresponding graphical elements
     public void IncrementBullets(int amount)
     {
         if (bullets == 0) emptyGunIcon.SetActive(false);
@@ -578,7 +588,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
     }
 
-    //RPC to play the knife animation, this needs to be triggered separately due to the layering in the animatior
+    // RPC to play the knife animation, this needs to be triggered separately due to the layering in the animatior
     [PunRPC]
     void RPC_playKnifeAnimation()
     {
@@ -602,11 +612,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         team = tm;
         if (team == 0)
         {
-            //Make sure correct HUD and text colour is used for team
+            // Make sure correct HUD and text colour is used for team
             GetComponent<Renderer>().material = BlueMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.blue;
             playerIcon.layer = 11;
-            //Get correct player model to show depending on team
+            // Get correct player model to show depending on team
             AttackerModel.SetActive(false);
             DefenderModel.SetActive(true);
             if (view.IsMine)
@@ -616,11 +626,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         }
         else
         {
-            //Make sure correct HUD and text colour is used for team
+            // Make sure correct HUD and text colour is used for team
             GetComponent<Renderer>().material = RedMat;
             playerIcon.GetComponent<SpriteRenderer>().color = Color.red;
             playerIcon.layer = 10;
-            //Get correct player model to show depending on team
+
+            // Get correct player model to show depending on team
             DefenderModel.SetActive(false);
             AttackerModel.SetActive(true);
             animator = animatorAtt;
@@ -716,7 +727,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (index == ind)
         {
             GetComponent<Renderer>().enabled = false;
-            // gun.GetComponent<Renderer>().enabled = false;
         }
     }
     
@@ -726,10 +736,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         if (index == ind)
         {
             GetComponent<Renderer>().enabled = true;
-            // gun.GetComponent<Renderer>().enabled = true;
         }
     }
 
+    // Broadcasts specific sound to the other players
     public void BroadcastSound(string sound)
     {
         view.RPC("RPC_BroadcastSound", RpcTarget.Others, sound);
@@ -740,22 +750,26 @@ public class PlayerController : MonoBehaviourPunCallbacks, IDamageable, IPlayerS
         view.RPC("RPC_BroadcastSoundS", RpcTarget.Others, sound);
     }
 
+    // Wrapper function for playing specific sound from AudioManager
     public void PlayRemote(string sound)
     {
         GetComponent<AudioManager>().Play(sound);
     }
 
+    // Wrapper function for stopping specific sound from AudioManager
     public void StopRemote(string sound)
     {
         GetComponent<AudioManager>().Stop(sound);
     }
 
+    // RPC wrapper function for playing specific sound from AudioManager
     [PunRPC]
     void RPC_BroadcastSound(string sound)
     {
         PlayRemote(sound);
     }
 
+    // RPC wrapper function for playing specific sound from AudioManager
     [PunRPC]
     void RPC_BroadcastSoundS(string sound)
     {
