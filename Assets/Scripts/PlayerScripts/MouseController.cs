@@ -38,6 +38,9 @@ public class MouseController : MonoBehaviour
         }
     }
 
+    /* Sets mouse sensitivity depending whether the game is played from the editor or build
+       WebGL sensitivity is dependent on the mouseSpeed menu setting and delta time between
+       the last frame and the current one */
     void Update()
     {
         if (Cursor.lockState == CursorLockMode.Locked && view.IsMine)
@@ -57,7 +60,9 @@ public class MouseController : MonoBehaviour
 #endif
         }
     }
-  public void setMouseSpeed(float volume)
+
+    // Takes variable set in pause menu and sets the internal mouseSpeed value
+    public void setMouseSpeed(float volume)
     {
         RoomManager.Instance.mouseSpeed = volume;
         mouseSpeed = RoomManager.Instance.mouseSpeed;

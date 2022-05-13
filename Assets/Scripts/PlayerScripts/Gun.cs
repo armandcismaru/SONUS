@@ -32,6 +32,9 @@ public class Gun : MonoBehaviour
         ShootingSystem.Play();
         Vector3 direction = GetDirection();
 
+        /* If the shooting ray hits a collider of any kind an animated trail
+         * will be spawned as well as shooting fire effect and bullet hitmark.
+         * If the bullets hits an enemy the crosshair will become red */
         if (Physics.Raycast(BulletSpawnPoint.position, direction, out RaycastHit hit, range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             TrailRenderer trail = Instantiate(BulletTrail, GunTip.position, Quaternion.identity);
@@ -48,6 +51,8 @@ public class Gun : MonoBehaviour
         }
     }
 
+    /* Returns direction forward of the camera, if used for shooting it will 
+     * add random bullet spread in a predefined range of gun variance */
     private Vector3 GetDirection()
     {
         Vector3 direction = fpsCam.transform.forward;
@@ -66,15 +71,16 @@ public class Gun : MonoBehaviour
         return direction;
     }
 
+    // Activates hitmarker and keeps it on for a set amount of time
     private IEnumerator ActivateHitmarker()
     {
         HitMarker.GetComponent<Image>().color = Color.red;
-
         yield return new WaitForSeconds(0.35f);
 
         HitMarker.GetComponent<Image>().color = Color.white;
     }
 
+    // Spawns gun trail and impact effect and particle effect
     private IEnumerator SpawnTrail(TrailRenderer Trail, RaycastHit Hit)
     {
         float time = 0;

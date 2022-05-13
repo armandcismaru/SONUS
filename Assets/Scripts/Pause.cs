@@ -1,8 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Collections.Generic;
 
 public class Pause : MonoBehaviourPunCallbacks
 {   

@@ -38,7 +38,7 @@ public class Shelter : MonoBehaviour, IRoundFinished
 
     public void Notify()
     {
-            currentAmountofBoxes = 0;
+        currentAmountofBoxes = 0;
     }
 
     /* Replicate logic for delievering the supplies and making the round finish

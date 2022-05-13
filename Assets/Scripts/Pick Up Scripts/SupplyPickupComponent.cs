@@ -131,6 +131,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         }
     }
 
+    // Tells GUI to update as supply was picked up
     private void IncrementFood(float value)
     {
         if (!view.IsMine)
@@ -140,9 +141,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
         if (view.IsMine)
         {
             EditSupplyGUI("Supplies collected", 255);
-            //base.SetSlider(5, "Food", current_food / (max_food * supplyCharge));
         }
-        //replicateIncrementFood(value);
     }
     
     private void replicateIncrementFood(float value)
@@ -152,7 +151,7 @@ public class SupplyPickupComponent : PickUpComponent, IDieObserver
             updateUI(); 
     }
     
-    /*Governs the mechanic for picking up food 
+    /* Governs the mechanic for picking up food 
      * and destroying the pig after it has been collected
      */
     public override void pickupTrigger(PickUpScript pickup)

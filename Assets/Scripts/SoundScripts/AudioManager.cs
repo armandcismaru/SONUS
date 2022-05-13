@@ -1,13 +1,12 @@
-using UnityEngine.Audio;
 using UnityEngine;
 using System;
 
+/* Audio Manager class used to attack Audio Sources at runtime;
+   lives attached to the whatever game component needs to brodcast sounds */
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
 
-
-    // Start is called before the first frame update
     void Awake()
     {
         foreach (Sound s in sounds)
@@ -30,6 +29,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // Returns sound clip by name
     public Sound GetSound(string sound)
     {
         foreach (Sound s in sounds)
@@ -40,6 +40,7 @@ public class AudioManager : MonoBehaviour
         return sounds[0];
     }
 
+    // Stops sound by clip name
     public void Stop(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
@@ -52,6 +53,7 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
 
+    // Plays sound by clip name
     public void Play (string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
@@ -64,6 +66,7 @@ public class AudioManager : MonoBehaviour
         s.source.Play();
     }
 
+    // Checks whether certain sound is already playing 
     public bool isPlaying(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);

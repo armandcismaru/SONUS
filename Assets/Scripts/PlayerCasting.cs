@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// Casts rays in game
 public class PlayerCasting : MonoBehaviour
 {
     public static float DistanceFromTarget;

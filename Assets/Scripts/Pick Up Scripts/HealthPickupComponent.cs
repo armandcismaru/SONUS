@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Photon.Pun;
 
 /* Script attached to the player
@@ -98,7 +95,7 @@ public class HealthPickupComponent : PickUpComponent, IDamageObserver
         }
     }
 
-    /*Governs the mechanic for picking up health 
+    /* Governs the mechanic for picking up health 
      * and destroying the health pack after it has been collected
      */
     public override void pickupTrigger(PickUpScript pickup)
