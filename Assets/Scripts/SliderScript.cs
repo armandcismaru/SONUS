@@ -16,11 +16,13 @@ public class SliderScript : MonoBehaviour
         slider.value = RoomManager.Instance.getMouseSpeed();
         ChangeValue(slider.value);
     }
+
     void OnDisable()
     {
         slider.onValueChanged.RemoveAllListeners();
     }
 
+    // Update mouse sensitivity when using ther slider
     void ChangeValue(float value)
     {
         text.text = value.ToString("n"+decimals) + " " + unit;
