@@ -199,6 +199,7 @@
 
       window.returnIds = function() {
         let ids = peers[0].id
+	console.log(ids)
         for(let i = 1; i < peers.length; i++){
             ids = ids.concat(",", peers[i].id);
         }
